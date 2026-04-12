@@ -1,0 +1,4 @@
+interface:
+  display_name: "日本語校正"
+  short_description: "日本語の文章を厳密な文法・語法・体裁ルールで校正する"
+  default_prompt: "Use $japanese-writing-rules to proofread this Japanese text under the bundled style rules."
