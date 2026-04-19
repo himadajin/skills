@@ -1,0 +1,4 @@
+interface:
+  display_name: "日本語テクニカルライティング"
+  short_description: "技術文書の作成・校正を行い、テンプレート方針を切り替えるスキル。"
+  default_prompt: "$japanese-technical-writing を使って、テンプレート方針を決めた上で技術文書を作成または校正してください。"
