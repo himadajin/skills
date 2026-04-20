@@ -16,15 +16,33 @@ description: 手順書、AGENTS.md、SKILL.md などの定義から、LLM/エー
 
 ## reference を選ぶ
 
-- まず `references/` のファイル名一覧を確認する。
-- `references/` 配下にディレクトリはない。すべてフラットなファイル名で管理される。
-- ファイル名は原則として `<vendor>-<surface>-<model>[-<variant>].md` を使う。`vendor` は `anthropic` / `openai` / `google` / `xai`、`surface` は `claude` / `chatgpt` / `codex` / `gemini` / `grok` など利用面を表す。
-- バージョン違いがあるトラックでは、`references/` には最新と一つ前だけが置かれている前提で選ぶ。
-- image generation 用 prompt、軽量モデルの prompt、`o3`、Gemini 2.x、text-first ではないサービス、beta、notebook 系は `references/` に置かれない前提で扱う。
+`references/` の公式システムプロンプト実例は **体裁の参考** と **内容の参考** の二つの目的で使い分ける。
+まず `references/` のファイル名一覧を確認する。ファイルはフラットに `<vendor>-<surface>-<model>[-<variant>].md` 形式で管理される。
+
+### 体裁の参考 — ターゲットモデルに合わせる
+
+生成するプロンプトの構造・見出しの切り方・粒度・語調・マークアップ形式は、ターゲットモデルの既存システムプロンプトに習う。
+
 - ターゲットが明示されている場合は、まず vendor と surface を合わせ、次に model と variant を合わせる。
-- ターゲットが不明な場合はユーザーに確認する。確認できない場合は、生成先に最も近い surface を選び、その前提を明示する。汎用 fallback 用の example は置かれていない。
-- reference の文面をそのまま写すのではなく、構造、粒度、語調、見出しの切り方を抽出して適用する。
-- reference が長い場合は、冒頭のメタ情報と主要セクション構造を優先して読み、必要な箇所だけ追加で読む。
+- 完全一致がなくても、同じ vendor・surface の別バージョンや同系統モデルのファイルを体裁テンプレートとして使う。
+- ターゲットが不明な場合はユーザーに確認する。確認できなければ最も近い surface を選び、前提を明示する。汎用 fallback 用の example は置かれていない。
+- reference の文面をそのまま写さず、体裁パターンを抽出して適用する。
+
+### 内容の参考 — 他モデルから知見を得る
+
+references は「システムプロンプトに何を書くべきか」の知見の集積である。体裁テンプレートを決めた後、生成目的に応じて他モデルのプロンプトも横断的に参照し、書くべき項目の抜け漏れを防ぐ。
+
+- ターゲットモデルのプロンプトだけをテンプレートとして扱わない。他モデルが同種の機能や制約をどう表現しているかを確認する。
+- 例: コーディングエージェント向けなら `anthropic-claude-code.md`、`openai-codex-gpt-5.4.md`、`google-gemini-cli.md` を横断し、ツール使用規則・安全制約・自律性指針の共通パターンを把握する。
+- 例: ツール固有の指示を含めるなら `openai-tool-*.md` を参照し、ツール指示の粒度や記述パターンを確認する。
+- 例: 個性やスタイル定義を含めるなら `anthropic-default-styles.md`、`openai-codex-personality-*.md`、`xai-grok-personas.md` を参照する。
+- 横断参照の結果はターゲットモデルの体裁に統一して反映する。他モデルの形式をそのまま混ぜない。
+
+### 読み方
+
+- reference が長い場合は冒頭のメタ情報と主要セクション構造を優先して読み、必要な箇所だけ追加で読む。
+- バージョン違いがあるトラックでは最新と一つ前だけが置かれている前提で選ぶ。
+- image generation 用、軽量モデル、`o3`、Gemini 2.x、text-first でないサービス、beta、notebook 系は置かれない前提。
 
 ## 変換する
 
@@ -44,12 +62,15 @@ description: 手順書、AGENTS.md、SKILL.md などの定義から、LLM/エー
 
 ## references
 
-- `references/` には `works/system_prompts_leaks` からコピーした公式 prompt 実例だけを置く。
-- ベンダー別に `anthropic-*`, `openai-*`, `google-*`, `xai-*` を確認する。
-- 代表例:
-  - `references/anthropic-claude-code.md`
-  - `references/openai-codex-gpt-5.4.md`
-  - `references/google-gemini-cli.md`
-  - `references/xai-grok-4.2.md`
-- 古い世代を広く集めるのではなく、各トラックで最新と一つ前だけを参照候補として扱う。
-- ただし image generation、軽量モデル、`o3`、Gemini 2.x、text-first ではないサービス、beta、notebook 系は参照候補から外す。
+`references/` には `works/system_prompts_leaks` からコピーした公式 prompt 実例だけを置く。ベンダー別に `anthropic-*`, `openai-*`, `google-*`, `xai-*` を確認する。内容は以下のカテゴリに分かれる。
+
+- **コーディングエージェント**: `anthropic-claude-code.md`, `openai-codex-gpt-5.4.md`, `google-gemini-cli.md`, `google-jules.md` — ツール使用規則、安全制約、自律性指針の参考
+- **チャットモデル**: `anthropic-claude-opus-*.md`, `anthropic-claude-sonnet-*.md`, `openai-chatgpt-*.md`, `google-gemini-3*.md`, `xai-grok-4*.md` — 役割定義、応答スタイル、制約の参考
+- **ツール固有指示**: `openai-tool-*.md` — 検索、コード実行、ファイル操作などツール別の指示パターンの参考
+- **スタイル・個性**: `anthropic-default-styles.md`, `openai-codex-personality-*.md`, `xai-grok-personas.md` — 語調・個性定義の参考
+- **ポリシー・安全**: `openai-policy-automation-context.md`, `xai-grok-safety-instructions.md`, `anthropic-claude-ai-injections.md` — 安全指針の参考
+
+管理方針:
+
+- 古い世代を広く集めず、各トラックで最新と一つ前だけを参照候補として扱う。
+- image generation、軽量モデル、`o3`、Gemini 2.x、text-first でないサービス、beta、notebook 系は参照候補から外す。
