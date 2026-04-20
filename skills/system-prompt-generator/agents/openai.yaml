@@ -1,0 +1,4 @@
+interface:
+  display_name: "System Prompt Generator"
+  short_description: "Generate agent system prompts from docs"
+  default_prompt: "Use $system-prompt-generator to turn ./AGENTS.md into a Codex system prompt and save it to ./system-prompt.md."
