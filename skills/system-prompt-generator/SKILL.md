@@ -1,6 +1,6 @@
 ---
 name: system-prompt-generator
-description: 手順書、AGENTS.md、SKILL.md などの定義から、LLM/エージェント向けのシステムプロンプトを生成するスキル。入力が本文でもファイルパスでも扱い、`references/` に保存した公式システムプロンプト実例から、企業・サービス・モデル・バリアントごとの近い完成形を選んで同等の体裁で出力する必要があるときに使う。
+description: 手順書、AGENTS.md、SKILL.md などの定義から、LLM/エージェント向けのシステムプロンプトを生成するスキル。入力として本文もファイルパスも扱い、`references/` に保存した公式システムプロンプト実例から、企業・サービス・モデル・バリアントごとの近い完成形を選んで同等の体裁で出力する必要があるときに使う。
 ---
 
 # system-prompt-generator
@@ -16,16 +16,16 @@ description: 手順書、AGENTS.md、SKILL.md などの定義から、LLM/エー
 
 ## reference を選ぶ
 
-`references/` の公式システムプロンプト実例は **体裁の参考** と **内容の参考** の二つの目的で使い分ける。
+`references/` の公式システムプロンプト実例は「体裁の参考」と「内容の参考」の二つの目的で使い分ける。
 まず `references/` のファイル名一覧を確認する。ファイルはフラットに `<vendor>-<surface>-<model>[-<variant>].md` 形式で管理される。
 
 ### 体裁の参考 — ターゲットモデルに合わせる
 
-生成するプロンプトの構造・見出しの切り方・粒度・語調・マークアップ形式は、ターゲットモデルの既存システムプロンプトに習う。
+生成するプロンプトの構造・見出しの切り方・粒度・語調・マークアップ形式は、ターゲットモデルの既存システムプロンプトに倣う。
 
 - ターゲットが明示されている場合は、まず vendor と surface を合わせ、次に model と variant を合わせる。
 - 完全一致がなくても、同じ vendor・surface の別バージョンや同系統モデルのファイルを体裁テンプレートとして使う。
-- ターゲットが不明な場合はユーザーに確認する。確認できなければ最も近い surface を選び、前提を明示する。汎用 fallback 用の example は置かれていない。
+- ターゲットが不明な場合はユーザーに確認する。確認できなければ最も近い surface を選び、前提を明示する。汎用 fallback 用の実例は置かれていない。
 - reference の文面をそのまま写さず、体裁パターンを抽出して適用する。
 
 ### 内容の参考 — 他モデルから知見を得る
@@ -42,7 +42,7 @@ references は「システムプロンプトに何を書くべきか」の知見
 
 - reference が長い場合は冒頭のメタ情報と主要セクション構造を優先して読み、必要な箇所だけ追加で読む。
 - バージョン違いがあるトラックでは最新と一つ前だけが置かれている前提で選ぶ。
-- image generation 用、軽量モデル、`o3`、Gemini 2.x、text-first でないサービス、beta、notebook 系は置かれない前提。
+- image generation 用、軽量モデル、`o3`、Gemini 2.x、text-first でないサービス、beta、notebook 系は置かれない前提で扱う。
 
 ## 変換する
 
@@ -62,7 +62,7 @@ references は「システムプロンプトに何を書くべきか」の知見
 
 ## references
 
-`references/` には `works/system_prompts_leaks` からコピーした公式 prompt 実例だけを置く。ベンダー別に `anthropic-*`, `openai-*`, `google-*`, `xai-*` を確認する。内容は以下のカテゴリに分かれる。
+`references/` には `works/system_prompts_leaks` からコピーした公式システムプロンプト実例だけを置く。ベンダー別に `anthropic-*`, `openai-*`, `google-*`, `xai-*` を確認する。内容は以下のカテゴリに分かれる。
 
 - **コーディングエージェント**: `anthropic-claude-code.md`, `openai-codex-gpt-5.4.md`, `google-gemini-cli.md`, `google-jules.md` — ツール使用規則、安全制約、自律性指針の参考
 - **チャットモデル**: `anthropic-claude-opus-*.md`, `anthropic-claude-sonnet-*.md`, `openai-chatgpt-*.md`, `google-gemini-3*.md`, `xai-grok-4*.md` — 役割定義、応答スタイル、制約の参考
@@ -70,7 +70,3 @@ references は「システムプロンプトに何を書くべきか」の知見
 - **スタイル・個性**: `anthropic-default-styles.md`, `openai-codex-personality-*.md`, `xai-grok-personas.md` — 語調・個性定義の参考
 - **ポリシー・安全**: `openai-policy-automation-context.md`, `xai-grok-safety-instructions.md`, `anthropic-claude-ai-injections.md` — 安全指針の参考
 
-管理方針:
-
-- 古い世代を広く集めず、各トラックで最新と一つ前だけを参照候補として扱う。
-- image generation、軽量モデル、`o3`、Gemini 2.x、text-first でないサービス、beta、notebook 系は参照候補から外す。
