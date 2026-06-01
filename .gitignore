@@ -3,3 +3,8 @@
 
 __pycache__/
 *.pyc
+
+# Local workspace files
+/works/
+/local/
+/tmp/
