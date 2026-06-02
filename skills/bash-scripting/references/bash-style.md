@@ -12,7 +12,6 @@ set -euo pipefail
 
 script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 readonly script_dir
-tmp_dir=""
 
 # Script interface
 
@@ -20,7 +19,6 @@ usage() { ... }
 die() { ... }
 color_enabled() { ... }
 validate() { ... }
-cleanup() { ... }
 
 # Task functions
 
@@ -35,10 +33,12 @@ main "$@"
 
 Rules:
 
-- Do not place task-specific functions between `usage()`, `die()`, `color_enabled()`, `validate()`, and `cleanup()`.
+- Do not place task-specific functions between `usage()`, `die()`, `color_enabled()`, `validate()`, and `cleanup()` when `cleanup()` is present.
 - `# Task functions` may be removed when there are no task-specific functions.
 - Order task-specific functions by the order in which `main()` calls them.
-- Keep `script_dir`, `tmp_dir`, and color support in the template unless the user explicitly asks to remove them.
+- Keep `script_dir` and color support in the template unless the user explicitly asks to remove them.
+- Add `tmp_dir`, `cleanup()`, and `trap cleanup EXIT` together only when the script creates temporary files or directories.
+- Do not create a dummy temporary directory just to keep `cleanup()` or `trap cleanup EXIT` in the script.
 
 ## Variables
 

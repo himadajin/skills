@@ -48,6 +48,8 @@ Use `validate()` for:
 - Output destination sanity checks when needed.
 - Preconditions for destructive operations.
 
+User-supplied precondition failures, such as missing arguments, invalid argument values, and missing input paths, are usage errors and should exit with code `2`.
+
 Missing commands should exit with code `127`:
 
 ```bash
@@ -66,12 +68,33 @@ command -v jq >/dev/null 2>&1 || die "required command not found: jq" 127
 
 ## Temporary Files
 
+When a script creates temporary files or directories:
+
 - Use `mktemp` or `mktemp -d`.
-- Use `cleanup()` and `trap cleanup EXIT`.
+- Prefer `tmp_dir=$(mktemp -d)` for temporary directories; do not pass a literal `/tmp/...` template unless the script's public interface explicitly requires that location.
+- Add `tmp_dir`, `cleanup()`, and `trap cleanup EXIT` together.
 - Do not use fixed paths such as `/tmp/script-name`.
 - `tmp_dir` starts as an empty global variable so `cleanup()` is safe under `set -u`.
 - `trap cleanup EXIT` goes in `main()` near the temporary resource creation.
 - `cleanup()` must validate the target before `rm -rf`.
+
+Minimum directory cleanup pattern:
+
+```bash
+tmp_dir=""
+
+cleanup() {
+  [[ -n "${tmp_dir}" && -d "${tmp_dir}" ]] || return 0
+  rm -rf -- "${tmp_dir}"
+}
+
+main() {
+  tmp_dir=$(mktemp -d)
+  trap cleanup EXIT
+}
+```
+
+When a script does not create temporary files or directories, do not define `tmp_dir`, `cleanup()`, or `trap cleanup EXIT`.
 
 ## File Modification And Deletion
 

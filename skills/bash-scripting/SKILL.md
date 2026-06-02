@@ -17,7 +17,7 @@ Use this skill for Bash scripts that should be small, predictable, and composabl
 - Start new scripts from `references/template.sh`.
 - Keep the template structure unless the user asks for a smaller final script.
 - `usage()`, `die()`, `color_enabled()`, `validate()`, `main()`, and `main "$@"` are required.
-- `cleanup()` and `trap cleanup EXIT` may be removed only when the script does not create temporary files or directories.
+- Add `tmp_dir`, `cleanup()`, and `trap cleanup EXIT` only when the script creates temporary files or directories; do not create dummy temporary resources just to preserve the template.
 - Additional task functions go under `# Task functions`, ordered by the order in which `main()` calls them.
 - Follow UNIX philosophy: write the primary result to stdout, and write errors, diagnostics, warnings, and optional verbose output to stderr.
 - Do not print success chatter such as `Done`, `Success`, or `Generated ...`.

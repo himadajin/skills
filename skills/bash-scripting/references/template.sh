@@ -4,7 +4,6 @@ set -euo pipefail
 script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 readonly script_dir
 readonly tool_bin="${TOOL_BIN:-cat}"
-tmp_dir=""
 
 # Script interface
 
@@ -67,12 +66,7 @@ validate() {
   command -v "${tool_bin}" >/dev/null 2>&1 || die "required command not found: ${tool_bin}" 127
 
   [[ $# -eq 1 ]] || die "expected exactly 1 argument, got $#; use --help for usage" 2
-  [[ -f "$1" ]] || die "input file not found: $1"
-}
-
-cleanup() {
-  [[ -n "${tmp_dir}" && -d "${tmp_dir}" ]] || return 0
-  rm -rf -- "${tmp_dir}"
+  [[ -f "$1" ]] || die "input file not found: $1; pass an existing file" 2
 }
 
 # Task functions
@@ -92,9 +86,6 @@ main() {
   fi
 
   validate "$@"
-
-  tmp_dir=$(mktemp -d)
-  trap cleanup EXIT
 
   convert_file "$1"
 }
