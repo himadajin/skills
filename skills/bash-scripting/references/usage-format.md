@@ -1,6 +1,8 @@
 # Usage Format
 
-Use this reference when the template is not enough. Keep the interface smaller before adding more notation.
+Read this before writing or changing `usage()`, help output, arguments, commands, options, examples, or environment documentation.
+
+Keep the interface smaller before adding more notation. This file documents help output only. It does not authorize adding flags.
 
 ## Core Rule
 
@@ -13,6 +15,37 @@ Use this reference when the template is not enough. Keep the interface smaller b
 - `Examples:` shows representative successful commands, not extra behavior.
 
 If these sections become hard to keep consistent, simplify the CLI.
+
+## Section Order
+
+Use English and ASCII only. Use this section order:
+
+1. One-line description.
+2. `Usage:`
+3. `Commands:` when the script has subcommands.
+4. `Arguments:` when the script has positional arguments.
+5. `Options:`
+6. `Environment:` when environment variables affect behavior.
+7. `Examples:`
+
+Rules:
+
+- The one-line description states what the script does.
+- Do not use marketing words such as `simple`, `easy`, `powerful`, or `fast`.
+- `Usage:` contains only supported invocation forms.
+- `Commands:` lists every subcommand from `Usage:` and no others.
+- `Arguments:` documents every placeholder from `Usage:` and no others.
+- `Options:` documents every accepted option and no others.
+- `Environment:` documents environment variables, not CLI options.
+- `Examples:` contains 1 to 3 representative successful examples.
+- Examples must be copyable commands.
+- Do not include `--help` as an example.
+- Do not introduce behavior in `Examples:` that is not already documented elsewhere in help.
+- End descriptions with periods.
+- Keep item descriptions to one line. If they need wrapping, simplify the text.
+- Use 2 spaces of indentation for item lines.
+- Align descriptions within the same section with at least 2 spaces between the item and the description.
+- Use one blank line between sections.
 
 ## Usage Notation
 
@@ -38,6 +71,44 @@ Notation:
 - Bare words are subcommands.
 
 Do not use `|`, `{}`, nested option groups, or EBNF-style grammar. If the notation needs that, redesign the CLI.
+
+## Options
+
+`Options:` normally contains only `-h, --help`.
+
+Rules:
+
+- List `-h, --help` first.
+- Prefer long option names.
+- Do not add short aliases except `-h` unless the user asks.
+- Values use the form `--format <format>`.
+- Boolean flags use the form `--json`.
+- Put default values at the end of option descriptions, such as `Default: text.`
+- Put small allowed value sets in the description, such as `Output format: text, json.`
+- Keep parser order and `Options:` order aligned.
+- Do not accept options that are not documented in `Options:`.
+
+## Arguments
+
+Rules:
+
+- Document every placeholder from `Usage:`.
+- Do not document placeholders that are not in `Usage:`.
+- If the same placeholder appears in multiple `Usage:` lines, document it once.
+- Use the same notation as `Usage:`, such as `<file>...` or `[<file>]`.
+- Explain the argument's concrete role, such as `Markdown file to read.`
+- When an argument is optional, document what happens when it is omitted.
+- When a repeated argument is used, make the required count visible in `Usage:`.
+
+## Commands
+
+Rules:
+
+- Write `Commands:` only when the script has subcommands.
+- Document every subcommand from `Usage:`.
+- Do not document subcommands that are not in `Usage:`.
+- Explain command names only. Put command arguments in `Arguments:`.
+- Start command descriptions with a verb.
 
 ## Single Positional Argument
 
@@ -129,7 +200,7 @@ Examples:
 
 ## One Leading Flag
 
-Use this only when one optional flag is clearer than another positional argument or subcommand.
+Use this only when one optional flag is clearer than another positional argument or subcommand, and the user accepted the tradeoff.
 
 ```text
 Read a data file and write selected fields to stdout.
@@ -151,7 +222,7 @@ Examples:
 
 ## Last-Resort Multiple Flags
 
-Use this only with the parser pattern in `option-parsing.md`.
+Use this only with the parser pattern in `advanced-option-parsing.md`, after the user accepted the tradeoff.
 
 ```text
 Render a report from an input file.
