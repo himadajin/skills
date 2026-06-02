@@ -1,6 +1,6 @@
 ---
 name: bash-scripting
-description: Use when creating, reviewing, or revising Bash scripts that must follow a fixed small-utility style: Bash-only implementation, UNIX-style composability, predictable usage() output, simple CLI design, and safe shell idioms.
+description: 'Use when the user asks to create, refactor, review, or revise a shell script artifact, or to turn commands, steps, or existing code into a shell script, especially command-line utilities and automation scripts that should follow this skill''s fixed script format. This skill implements shell scripts as Bash by default, but trigger on requests like "write a shell script to...", "refactor this .sh", "review this shell script", or requested edits to shell script files even when the user does not name Bash or this skill. Do not trigger for general shell questions, one-off command help, pipeline debugging, POSIX/zsh/PowerShell discussions, or narrow shell syntax/option questions unless the user is creating or revising a script artifact.'
 ---
 
 # bash-scripting
