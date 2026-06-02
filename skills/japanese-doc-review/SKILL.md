@@ -156,8 +156,7 @@ description: Use when the user asks for Japanese document review, proofreading, 
 - 上流観点に `高` または `中` の指摘がある場合、指定された下流観点はレビュー対象の観点にしない。
 - 上流観点に `高` または `中` の指摘がない場合だけ、指定された次の下流観点をレビュー対象の観点にする。
 
-レビュー対象の観点に対応する `references/` を読む。
-`references/` のパスは、この `SKILL.md` があるディレクトリからの相対パスとして解決する。
+レビュー対象の観点に応じて、次の補助資料を読む。
 
 - `構成・論理`: `references/01-structure.md`
 - `文意・文法`: `references/02-grammar.md`
