@@ -51,8 +51,6 @@ Before writing code, read these files in order:
 4. `references/bash-style.md`
 5. `references/safety.md`
 
-Do not read `references/advanced-option-parsing.md` for a first-pass design.
-
 ### Existing Script Changes
 
 - Read `references/bash-style.md` before editing Bash code.
@@ -75,12 +73,3 @@ Do not read `references/advanced-option-parsing.md` for a first-pass design.
 - Do not read `references/advanced-option-parsing.md` during first-pass CLI design.
 - Read `references/advanced-option-parsing.md` only when flags remain necessary after simpler CLI shapes fail and the user accepts that tradeoff.
 - If `advanced-option-parsing.md` is not allowed by these gates, do not implement `while`/`case` option parsing.
-
-## Reference Map
-
-- `references/template.sh`: standard starting point for new scripts.
-- `references/basic-cli.md`: normal CLI design path for positional arguments, stdin, subcommands, and environment variables.
-- `references/usage-format.md`: exact `usage()` section order, notation, alignment, and examples.
-- `references/bash-style.md`: quoting, variables, functions, loops, comments, and color rules.
-- `references/safety.md`: stdout/stderr behavior, exit codes, validation, paths, temporary files, overwrites, deletion, and external command safety.
-- `references/advanced-option-parsing.md`: last-resort flag parsing patterns.
