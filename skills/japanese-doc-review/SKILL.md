@@ -1,6 +1,6 @@
 ---
 name: japanese-doc-review
-description: Use when the user asks to review, proofread, or point out problems in concrete Japanese document text, an existing file, or an already-written draft such as README, design notes, specs, procedures, or reports. Trigger on Japanese requests like「レビューして」「校正して」「問題点を指摘して」「セルフレビューして」when a specific review target exists, even when this skill is not named. Do NOT invoke for drafting, summarizing, translation, abstract writing advice, or direct rewrite/edit requests like「改善して」「自然にして」unless the user asks for review findings or problem identification.
+description: Use when the user asks for Japanese document review, proofreading, or problem identification: 「レビューして」「校正して」「問題点を指摘して」「セルフレビューして」, including scoped review phrases like「文法だけ」「誤字脱字だけ」「表記揺れだけ」「総合」「全観点」. Trigger on pasted text, existing files, or agent-written drafts such as README, design notes, specs, procedures, and reports, and also on review/proofreading intent without a target so the skill can ask for 対象本文/対象ファイル/作成済みドラフト. Do NOT invoke for drafting, summarizing, translation, abstract writing advice, or direct rewrite/edit requests like「改善して」「自然にして」unless the user asks for review findings or problem identification.
 ---
 
 # japanese-doc-review
