@@ -32,6 +32,9 @@ description: Use when the user asks for Japanese document review, proofreading, 
 
 レビュー結果は、後続作業のコンテキストとして使われる。
 対象範囲、前提、確認事項、今回のレビュー範囲、指摘の表記は固定形式に従って書く。
+レビュー観点の見出しは、`構成・論理`、`文意・文法`、`体裁・表現` の3つを常にこの順序で出す。
+単一観点指定の場合も、レビュー対象外の観点を省略しない。
+レビュー対象外の観点では、`今回のレビュー範囲: 含まない`、該当する `理由`、`指摘: - 今回はレビュー対象外。` を書く。
 
 ## 用語と定義
 
@@ -154,6 +157,7 @@ description: Use when the user asks for Japanese document review, proofreading, 
 - 上流観点に `高` または `中` の指摘がない場合だけ、指定された次の下流観点をレビュー対象の観点にする。
 
 レビュー対象の観点に対応する `references/` を読む。
+`references/` のパスは、この `SKILL.md` があるディレクトリからの相対パスとして解決する。
 
 - `構成・論理`: `references/01-structure.md`
 - `文意・文法`: `references/02-grammar.md`
