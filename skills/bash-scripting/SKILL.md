@@ -22,6 +22,7 @@ This skill is for small disposable utilities. Prefer a simple command line inter
 
 - For new scripts, start from `references/template.sh`.
 - For option parsing, do not invent a new parser. First simplify the CLI. If flags are still necessary, read `references/option-parsing.md`.
+- For help output patterns beyond the template, read `references/usage-format.md`.
 - `getopts` is forbidden.
 
 ## Core Principles
@@ -99,15 +100,32 @@ Rules:
 
 - The one-line description states what the script does. Do not use marketing words such as `simple`, `easy`, `powerful`, or `fast`.
 - `Usage:` contains only supported invocation forms.
+- Write one supported invocation form per line.
 - Use lowercase placeholders such as `<input>`, `<output>`, and `<dir>`.
+- Use `<name>` for a required value.
+- Use `[<name>]` for an optional value.
 - Use `<file>...` for repeated arguments.
-- Use `[<file>]` for optional arguments.
+- Use `[<file>...]` for zero or more repeated arguments.
+- Use `[--flag]` for an optional boolean flag.
+- Use `--flag <value>` when an option requires a value.
+- Do not use `|`, `{}`, or complex grammar notation in `Usage:`.
 - Use bare words for subcommands, such as `script list <dir>`.
 - `Options:` normally contains only `-h, --help`.
+- In `Options:`, list `-h, --help` first.
+- Prefer long option names. Do not add short aliases except `-h` unless the user asks.
+- Document every accepted option in `Options:`, and do not accept options that are not documented there.
+- Keep the parser order and `Options:` order aligned.
+- Put default values at the end of option descriptions, such as `Default: text.`
+- Put small allowed value sets in the description, such as `Output format: text, json.`
+- In `Arguments:`, document every placeholder from `Usage:` and do not document placeholders that are not in `Usage:`.
+- When an argument is optional, document what happens when it is omitted.
+- When a script has subcommands, document every command from `Usage:` in `Commands:`.
+- `Commands:` explains command names only. Put command arguments in `Arguments:`.
 - `Environment:` documents environment variables, not CLI options.
 - `Examples:` contains 1 to 3 representative successful examples.
 - Examples must be copyable commands.
 - Do not include `--help` as an example.
+- Do not introduce behavior in `Examples:` that is not already documented in `Usage:`, `Arguments:`, `Options:`, `Commands:`, or `Environment:`.
 - End descriptions with periods.
 - Keep item descriptions to one line; if they need wrapping, simplify the text.
 - Use 2 spaces of indentation for item lines.
