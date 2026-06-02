@@ -1,6 +1,6 @@
 ---
 name: japanese-doc-review
-description: 日本語ドキュメントのレビュー用スキル。レビュー、校正、問題点の指摘、作成済み本文の見直しを求められた場合に使う。セルフレビューと呼ばれる依頼も、具体的な本文がある場合は通常のレビューとして扱う。
+description: Use when the user asks to review, proofread, or point out problems in concrete Japanese document text, an existing file, or an already-written draft such as README, design notes, specs, procedures, or reports. Trigger on Japanese requests like「レビューして」「校正して」「問題点を指摘して」「セルフレビューして」when a specific review target exists, even when this skill is not named. Do NOT invoke for drafting, summarizing, translation, abstract writing advice, or direct rewrite/edit requests like「改善して」「自然にして」unless the user asks for review findings or problem identification.
 ---
 
 # japanese-doc-review
