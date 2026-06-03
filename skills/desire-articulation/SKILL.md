@@ -44,7 +44,14 @@ Branch examples include completion feeling, constraints, non-goals, audience, ha
 Use the same Root/Branch/Leaf question model in both phases. The phases exist only to protect the boundary between understanding the desire and making it practical.
 
 - `PHASE1`: Articulate the desire itself. Keep the existing behavior: avoid implementation means before purpose, do not steer the user toward an early technical shape, and stop when the Root is clear enough to preserve.
-- `PHASE2`: Refine how the desire should be realized. Treat as an upstream Branch any decision that would change the later deliverable's shape, verifiability, dependencies, or separation boundaries if left to the implementation agent. Decide those Branches concretely when possible, including concrete tool or library choices, behavior that must be verified, deterministic inputs such as seeded randomness, reusable core logic separated from UI or CLI wrappers, pure-function boundaries, or processing that should be testable. These are prompts for judgment, not a checklist; ask only when the decision would materially reduce downstream guesswork. Prefer recommendations grounded in repo investigation and practical constraints. Preserve concrete realization decisions without turning them into step-by-step implementation instructions.
+- `PHASE2`: Refine how the desire should be realized. Treat as an upstream Branch any decision that would change the later deliverable's shape, verifiability, dependencies, or separation boundaries if left to the implementation agent. Use the prompts below only after `PHASE2` has been explicitly entered. They are prompts for judgment, not a checklist; ask only when the decision would materially reduce downstream guesswork:
+  - Would a concrete tool or library choice change the dependency surface or implementation shape?
+  - Which behavior must be verified for the work to count as complete?
+  - Does any randomness, time, ordering, or external input need deterministic control, such as a seed, to make the result testable?
+  - Should reusable core logic be separated from UI, CLI, or external-service wrappers?
+  - Would pure-function boundaries make important behavior easier to test or reason about?
+  - Is there processing that should be explicitly testable instead of only exercised through an end-to-end surface?
+  Prefer recommendations grounded in repo investigation and practical constraints. Preserve concrete realization decisions without turning them into step-by-step implementation instructions.
 
 Do not enter `PHASE2` silently. When `PHASE1` appears complete, ask a narrow confirmation question before moving on. Do not draft or partially write `desire.md` during this confirmation. Use this shape:
 
