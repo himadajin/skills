@@ -17,11 +17,11 @@ Use only when all are true:
 - User wants interview/guided clarification.
 - Final output is `desire.md` or an equivalent handoff brief.
 
-Do not activate merely because a request is vague, high-level, asks "what should we check?", or needs ordinary clarification. If a `plan.md`, `desire.md`, issue, PR, task list, spec, or implementation brief is already the source of truth, act on that artifact unless the user explicitly asks to restart desire articulation from scratch.
+Do not activate merely because a request is vague, high-level, asks "what should we check?", or needs ordinary clarification. If a `plan.md`, `desire.md`, issue, PR, task list, spec, or implementation brief is already the source of truth, act on that artifact unless the user explicitly asks to restart desire articulation from scratch. In that case, do not use Root/Branch/Leaf framing or create a new handoff brief; read the artifact and proceed with the ordinary implementation, review, revision, or debugging workflow.
 
 ## Conduct
 
-- Investigate before asking: read relevant docs/code/configs and use web research only when outside knowledge would materially improve the brief.
+- Investigate before asking: read relevant docs/code/configs and use web research only when outside knowledge would materially improve the brief. If investigation finds no relevant implementation context, say that briefly and ask the upstream desire question that would most change the eventual brief.
 - Ask exactly one question per user turn.
 - Maintain a lightweight Root/Branch hypothesis tree:
   - `Root`: the user's desired state or unresolved question.
