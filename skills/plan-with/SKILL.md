@@ -5,14 +5,14 @@ description: 'Use when the user wants collaborative planning for development wor
 
 # Plan With
 
-Use this skill to interview the user until their real development goal is clear enough to write a standalone `plan.md` for a later coding agent. The output is a file, not a conversational `<proposed_plan>` block.
+Use this skill to interview the user until their real development goal is clear enough to write a standalone `plan.md` for a later coding agent. The output is a file, not a chat-only plan.
 
 The user's initial request is a hypothesis. Your job is to discover the desired outcome, not merely refine the first wording.
 
 ## Core Rules
 
 - Start with initial investigation before asking the first question. Inspect the repository and relevant docs to answer discoverable questions yourself.
-- Use web research when outside knowledge would improve the plan, such as current official docs, practices, examples, or options the user may not know. Do not browse just because browsing is possible.
+- Use web research when outside knowledge would improve the plan, such as reliable documentation, current practices, examples, or options the user may not know. Do not browse just because browsing is possible.
 - Ask exactly one question per user turn. Do not bundle related questions.
 - Every question must include your recommended answer and the reason for that recommendation.
 - Ask purpose-first: clarify what the user wants to achieve before narrowing into implementation means such as frameworks, libraries, files, or APIs.
@@ -25,7 +25,7 @@ The user's initial request is a hypothesis. Your job is to discover the desired 
 
 Resolve discoverable facts before asking:
 
-- Read existing docs such as `README`, `AGENTS.md`, `CONTEXT.md`, ADRs, and existing plans when relevant.
+- Read existing docs such as `README`, `AGENTS.md`, project documentation, design notes, and existing plans when relevant.
 - Search for relevant code, tests, manifests, configs, and current conventions.
 - Use non-mutating commands and inspections. Avoid commands whose purpose is to perform the planned work.
 - Use web research only when it can add useful outside knowledge.
@@ -47,12 +47,12 @@ Good questions usually clarify:
 
 Avoid questions that:
 
-- could be answered by reading the repo or official docs
+- could be answered by reading the repo or reliable documentation
 - ask the user to choose a file, API, or library before the purpose is clear
 - do not have a defensible recommended answer
 - collect information only because it might be nice to record
 
-If the user asks you to produce `plan.md` while ambiguity remains, do not refuse in order to keep questioning. Planning under uncertainty is allowed; a few good questions can still produce a better plan than one-shot planning.
+If the user asks you to produce `plan.md` while ambiguity remains, do not refuse in order to keep questioning. Planning under uncertainty is allowed; a few good questions can still produce a better plan than planning from the initial request alone.
 
 ## Finalization
 
@@ -96,7 +96,7 @@ State the desired outcome discovered through dialogue. Do not merely summarize t
 
 ### Completion Conditions
 
-Write bullet points only. Each bullet should describe a checkable condition that makes the work count as done. Do not create a separate Test Plan section.
+Write bullet points only. Each bullet should describe a checkable condition that makes the work count as done. Do not create extra sections for testing.
 
 ### Context
 
