@@ -1,12 +1,12 @@
 ---
 name: desire-articulation
 description: >-
-  Use only for an explicit interview-style clarification phase for a software development task whose output is a standalone desire.md or equivalent handoff brief for a later coding agent. Trigger when the user asks to be questioned, articulate an unclear development desire, or create/capture a desire file before implementation, and the request implies both unresolved intent and a written handoff artifact. Do NOT use for ordinary clarification, planning, plan.md creation, code review, issue execution, debugging, prompt writing, prose editing, brainstorming, non-development goals, or when an existing plan/desire/spec/issue/task list should be implemented, followed, reviewed, revised, or continued.
+  Use only for an explicit interview-style clarification phase for a software development task whose output is a standalone desire.md or equivalent handoff brief for a later coding agent. Trigger when the user asks to be questioned, articulate an unclear development desire, or create/capture a desire file before implementation, and the request implies both unresolved intent and a written handoff artifact. First articulate the underlying desire, then refine how it should be realized without prescribing step-by-step implementation. Do NOT use for ordinary clarification, planning, plan.md creation, code review, issue execution, debugging, prompt writing, prose editing, brainstorming, non-development goals, or when an existing plan/desire/spec/issue/task list should be implemented, followed, reviewed, revised, or continued.
 ---
 
 # Desire Articulation
 
-Interview the user until their underlying development desire is clear enough to write a standalone `desire.md` for a later coding agent. Treat the initial request as a hypothesis; discover the desired state or unresolved question behind it.
+Interview the user until their underlying development desire and its practical realization are clear enough to write a standalone `desire.md` for a later coding agent. Treat the initial request as a hypothesis; first discover the desired state or unresolved question behind it, then refine how that desire should be made real without locking in unnecessary step-by-step implementation.
 
 ## Activation Gate
 
@@ -39,9 +39,20 @@ When asking after investigation, first share one or two short sentences with the
 
 Branch examples include completion feeling, constraints, non-goals, audience, handoff boundaries, and direction-changing tradeoffs. These are examples, not a checklist; ask about them only when they could change the Root or the final brief. Avoid questions answerable from the repo/docs, implementation means before purpose, or low-value facts that are merely nice to record.
 
+## Phases
+
+Use the same Root/Branch/Leaf question model in both phases. The phases exist only to protect the boundary between understanding the desire and making it practical.
+
+- `PHASE1`: Articulate the desire itself. Keep the existing behavior: avoid implementation means before purpose, do not steer the user toward an early technical shape, and stop when the Root is clear enough to preserve.
+- `PHASE2`: Refine how the desire should be realized. Ask upstream Branch questions about what would make the work complete, which tools or libraries fit the user's environment, the minimum quality and testing expectations, architectural boundaries, and implementation directions to avoid. Prefer recommendations grounded in repo investigation and practical constraints. Decide tools and goals when they matter, but do not prescribe detailed implementation steps.
+
+Do not enter `PHASE2` silently. When `PHASE1` appears complete, ask a narrow confirmation question before moving on. Do not draft or partially write `desire.md` during this confirmation. Use this shape:
+
+> I think PHASE1 is ready to close: the desire itself is clear enough to preserve without turning it into implementation detail yet. My recommendation is to move to PHASE2 because the remaining important questions are about how to make this real. Should we continue refining the desire, or move to PHASE2?
+
 ## Finalization
 
-Stop asking when the Root is articulated, no unresolved upstream Branch remains that would distort the Root or final brief, and the user's own questions about what they want are resolved enough to proceed.
+Stop asking when the Root is articulated, no unresolved upstream Branch remains that would distort the Root or final brief, PHASE2 is complete enough to make the desire practical, and the user's own questions about what they want are resolved enough to proceed.
 
 Before writing the file, ask one narrow confirmation question so the user controls when refinement stops, for example:
 
