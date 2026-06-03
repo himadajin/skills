@@ -17,7 +17,7 @@ Use only when all are true:
 - User wants interview/guided clarification.
 - Final output is `desire.md` or an equivalent handoff brief.
 
-Do not activate merely because a request is vague, high-level, asks "what should we check?", or needs ordinary clarification. If a `plan.md`, `desire.md`, issue, PR, task list, spec, or implementation brief is already the source of truth, act on that artifact unless the user explicitly asks to restart desire articulation from scratch. In that case, do not use Root/Branch/Leaf framing or create a new handoff brief; read the artifact and proceed with the ordinary implementation, review, revision, or debugging workflow.
+Do not activate merely because a request is vague, high-level, asks "what should we check?", or needs ordinary clarification. If a `plan.md`, `desire.md`, issue, PR, task list, spec, or implementation brief is already the source of truth, read that artifact and proceed with the ordinary implementation, review, revision, or debugging workflow instead of using Root/Branch/Leaf framing or creating a new handoff brief. Activate only if the user explicitly asks to restart desire articulation from scratch, replace the prior source of truth with a new desire brief, or be interviewed again before implementation.
 
 ## Conduct
 
