@@ -1,7 +1,7 @@
 ---
 name: japanese-doc-review
 description: >-
-  Use when the user asks for Japanese document review, proofreading, or problem identification: 「レビューして」「校正して」「問題点を指摘して」「セルフレビューして」, including scoped review phrases like「文法だけ」「誤字脱字だけ」「表記揺れだけ」「総合」「全観点」. Trigger on pasted text, existing files, or agent-written drafts such as README, design notes, specs, procedures, and reports, and also on review/proofreading intent without a target so the skill can ask for 対象本文/対象ファイル/作成済みドラフト. Do NOT invoke for drafting, summarizing, translation, abstract writing advice, or direct rewrite/edit requests like「改善して」「自然にして」unless the user asks for review findings or problem identification.
+  Use when the user asks to review, proofread, self-review, check prose quality, or identify problems in Japanese prose/documents: 「レビューして」「校正して」「問題点を指摘して」「セルフレビューして」. Trigger for pasted text, files, agent-written drafts, or review intent without a target; also for review-result write/update requests when producing or refreshing findings for a known target or prior review. Treat 構成, 文法, 誤字脱字, 表記揺れ, 文体, 総合, 全観点 and 「確認して」/「チェックして」 as triggers only with Japanese prose/document quality, review scope, or problem-identification intent. Do NOT invoke for code/PR review, drafting, summarizing, translation, abstract advice, or direct rewrites like「改善して」「自然にして」unless review findings/problem identification are requested.
 ---
 
 # japanese-doc-review
@@ -12,6 +12,7 @@ description: >-
 ## 使う場面
 
 具体的なレビュー対象本文に対するレビュー要求が明示されている場合に使う。
+レビュー結果のファイル書き出し、または既存レビュー結果ファイルの更新を求められている場合も、レビュー対象本文があるならレビュー要求として扱う。
 
 レビュー対象本文とは、次のいずれかである。
 
