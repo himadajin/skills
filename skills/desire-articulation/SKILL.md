@@ -33,7 +33,7 @@ Do not activate merely because a request is vague, high-level, asks "what should
 - Respect explicit constraints; if a constraint conflicts with the Root, ask whether it is mandatory.
 - Do not implement the articulated work.
 - Do not maintain a separate memo or update `desire.md` incrementally. Write the final file once.
-- If the user asks to write `desire.md` while ambiguity remains, allow an imperfect brief instead of forcing more questions.
+- If the user asks to write `desire.md` while ambiguity remains, allow an imperfect brief instead of forcing more questions. Preserve remaining decision-relevant unknowns in `Context`, do not invent specifics, and use `Direction` to guide the later agent away from premature implementation commitments.
 
 When asking after investigation, first share one or two short sentences with the useful finding that frames the question. Do not dump research notes.
 
