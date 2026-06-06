@@ -58,9 +58,13 @@ Load only the phase file and matching format file needed for the current intervi
 
 Stop asking only when the active phase's rule file says the interview is ready to close and the user's own questions about what they want are resolved enough to proceed.
 
-Before writing the active file, ask one narrow confirmation question so the user controls when refinement stops. For example:
+Before writing the active file, ask one narrow confirmation question in the user's conversation language so the user controls when refinement stops. Do not copy a fixed template verbatim.
 
-> I think this is ready to turn into `[desire.md/design.md]`: [brief direction]. My recommendation is to write it now because [reason]. Should I create the file?
+The question must briefly convey:
+
+- The active file is ready to be written, with a brief direction.
+- Writing it now is the recommended next step, with a concise reason.
+- The user can choose either to continue refining or to write the active file now.
 
 If the user confirms or otherwise asks you to proceed, write the file.
 

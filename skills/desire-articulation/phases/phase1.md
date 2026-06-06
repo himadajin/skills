@@ -14,8 +14,4 @@ Articulate the desire itself before refining how it should be realized.
 
 Close this phase only when the desire itself is clear enough to preserve without turning it into implementation detail.
 
-Before writing `desire.md`, ask one narrow confirmation question. The question must let the user choose whether to continue refining the desire or write an imperfect `desire.md` now.
-
-Use this shape:
-
-> I think PHASE1 is ready to close: the desire itself is clear enough to preserve without turning it into implementation detail yet. My recommendation is to write `desire.md` now because [reason]. Should we continue refining the desire, or write the desire file now?
+Before writing `desire.md`, apply the Finalization rule. The choice must be between continuing to refine the desire and writing `desire.md` now.

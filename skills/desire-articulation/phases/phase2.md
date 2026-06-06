@@ -27,8 +27,4 @@ These prompts are not a checklist. Use them only when they reveal the most upstr
 
 Close this phase only when `design.md` would be self-contained enough for a later coding agent to act without guessing about shape, verification, dependencies, or boundaries, or when remaining unknowns are explicitly preserved as decision-relevant context.
 
-Before writing `design.md`, ask one narrow confirmation question. The question must let the user choose whether to continue refining the handoff or write the file now.
-
-Use this shape:
-
-> I think this is ready to turn into `design.md`: [brief direction]. My recommendation is to write it now because [reason]. Should we continue refining the handoff, or write the design file now?
+Before writing `design.md`, apply the Finalization rule. The choice must be between continuing to refine the handoff and writing `design.md` now.
