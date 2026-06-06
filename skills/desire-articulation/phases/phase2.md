@@ -1,6 +1,6 @@
 # PHASE2
 
-Refine an articulated desire into a practical handoff without turning it into step-by-step implementation instructions.
+Refine a written `desire.md` into a practical, self-contained `design.md` without turning it into step-by-step implementation instructions.
 
 ## Judgment
 
@@ -13,20 +13,22 @@ Refine an articulated desire into a practical handoff without turning it into st
 Useful prompts for judgment:
 
 - Would a concrete tool or library choice change the dependency surface or implementation shape?
+- Would an established library, framework, or development environment materially reduce risk compared with leaving the choice to the implementation agent?
 - Which behavior must be verified for the work to count as complete?
 - Does randomness, time, ordering, or external input need deterministic control to make the result testable?
 - Should reusable core logic be separated from UI, CLI, or external-service wrappers?
-- Would pure-function boundaries make important behavior easier to test or reason about?
+- Would Unix-style composition, pure-function boundaries, or explicit separation between logic and presentation make important behavior easier to test or reason about?
 - Is there processing that should be explicitly testable instead of only exercised through an end-to-end surface?
+- Should formatter, linter, or automated test expectations be part of the handoff for this kind of work?
 
 These prompts are not a checklist. Use them only when they reveal the most upstream unresolved Branch.
 
 ## Closing PHASE2
 
-Close this phase only when the desire is clear enough for a later coding agent to act without guessing about shape, verification, dependencies, or boundaries, or when remaining unknowns are explicitly preserved as decision-relevant context.
+Close this phase only when `design.md` would be self-contained enough for a later coding agent to act without guessing about shape, verification, dependencies, or boundaries, or when remaining unknowns are explicitly preserved as decision-relevant context.
 
-Before writing `desire.md`, ask one narrow confirmation question. The question must let the user choose whether to continue refining the handoff or write the file now.
+Before writing `design.md`, ask one narrow confirmation question. The question must let the user choose whether to continue refining the handoff or write the file now.
 
 Use this shape:
 
-> I think this is ready to turn into `desire.md`: [brief direction]. My recommendation is to write it now because [reason]. Should we continue refining the handoff, or write the desire file now?
+> I think this is ready to turn into `design.md`: [brief direction]. My recommendation is to write it now because [reason]. Should we continue refining the handoff, or write the design file now?
