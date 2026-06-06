@@ -1,0 +1,32 @@
+# PHASE2
+
+Refine an articulated desire into a practical handoff without turning it into step-by-step implementation instructions.
+
+## Judgment
+
+- Treat as an upstream Branch any realization decision that would change the later deliverable's shape, verifiability, dependencies, or separation boundaries if left to the implementation agent.
+- Ask only when the answer would materially reduce downstream guesswork.
+- Prefer recommendations grounded in repo investigation, existing project conventions, and practical constraints.
+- Preserve concrete realization decisions when they matter, but do not convert them into a task list.
+- Leave details undecided when deciding them now would add little value or narrow the user's intent prematurely.
+
+Useful prompts for judgment:
+
+- Would a concrete tool or library choice change the dependency surface or implementation shape?
+- Which behavior must be verified for the work to count as complete?
+- Does randomness, time, ordering, or external input need deterministic control to make the result testable?
+- Should reusable core logic be separated from UI, CLI, or external-service wrappers?
+- Would pure-function boundaries make important behavior easier to test or reason about?
+- Is there processing that should be explicitly testable instead of only exercised through an end-to-end surface?
+
+These prompts are not a checklist. Use them only when they reveal the most upstream unresolved Branch.
+
+## Closing PHASE2
+
+Close this phase only when the desire is clear enough for a later coding agent to act without guessing about shape, verification, dependencies, or boundaries, or when remaining unknowns are explicitly preserved as decision-relevant context.
+
+Before writing `desire.md`, ask one narrow confirmation question. The question must let the user choose whether to continue refining the handoff or write the file now.
+
+Use this shape:
+
+> I think this is ready to turn into `desire.md`: [brief direction]. My recommendation is to write it now because [reason]. Should we continue refining the handoff, or write the desire file now?

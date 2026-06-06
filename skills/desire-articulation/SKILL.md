@@ -1,12 +1,12 @@
 ---
 name: desire-articulation
 description: >-
-  Use only for an explicit interview-style clarification phase for a software development task whose output is a standalone desire.md or equivalent handoff brief for a later coding agent. Trigger when the user asks to be questioned, articulate an unclear development desire, or create/capture a desire file before implementation, and the request implies both unresolved intent and a written handoff artifact. First articulate the underlying desire, then refine how it should be realized without prescribing step-by-step implementation. Do NOT use for ordinary clarification, planning, plan.md creation, code review, issue execution, debugging, prompt writing, prose editing, brainstorming, non-development goals, or when an existing plan/desire/spec/issue/task list should be implemented, followed, reviewed, revised, or continued.
+  Use only for an explicit interview-style clarification phase for a software development task whose output is a standalone desire.md or equivalent handoff brief for a later coding agent. Trigger when the user asks to be questioned, articulate an unclear development desire, create/capture a desire file before implementation, or refine an existing desire.md through an explicit PHASE2 interview. First articulate the underlying desire, then refine how it should be realized without prescribing step-by-step implementation. Do NOT use for ordinary clarification, planning, plan.md creation, code review, issue execution, debugging, prompt writing, prose editing, brainstorming, non-development goals, or when an existing plan/desire/spec/issue/task list should simply be implemented, followed, reviewed, revised, or continued.
 ---
 
 # Desire Articulation
 
-Interview the user until their underlying development desire and its practical realization are clear enough to write a standalone `desire.md` for a later coding agent. Treat the initial request as a hypothesis; first discover the desired state or unresolved question behind it, then refine how that desire should be made real without locking in unnecessary step-by-step implementation.
+Interview the user until their underlying development desire and its practical realization are clear enough to write a standalone `desire.md` for a later coding agent. Treat the initial request as a hypothesis and preserve the user's real intent without locking in unnecessary step-by-step implementation.
 
 ## Activation Gate
 
@@ -17,7 +17,7 @@ Use only when all are true:
 - User wants interview/guided clarification.
 - Final output is `desire.md` or an equivalent handoff brief.
 
-Do not activate merely because a request is vague, high-level, asks "what should we check?", or needs ordinary clarification. If a `plan.md`, `desire.md`, issue, PR, task list, spec, or implementation brief is already the source of truth, read that artifact and proceed with the ordinary implementation, review, revision, or debugging workflow instead of using Root/Branch/Leaf framing or creating a new handoff brief. Activate only if the user explicitly asks to restart desire articulation from scratch, replace the prior source of truth with a new desire brief, or be interviewed again before implementation.
+Do not activate merely because a request is vague, high-level, asks "what should we check?", or needs ordinary clarification. If a `plan.md`, `desire.md`, issue, PR, task list, spec, or implementation brief is already the source of truth, read that artifact and proceed with the ordinary implementation, review, revision, or debugging workflow instead of using Root/Branch/Leaf framing or creating a new handoff brief. Activate only if the user explicitly asks to restart desire articulation from scratch, replace the prior source of truth with a new desire brief, be interviewed again before implementation, or refine a provided `desire.md` from `PHASE2`.
 
 ## Conduct
 
@@ -34,6 +34,7 @@ Do not activate merely because a request is vague, high-level, asks "what should
 - Do not implement the articulated work.
 - Do not maintain a separate memo or update `desire.md` incrementally. Write the final file once.
 - If the user asks to write `desire.md` while ambiguity remains, allow an imperfect brief instead of forcing more questions. Preserve remaining decision-relevant unknowns in `Context`, do not invent specifics, and use `Direction` to guide the later agent away from premature implementation commitments.
+- Before stopping, switching phase, or writing the file, ask a narrow confirmation question so the user explicitly chooses whether to continue or finish.
 
 When asking after investigation, first share one or two short sentences with the useful finding that frames the question. Do not dump research notes.
 
@@ -43,25 +44,20 @@ Branch examples include completion feeling, constraints, non-goals, audience, ha
 
 Use the same Root/Branch/Leaf question model in both phases. The phases exist only to protect the boundary between understanding the desire and making it practical.
 
-- `PHASE1`: Articulate the desire itself. Keep the existing behavior: avoid implementation means before purpose, do not steer the user toward an early technical shape, and stop when the Root is clear enough to preserve.
-- `PHASE2`: Refine how the desire should be realized. Treat as an upstream Branch any decision that would change the later deliverable's shape, verifiability, dependencies, or separation boundaries if left to the implementation agent. Use the prompts below only after `PHASE2` has been explicitly entered. They are prompts for judgment, not a checklist; ask only when the decision would materially reduce downstream guesswork:
-  - Would a concrete tool or library choice change the dependency surface or implementation shape?
-  - Which behavior must be verified for the work to count as complete?
-  - Does any randomness, time, ordering, or external input need deterministic control, such as a seed, to make the result testable?
-  - Should reusable core logic be separated from UI, CLI, or external-service wrappers?
-  - Would pure-function boundaries make important behavior easier to test or reason about?
-  - Is there processing that should be explicitly testable instead of only exercised through an end-to-end surface?
-  Prefer recommendations grounded in repo investigation and practical constraints. Preserve concrete realization decisions without turning them into step-by-step implementation instructions.
+- `PHASE1`: articulate the desire itself; follow [phases/phase1.md](phases/phase1.md).
+- `PHASE2`: refine how the desire should be realized; follow [phases/phase2.md](phases/phase2.md).
 
-Do not enter `PHASE2` silently. When `PHASE1` appears complete, ask a narrow confirmation question before moving on. Do not draft or partially write `desire.md` during this confirmation. Use this shape:
+Load only the phase file needed for the current interview:
 
-> I think PHASE1 is ready to close: the desire itself is clear enough to preserve without turning it into implementation detail yet. My recommendation is to move to PHASE2 because the remaining important questions are about how to make this real. Should we continue refining the desire, or move to PHASE2?
+- Start with `phases/phase1.md` by default.
+- Start with `phases/phase2.md` only when the user provides an existing `desire.md` and explicitly asks to begin from `PHASE2`.
+- If the user chooses to continue from `PHASE1` to `PHASE2`, load `phases/phase2.md` then.
 
 ## Finalization
 
-Stop asking when the Root is articulated, no unresolved upstream Branch remains that would distort the Root or final brief, PHASE2 has either decided or explicitly preserved the realization decisions that would otherwise leave the implementation agent guessing about shape, verification, dependencies, or boundaries, and the user's own questions about what they want are resolved enough to proceed.
+Stop asking only when the active phase's rule file says the interview is ready to close and the user's own questions about what they want are resolved enough to proceed.
 
-Before writing the file, ask one narrow confirmation question so the user controls when refinement stops, for example:
+Before writing the file, ask one narrow confirmation question so the user controls when refinement stops. For example:
 
 > I think this is ready to turn into `desire.md`: [brief direction]. My recommendation is to write it now because [reason]. Should I create the desire file?
 
