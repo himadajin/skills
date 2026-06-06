@@ -70,11 +70,11 @@ If the user confirms or otherwise asks you to proceed, write the file.
 
 ## File Path
 
-Use the user-specified path when provided. Otherwise write at the repository root:
+Use the user-specified path when provided. Otherwise write under the repository `docs/` directory. If `docs/` does not exist, create it without asking.
 
-- In PHASE1, use `desire.md` if it does not exist.
-- In PHASE2, use `design.md` if it does not exist.
-- If the target file exists, choose a short, meaningful English kebab-case filename such as `desire-refine-search-ui.md` or `design-refine-search-ui.md`.
+- In PHASE1, use `docs/desire.md` if it does not exist.
+- In PHASE2, use `docs/design.md` if it does not exist.
+- If the target file exists, choose a short, meaningful English kebab-case filename under `docs/`, such as `docs/desire-refine-search-ui.md` or `docs/design-refine-search-ui.md`.
 - Do not ask the user to name the file.
 
 ## File Format
