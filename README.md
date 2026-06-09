@@ -51,8 +51,11 @@ References:
 - [Adding agent skills for GitHub Copilot CLI - GitHub Docs](https://docs.github.com/en/copilot/how-tos/copilot-cli/customize-copilot/add-skills)
 - [Use Agent Skills in VS Code](https://code.visualstudio.com/docs/copilot/customization/agent-skills)
 
-Examples:
+Related repositories:
 
-- [openai/skills: Skills Catalog for Codex | GitHub](https://github.com/openai/skills)
-- [anthropics/skills: Public repository for Agent Skills | GitHub](https://github.com/anthropics/skills)
-- [ComposioHQ/awesome-claude-skills: A curated list of awesome Claude Skills, resources, and tools for customizing Claude AI workflows | GitHub](https://github.com/ComposioHQ/awesome-claude-skills)
+- [anthropics/skills | GitHub](https://github.com/anthropics/skills)
+- [ComposioHQ/awesome-claude-skills | GitHub](https://github.com/ComposioHQ/awesome-claude-skills)
+- [google/skills | GitHub](https://github.com/google/skills)
+- [mattpocock/skills | GitHub](https://github.com/mattpocock/skills)
+- [mizchi/skills | GitHub](https://github.com/mizchi/skills)
+- [openai/skills | GitHub](https://github.com/openai/skills)
