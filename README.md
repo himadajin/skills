@@ -13,13 +13,25 @@ and Claude Code can follow the same directory through a symlink.
 
 Use `~/.agents/skills/` as the real directory, then connect agent-specific locations to it with symlinks where needed:
 
-| Agent                      | Personal skills location                                          | Recommended setup                                                                                  |
-| -------------------------- | ----------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
-| Claude Code                | `~/.claude/skills/`                                               | Symlink `~/.claude/skills` -> `~/.agents/skills`                                                   |
-| Codex                      | `~/.agents/skills/`                                               | Use directly                                                                                       |
-| GitHub Copilot CLI         | `~/.agents/skills/` or `~/.copilot/skills/`                       | Prefer `~/.agents/skills/`; if you also use `~/.copilot/skills/`, symlink it to the same directory |
-| GitHub Copilot cloud agent | `~/.agents/skills/` or `~/.copilot/skills/`                       | Manage shared personal skills in `~/.agents/skills/`                                               |
-| GitHub Copilot in VS Code  | `~/.agents/skills/`, `~/.claude/skills/`, or `~/.copilot/skills/` | Prefer `~/.agents/skills/`; keep the others as symlinks only if needed                             |
+- **Claude Code**
+  - Location: `~/.claude/skills/`
+  - Setup: symlink `~/.claude/skills` -> `~/.agents/skills`
+
+- **Codex**
+  - Location: `~/.agents/skills/`
+  - Setup: use directly
+
+- **GitHub Copilot CLI**
+  - Location: `~/.agents/skills/` or `~/.copilot/skills/`
+  - Setup: prefer `~/.agents/skills/`; if you also use `~/.copilot/skills/`, symlink it to the same directory
+
+- **GitHub Copilot cloud agent**
+  - Location: `~/.agents/skills/` or `~/.copilot/skills/`
+  - Setup: manage shared personal skills in `~/.agents/skills/`
+
+- **GitHub Copilot in VS Code**
+  - Location: `~/.agents/skills/`, `~/.claude/skills/`, or `~/.copilot/skills/`
+  - Setup: prefer `~/.agents/skills/`; keep the others as symlinks only if needed
 
 This keeps shared skills centralized in one place while still matching each agent's discovery rules.
 
@@ -39,8 +51,11 @@ References:
 - [Adding agent skills for GitHub Copilot CLI - GitHub Docs](https://docs.github.com/en/copilot/how-tos/copilot-cli/customize-copilot/add-skills)
 - [Use Agent Skills in VS Code](https://code.visualstudio.com/docs/copilot/customization/agent-skills)
 
-Examples:
+Related repositories:
 
-- [openai/skills: Skills Catalog for Codex | GitHub](https://github.com/openai/skills)
-- [anthropics/skills: Public repository for Agent Skills | GitHub](https://github.com/anthropics/skills)
-- [ComposioHQ/awesome-claude-skills: A curated list of awesome Claude Skills, resources, and tools for customizing Claude AI workflows | GitHub](https://github.com/ComposioHQ/awesome-claude-skills)
+- [anthropics/skills | GitHub](https://github.com/anthropics/skills)
+- [ComposioHQ/awesome-claude-skills | GitHub](https://github.com/ComposioHQ/awesome-claude-skills)
+- [google/skills | GitHub](https://github.com/google/skills)
+- [mattpocock/skills | GitHub](https://github.com/mattpocock/skills)
+- [mizchi/skills | GitHub](https://github.com/mizchi/skills)
+- [openai/skills | GitHub](https://github.com/openai/skills)
