@@ -3,6 +3,9 @@ set -euo pipefail
 
 script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 readonly script_dir
+readonly color_red=$'\033[31m'
+readonly color_cyan=$'\033[36m'
+readonly color_reset=$'\033[0m'
 readonly tool_bin="${TOOL_BIN:-cat}"
 
 # Script interface
@@ -10,16 +13,12 @@ readonly tool_bin="${TOOL_BIN:-cat}"
 usage() {
   local fd=${1:-1}
   local command_name=${0##*/}
-  local red=''
   local cyan=''
-  local yellow=''
   local reset=''
 
   if color_enabled "${fd}"; then
-    red=$'\033[31m'
-    cyan=$'\033[36m'
-    yellow=$'\033[33m'
-    reset=$'\033[0m'
+    cyan=${color_cyan}
+    reset=${color_reset}
   fi
 
   cat >&"${fd}" <<EOF
@@ -49,8 +48,8 @@ die() {
   local reset=''
 
   if color_enabled 2; then
-    red=$'\033[31m'
-    reset=$'\033[0m'
+    red=${color_red}
+    reset=${color_reset}
   fi
 
   printf '%sError:%s %s\n' "${red}" "${reset}" "${message}" >&2

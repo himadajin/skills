@@ -12,6 +12,9 @@ set -euo pipefail
 
 script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 readonly script_dir
+readonly color_red=$'\033[31m'
+readonly color_cyan=$'\033[36m'
+readonly color_reset=$'\033[0m'
 
 # Script interface
 
@@ -44,14 +47,24 @@ Rules:
 
 - Use lowercase `snake_case` for internal variables.
 - Use uppercase names only for environment variables or exported values.
-- Global variables are normally readonly configuration values.
+- Global variables are normally readonly configuration values or constants.
 - Environment overrides map from uppercase environment names to lowercase internal names:
 
 ```bash
 readonly tool_bin="${TOOL_BIN:-tool}"
 ```
 
+- Put stable literal constants that would otherwise clutter functions, including ANSI escape codes, in top-level readonly variables:
+
+```bash
+readonly color_red=$'\033[31m'
+readonly color_cyan=$'\033[36m'
+readonly color_yellow=$'\033[33m'
+readonly color_reset=$'\033[0m'
+```
+
 - Runtime state belongs in `main()` or local function variables.
+- Do not store derived state that depends on arguments, output file descriptors, terminal state, command results, or user input in globals.
 - The only standard mutable global is temporary resource state used by `cleanup()`, such as `tmp_dir=""`.
 - Function-local working variables should normally be `local`.
 - More detailed `local` declaration rules are intentionally not fixed.
@@ -110,7 +123,10 @@ Color is allowed when it improves human-readable output, but it must not break p
 
 - Use `color_enabled()` to check the output file descriptor.
 - Respect `NO_COLOR`.
-- Use only `red`, `cyan`, `yellow`, and `reset`.
+- Use only these color roles: `red`, `cyan`, `yellow`, and `reset`.
+- Define only the color constants used by the script.
+- Keep ANSI escape codes in readonly globals such as `color_red`; use local `red`, `cyan`, `yellow`, and `reset` variables only for fd-gated output inside functions.
+- Do not store enabled color state in globals because color depends on the output file descriptor and `NO_COLOR` at call time.
 - Do not use bold.
 - Do not add dedicated color helper functions beyond `color_enabled()`.
 - `red`: `Error:` prefix only.
