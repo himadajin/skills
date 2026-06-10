@@ -15,7 +15,7 @@ Read this before creating scripts, reviewing runtime behavior, or changing valid
 
 - `0`: success.
 - `1`: general runtime error.
-- `2`: usage error, such as missing arguments, unknown commands, or invalid argument values.
+- `2`: usage error, such as unknown commands, unknown options, invalid argument values, or missing required arguments after a command, option, or mode has been selected.
 - `127`: required command not found.
 
 ## Error Handling
@@ -25,6 +25,7 @@ Read this before creating scripts, reviewing runtime behavior, or changing valid
 - `die()` prints `Error:` to stderr and exits.
 - Error messages must say what is wrong and what the user should do next.
 - Do not automatically print usage on errors.
+- Zero arguments with no natural action are not an error; show `usage()` and exit `0` from `main()`.
 - Do not hide failing external commands behind unclear command substitutions.
 - For important command substitutions, add context:
 
@@ -34,7 +35,7 @@ if ! output=$(some_command); then
 fi
 ```
 
-- Do not use `local var=$(command)`. Declare and assign separately when command status matters.
+- Do not combine important command substitutions with declaration builtins such as `local`, `readonly`, `export`, or `declare`; declare and assign separately when command status matters.
 
 ## Validation
 
@@ -48,7 +49,8 @@ Use `validate()` for:
 - Output destination sanity checks when needed.
 - Preconditions for destructive operations.
 
-User-supplied precondition failures, such as missing arguments, invalid argument values, and missing input paths, are usage errors and should exit with code `2`.
+User-supplied precondition failures, such as missing required arguments after a command, option, or mode has been selected, invalid argument values, and missing input paths, are usage errors and should exit with code `2`.
+Handle zero arguments before `validate()` when the script has no natural zero-argument action.
 
 Missing commands should exit with code `127`:
 

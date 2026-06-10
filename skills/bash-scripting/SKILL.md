@@ -16,9 +16,9 @@ Use this skill for Bash scripts that should be small, predictable, and composabl
 - Short `sed`, `awk`, and `jq` expressions passed as CLI arguments are allowed.
 - Start new scripts from `references/template.sh`.
 - Keep the template structure unless the user asks for a smaller final script.
-- `usage()`, `die()`, `color_enabled()`, `validate()`, `main()`, and `main "$@"` are required.
+- `usage()`, `die()`, `validate()`, `main()`, and `main "$@"` are required.
 - Add `tmp_dir`, `cleanup()`, and `trap cleanup EXIT` only when the script creates temporary files or directories; do not create dummy temporary resources just to preserve the template.
-- Additional task functions go under `# Task functions`, ordered by the order in which `main()` calls them.
+- Task functions and `main()` go under `# = Script logic =`; task functions come before `main()` and are ordered by the order in which `main()` calls them.
 - Follow UNIX philosophy: write the primary result to stdout, and write errors, diagnostics, warnings, and optional verbose output to stderr.
 - Do not print success chatter such as `Done`, `Success`, or `Generated ...`.
 - Do not add `--verbose` by default. Add it only when the user asks.
@@ -26,6 +26,7 @@ Use this skill for Bash scripts that should be small, predictable, and composabl
 - Do not color machine-readable stdout.
 - `usage()` is required, English-only, ASCII-only, and documents the exact public interface.
 - `-h, --help` is required.
+- Show usage and exit `0` for `-h`, `--help`, and zero arguments when the script has no natural zero-argument action.
 - Do not automatically print usage on errors. Error messages must say what is wrong and what the user should do next.
 - Default CLI design uses no flags. Use positional arguments for single-purpose scripts and subcommands for multiple modes.
 - Use flags only when positional arguments and subcommands make the interface worse.

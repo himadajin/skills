@@ -28,6 +28,10 @@ main() {
       usage
       exit 0
       ;;
+    "")
+      usage
+      exit 0
+      ;;
     --json)
       mode='json'
       shift
@@ -53,6 +57,11 @@ main() {
   local format='text'
   local verbose=0
   local args=()
+
+  if [[ $# -eq 0 ]]; then
+    usage
+    exit 0
+  fi
 
   while (($# > 0)); do
     case "$1" in

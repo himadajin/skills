@@ -6,6 +6,13 @@ Do not start with flags. Do not read `advanced-option-parsing.md` during first-p
 
 ## Decision Order
 
+First choose the zero-argument behavior:
+
+- If the script has a natural zero-argument action, implement that action.
+- If the script has no useful zero-argument action, show `usage()` and exit `0`.
+
+This is part of the interface shape, not an error-handling special case.
+
 Stop at the first shape that fits the task:
 
 1. Filter: read stdin and write stdout.
@@ -55,6 +62,10 @@ main() {
       usage
       exit 0
       ;;
+    "")
+      usage
+      exit 0
+      ;;
     list)
       shift
       validate_list "$@"
@@ -64,9 +75,6 @@ main() {
       shift
       validate_show "$@"
       show_item "$@"
-      ;;
-    "")
-      die "missing command; use --help to see available commands" 2
       ;;
     -*)
       die "unknown option: $1; use --help to see available options" 2
@@ -100,12 +108,12 @@ Document environment variables in `Environment:`, not in `Options:`.
 
 ## Usage Errors
 
-Unknown commands, unknown options, missing arguments, and invalid argument values are usage errors and exit with code `2`.
+Unknown commands, unknown options, invalid argument values, and missing required arguments after a command, option, or mode has been selected are usage errors and exit with code `2`.
 
 Do not automatically print usage on errors. Tell the user what is wrong and how to proceed:
 
 ```bash
-die "missing input file; pass <input> or use --help for usage" 2
+die "missing input file for convert; pass <input> or use --help for usage" 2
 die "unknown command: $1; use --help to see available commands" 2
 ```
 

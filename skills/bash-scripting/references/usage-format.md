@@ -72,6 +72,14 @@ Notation:
 
 Do not use `|`, `{}`, nested option groups, or EBNF-style grammar. If the notation needs that, redesign the CLI.
 
+## Zero Arguments
+
+Choose the zero-argument behavior before adding notation.
+
+- If zero arguments perform a real action, include that invocation form in `Usage:`.
+- If zero arguments only show help because no useful action exists, do not add a separate `Usage:` line for it.
+- Do not include help-only invocations in `Examples:`.
+
 ## Options
 
 `Options:` normally contains only `-h, --help`.
