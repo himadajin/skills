@@ -26,6 +26,7 @@ Use this skill for Bash scripts that should be small, predictable, and composabl
 - Do not color machine-readable stdout.
 - `usage()` is required, English-only, ASCII-only, and documents the exact public interface.
 - `-h, --help` is required.
+- Show usage and exit `0` for `-h`, `--help`, and zero arguments when the script has no natural zero-argument action.
 - Do not automatically print usage on errors. Error messages must say what is wrong and what the user should do next.
 - Default CLI design uses no flags. Use positional arguments for single-purpose scripts and subcommands for multiple modes.
 - Use flags only when positional arguments and subcommands make the interface worse.

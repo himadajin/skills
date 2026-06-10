@@ -2,6 +2,7 @@
 set -euo pipefail
 
 script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck disable=SC2034
 readonly script_dir
 readonly color_red=$'\033[31m'
 readonly color_cyan=$'\033[36m'
@@ -77,6 +78,11 @@ convert_file() {
 
 main() {
   if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
+    usage
+    exit 0
+  fi
+
+  if [[ $# -eq 0 ]]; then
     usage
     exit 0
   fi
