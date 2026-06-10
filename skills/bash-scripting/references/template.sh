@@ -9,7 +9,6 @@ readonly color_reset=$'\033[0m'
 readonly tool_bin="${TOOL_BIN:-cat}"
 
 # Script interface
-
 usage() {
   local fd=${1:-1}
   local command_name=${0##*/}
@@ -68,15 +67,12 @@ validate() {
   [[ -f "$1" ]] || die "input file not found: $1; pass an existing file" 2
 }
 
-# Task functions
-
+# Main logic
 convert_file() {
   local input=$1
 
   "${tool_bin}" "${input}"
 }
-
-# Entry point
 
 main() {
   if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
