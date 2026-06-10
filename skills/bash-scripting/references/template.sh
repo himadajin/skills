@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# = Script setup =
 script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck disable=SC2034
 readonly script_dir
@@ -26,8 +27,7 @@ fi
 
 readonly help_cyan help_reset error_red error_reset
 
-# Script interface
-
+# = Script interface =
 usage() {
   local command_name=${0##*/}
 
@@ -66,15 +66,12 @@ validate() {
   [[ -f "$1" ]] || die "input file not found: $1; pass an existing file" 2
 }
 
-# Task functions
-
+# = Script logic =
 convert_file() {
   local input=$1
 
   "${tool_bin}" "${input}"
 }
-
-# Entry point
 
 main() {
   if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then

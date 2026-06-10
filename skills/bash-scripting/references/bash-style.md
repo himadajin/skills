@@ -10,6 +10,7 @@ Keep this order:
 #!/usr/bin/env bash
 set -euo pipefail
 
+# = Script setup =
 script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck disable=SC2034
 readonly script_dir
@@ -35,17 +36,13 @@ fi
 
 readonly help_cyan help_reset error_red error_reset
 
-# Script interface
-
+# = Script interface =
 usage() { ... }
 die() { ... }
 validate() { ... }
 
-# Task functions
-
+# = Script logic =
 task_function() { ... }
-
-# Entry point
 
 main() { ... }
 
@@ -55,8 +52,9 @@ main "$@"
 Rules:
 
 - Do not place task-specific functions between `usage()`, `die()`, `validate()`, and `cleanup()` when `cleanup()` is present.
-- `# Task functions` may be removed when there are no task-specific functions.
-- Order task-specific functions by the order in which `main()` calls them.
+- Keep exactly these top-level section comments: `# = Script setup =`, `# = Script interface =`, and `# = Script logic =`.
+- Do not leave a blank line between a section comment and the first line in that section.
+- Put task-specific functions and `main()` in `# = Script logic =`; order task-specific functions by the order in which `main()` calls them, then define `main()`.
 - Keep `script_dir` and help/error color support in the template unless the user explicitly asks to remove them.
 - Add `tmp_dir`, `cleanup()`, and `trap cleanup EXIT` together only when the script creates temporary files or directories.
 - Do not create a dummy temporary directory just to keep `cleanup()` or `trap cleanup EXIT` in the script.
@@ -152,7 +150,7 @@ Color is included to make help and errors quick to scan, not as a general output
 
 ## Comments
 
-- Keep section comments: `# Script interface`, `# Task functions`, and `# Entry point`.
+- Keep only the standard section comments: `# = Script setup =`, `# = Script interface =`, and `# = Script logic =`.
 - Do not add line-by-line explanation comments.
 - Use `usage()` to document the interface instead of comments.
 - Add comments only to explain non-obvious reasons, not what the code already says.

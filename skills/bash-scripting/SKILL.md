@@ -18,7 +18,7 @@ Use this skill for Bash scripts that should be small, predictable, and composabl
 - Keep the template structure unless the user asks for a smaller final script.
 - `usage()`, `die()`, `validate()`, `main()`, and `main "$@"` are required.
 - Add `tmp_dir`, `cleanup()`, and `trap cleanup EXIT` only when the script creates temporary files or directories; do not create dummy temporary resources just to preserve the template.
-- Additional task functions go under `# Task functions`, ordered by the order in which `main()` calls them.
+- Task functions and `main()` go under `# = Script logic =`; task functions come before `main()` and are ordered by the order in which `main()` calls them.
 - Follow UNIX philosophy: write the primary result to stdout, and write errors, diagnostics, warnings, and optional verbose output to stderr.
 - Do not print success chatter such as `Done`, `Success`, or `Generated ...`.
 - Do not add `--verbose` by default. Add it only when the user asks.
