@@ -11,9 +11,6 @@ Keep this order:
 set -euo pipefail
 
 # = Script setup =
-script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
-# shellcheck disable=SC2034
-readonly script_dir
 readonly color_red=$'\033[31m'
 readonly color_cyan=$'\033[36m'
 readonly color_reset=$'\033[0m'
@@ -55,7 +52,8 @@ Rules:
 - Keep exactly these top-level section comments: `# = Script setup =`, `# = Script interface =`, and `# = Script logic =`.
 - Do not leave a blank line between a section comment and the first line in that section.
 - Put task-specific functions and `main()` in `# = Script logic =`; order task-specific functions by the order in which `main()` calls them, then define `main()`.
-- Keep `script_dir` and help/error color support in the template unless the user explicitly asks to remove them.
+- Keep help/error color support in the template unless the user explicitly asks to remove it.
+- Add `script_dir` in `# = Script setup =` only when the script reads files that live next to the script.
 - Add `tmp_dir`, `cleanup()`, and `trap cleanup EXIT` together only when the script creates temporary files or directories.
 - Do not create a dummy temporary directory just to keep `cleanup()` or `trap cleanup EXIT` in the script.
 
@@ -68,6 +66,14 @@ Rules:
 
 ```bash
 readonly tool_bin="${TOOL_BIN:-tool}"
+```
+
+- Literal constants and simple environment defaults may be initialized directly with `readonly`.
+- When a readonly value comes from an important command substitution, assign it first and mark it readonly after so command failure is not masked:
+
+```bash
+script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+readonly script_dir
 ```
 
 - Put stable literal constants that would otherwise clutter functions, including ANSI escape codes, in top-level readonly variables:

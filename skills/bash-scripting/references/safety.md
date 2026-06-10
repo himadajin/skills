@@ -35,7 +35,7 @@ if ! output=$(some_command); then
 fi
 ```
 
-- Do not use `local var=$(command)`. Declare and assign separately when command status matters.
+- Do not combine important command substitutions with declaration builtins such as `local`, `readonly`, `export`, or `declare`; declare and assign separately when command status matters.
 
 ## Validation
 
