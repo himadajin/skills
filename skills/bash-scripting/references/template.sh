@@ -8,34 +8,44 @@ readonly color_cyan=$'\033[36m'
 readonly color_reset=$'\033[0m'
 readonly tool_bin="${TOOL_BIN:-cat}"
 
+help_cyan=''
+help_reset=''
+error_red=''
+error_reset=''
+
+if [[ -t 1 && -z "${NO_COLOR:-}" ]]; then
+  help_cyan=${color_cyan}
+  help_reset=${color_reset}
+fi
+
+if [[ -t 2 && -z "${NO_COLOR:-}" ]]; then
+  error_red=${color_red}
+  error_reset=${color_reset}
+fi
+
+readonly help_cyan help_reset error_red error_reset
+
 # Script interface
+
 usage() {
-  local fd=${1:-1}
   local command_name=${0##*/}
-  local cyan=''
-  local reset=''
 
-  if color_enabled "${fd}"; then
-    cyan=${color_cyan}
-    reset=${color_reset}
-  fi
-
-  cat >&"${fd}" <<EOF
+  cat <<EOF
 Process an input file and write the result to stdout.
 
-${cyan}Usage:${reset}
+${help_cyan}Usage:${help_reset}
   ${command_name} <input>
 
-${cyan}Arguments:${reset}
-  ${cyan}<input>${reset}  Input file to process.
+${help_cyan}Arguments:${help_reset}
+  ${help_cyan}<input>${help_reset}  Input file to process.
 
-${cyan}Options:${reset}
-  ${cyan}-h, --help${reset}  Show this help message.
+${help_cyan}Options:${help_reset}
+  ${help_cyan}-h, --help${help_reset}  Show this help message.
 
-${cyan}Environment:${reset}
-  ${cyan}TOOL_BIN${reset}  Command used to process the input. Default: cat
+${help_cyan}Environment:${help_reset}
+  ${help_cyan}TOOL_BIN${help_reset}  Command used to process the input. Default: cat
 
-${cyan}Examples:${reset}
+${help_cyan}Examples:${help_reset}
   ${command_name} input.txt > output.txt
 EOF
 }
@@ -43,21 +53,9 @@ EOF
 die() {
   local message=$1
   local code=${2:-1}
-  local red=''
-  local reset=''
 
-  if color_enabled 2; then
-    red=${color_red}
-    reset=${color_reset}
-  fi
-
-  printf '%sError:%s %s\n' "${red}" "${reset}" "${message}" >&2
+  printf '%sError:%s %s\n' "${error_red}" "${error_reset}" "${message}" >&2
   exit "${code}"
-}
-
-color_enabled() {
-  local fd=${1:-1}
-  [[ -t "${fd}" && -z "${NO_COLOR:-}" ]]
 }
 
 validate() {
@@ -67,12 +65,15 @@ validate() {
   [[ -f "$1" ]] || die "input file not found: $1; pass an existing file" 2
 }
 
-# Main logic
+# Task functions
+
 convert_file() {
   local input=$1
 
   "${tool_bin}" "${input}"
 }
+
+# Entry point
 
 main() {
   if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then

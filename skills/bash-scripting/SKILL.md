@@ -16,7 +16,7 @@ Use this skill for Bash scripts that should be small, predictable, and composabl
 - Short `sed`, `awk`, and `jq` expressions passed as CLI arguments are allowed.
 - Start new scripts from `references/template.sh`.
 - Keep the template structure unless the user asks for a smaller final script.
-- `usage()`, `die()`, `color_enabled()`, `validate()`, `main()`, and `main "$@"` are required.
+- `usage()`, `die()`, `validate()`, `main()`, and `main "$@"` are required.
 - Add `tmp_dir`, `cleanup()`, and `trap cleanup EXIT` only when the script creates temporary files or directories; do not create dummy temporary resources just to preserve the template.
 - Additional task functions go under `# Task functions`, ordered by the order in which `main()` calls them.
 - Follow UNIX philosophy: write the primary result to stdout, and write errors, diagnostics, warnings, and optional verbose output to stderr.

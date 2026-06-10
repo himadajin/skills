@@ -15,12 +15,29 @@ readonly script_dir
 readonly color_red=$'\033[31m'
 readonly color_cyan=$'\033[36m'
 readonly color_reset=$'\033[0m'
+readonly tool_bin="${TOOL_BIN:-tool}"
+
+help_cyan=''
+help_reset=''
+error_red=''
+error_reset=''
+
+if [[ -t 1 && -z "${NO_COLOR:-}" ]]; then
+  help_cyan=${color_cyan}
+  help_reset=${color_reset}
+fi
+
+if [[ -t 2 && -z "${NO_COLOR:-}" ]]; then
+  error_red=${color_red}
+  error_reset=${color_reset}
+fi
+
+readonly help_cyan help_reset error_red error_reset
 
 # Script interface
 
 usage() { ... }
 die() { ... }
-color_enabled() { ... }
 validate() { ... }
 
 # Task functions
@@ -36,10 +53,10 @@ main "$@"
 
 Rules:
 
-- Do not place task-specific functions between `usage()`, `die()`, `color_enabled()`, `validate()`, and `cleanup()` when `cleanup()` is present.
+- Do not place task-specific functions between `usage()`, `die()`, `validate()`, and `cleanup()` when `cleanup()` is present.
 - `# Task functions` may be removed when there are no task-specific functions.
 - Order task-specific functions by the order in which `main()` calls them.
-- Keep `script_dir` and color support in the template unless the user explicitly asks to remove them.
+- Keep `script_dir` and help/error color support in the template unless the user explicitly asks to remove them.
 - Add `tmp_dir`, `cleanup()`, and `trap cleanup EXIT` together only when the script creates temporary files or directories.
 - Do not create a dummy temporary directory just to keep `cleanup()` or `trap cleanup EXIT` in the script.
 
@@ -59,12 +76,12 @@ readonly tool_bin="${TOOL_BIN:-tool}"
 ```bash
 readonly color_red=$'\033[31m'
 readonly color_cyan=$'\033[36m'
-readonly color_yellow=$'\033[33m'
 readonly color_reset=$'\033[0m'
 ```
 
+- Top-level readonly variables may also cache simple startup decisions for fixed script output channels, such as whether help on stdout or errors on stderr should be colored.
 - Runtime state belongs in `main()` or local function variables.
-- Do not store derived state that depends on arguments, output file descriptors, terminal state, command results, or user input in globals.
+- Do not store derived state that depends on arguments, command results, or user input in globals.
 - The only standard mutable global is temporary resource state used by `cleanup()`, such as `tmp_dir=""`.
 - Function-local working variables should normally be `local`.
 - More detailed `local` declaration rules are intentionally not fixed.
@@ -119,22 +136,17 @@ done < <(find . -name '*.md' -print0)
 
 ## Color
 
-Color is allowed when it improves human-readable output, but it must not break pipelines.
+Color is included to make help and errors quick to scan, not as a general output styling system.
 
-- Use `color_enabled()` to check the output file descriptor.
 - Respect `NO_COLOR`.
-- Use only these color roles: `red`, `cyan`, `yellow`, and `reset`.
-- Define only the color constants used by the script.
-- Keep ANSI escape codes in readonly globals such as `color_red`; use local `red`, `cyan`, `yellow`, and `reset` variables only for fd-gated output inside functions.
-- Do not store enabled color state in globals because color depends on the output file descriptor and `NO_COLOR` at call time.
-- Do not use bold.
-- Do not add dedicated color helper functions beyond `color_enabled()`.
-- `red`: `Error:` prefix only.
-- `yellow`: `Warning:` prefix only.
-- `cyan`: help headings, command names, paths, environment variable names, and placeholders.
-- `reset`: immediately after each colored segment.
-- Do not use color for success, completion, or progress.
-- Do not make color the only carrier of meaning.
+- Decide help and error color once near the top of the script.
+- Help color is based on stdout: `[[ -t 1 && -z "${NO_COLOR:-}" ]]`.
+- Error color is based on stderr: `[[ -t 2 && -z "${NO_COLOR:-}" ]]`.
+- Use `cyan` for help headings, command names, paths, environment variable names, and placeholders.
+- Use `red` for the `Error:` prefix only.
+- Use `reset` immediately after each colored segment.
+- Do not add color to task output by default.
+- Do not add bold, warning colors, progress colors, success colors, or color helper functions by default.
 - Never color machine-readable stdout.
 
 ## Comments
