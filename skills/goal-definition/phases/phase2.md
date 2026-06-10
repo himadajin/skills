@@ -1,6 +1,6 @@
 # PHASE2
 
-Refine a written `desire.md` into a practical, self-contained `design.md` without turning it into step-by-step implementation instructions.
+Refine a written `purpose.md` into a practical, self-contained `design.md` without turning it into step-by-step implementation instructions.
 
 ## Judgment
 
