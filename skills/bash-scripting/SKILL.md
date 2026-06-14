@@ -23,6 +23,8 @@ Use this skill for Bash scripts that should be small, predictable, and composabl
 - Do not print success chatter such as `Done`, `Success`, or `Generated ...`.
 - Do not add `--verbose` by default. Add it only when the user asks.
 - Do not print decorative characters, emoji, or box drawing.
+- For new scripts, omit help and error color support unless the user asks for color; when adding color, follow `references/bash-style.md`.
+- When editing existing scripts, do not add or remove color support unless it is part of the requested change.
 - Do not color machine-readable stdout.
 - `usage()` is required, English-only, ASCII-only, and documents the exact public interface.
 - `-h, --help` is required.

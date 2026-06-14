@@ -2,27 +2,7 @@
 set -euo pipefail
 
 # = Script setup =
-readonly color_red=$'\033[31m'
-readonly color_cyan=$'\033[36m'
-readonly color_reset=$'\033[0m'
 readonly tool_bin="${TOOL_BIN:-cat}"
-
-help_cyan=''
-help_reset=''
-error_red=''
-error_reset=''
-
-if [[ -t 1 && -z "${NO_COLOR:-}" ]]; then
-  help_cyan=${color_cyan}
-  help_reset=${color_reset}
-fi
-
-if [[ -t 2 && -z "${NO_COLOR:-}" ]]; then
-  error_red=${color_red}
-  error_reset=${color_reset}
-fi
-
-readonly help_cyan help_reset error_red error_reset
 
 # = Script interface =
 usage() {
@@ -31,19 +11,19 @@ usage() {
   cat <<EOF
 Process an input file and write the result to stdout.
 
-${help_cyan}Usage:${help_reset}
+Usage:
   ${command_name} <input>
 
-${help_cyan}Arguments:${help_reset}
-  ${help_cyan}<input>${help_reset}  Input file to process.
+Arguments:
+  <input>  Input file to process.
 
-${help_cyan}Options:${help_reset}
-  ${help_cyan}-h, --help${help_reset}  Show this help message.
+Options:
+  -h, --help  Show this help message.
 
-${help_cyan}Environment:${help_reset}
-  ${help_cyan}TOOL_BIN${help_reset}  Command used to process the input. Default: cat
+Environment:
+  TOOL_BIN  Command used to process the input. Default: cat
 
-${help_cyan}Examples:${help_reset}
+Examples:
   ${command_name} input.txt > output.txt
 EOF
 }
@@ -52,7 +32,7 @@ die() {
   local message=$1
   local code=${2:-1}
 
-  printf '%sError:%s %s\n' "${error_red}" "${error_reset}" "${message}" >&2
+  printf 'Error: %s\n' "${message}" >&2
   exit "${code}"
 }
 

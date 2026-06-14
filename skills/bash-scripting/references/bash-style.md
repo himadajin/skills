@@ -11,27 +11,7 @@ Keep this order:
 set -euo pipefail
 
 # = Script setup =
-readonly color_red=$'\033[31m'
-readonly color_cyan=$'\033[36m'
-readonly color_reset=$'\033[0m'
 readonly tool_bin="${TOOL_BIN:-tool}"
-
-help_cyan=''
-help_reset=''
-error_red=''
-error_reset=''
-
-if [[ -t 1 && -z "${NO_COLOR:-}" ]]; then
-  help_cyan=${color_cyan}
-  help_reset=${color_reset}
-fi
-
-if [[ -t 2 && -z "${NO_COLOR:-}" ]]; then
-  error_red=${color_red}
-  error_reset=${color_reset}
-fi
-
-readonly help_cyan help_reset error_red error_reset
 
 # = Script interface =
 usage() { ... }
@@ -52,7 +32,8 @@ Rules:
 - Keep exactly these top-level section comments: `# = Script setup =`, `# = Script interface =`, and `# = Script logic =`.
 - Do not leave a blank line between a section comment and the first line in that section.
 - Put task-specific functions and `main()` in `# = Script logic =`; order task-specific functions by the order in which `main()` calls them, then define `main()`.
-- Keep help/error color support in the template unless the user explicitly asks to remove it.
+- For new scripts, use the standard structure without help/error color scaffolding unless the user asks for color.
+- When editing existing scripts, do not add or remove color support unless it is part of the requested change.
 - Add `script_dir` in `# = Script setup =` only when the script reads files that live next to the script.
 - Add `tmp_dir`, `cleanup()`, and `trap cleanup EXIT` together only when the script creates temporary files or directories.
 - Do not create a dummy temporary directory just to keep `cleanup()` or `trap cleanup EXIT` in the script.
@@ -76,15 +57,12 @@ script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 readonly script_dir
 ```
 
-- Put stable literal constants that would otherwise clutter functions, including ANSI escape codes, in top-level readonly variables:
+- Put stable literal constants that would otherwise clutter functions in top-level readonly variables:
 
 ```bash
-readonly color_red=$'\033[31m'
-readonly color_cyan=$'\033[36m'
-readonly color_reset=$'\033[0m'
+readonly default_format="${DEFAULT_FORMAT:-text}"
 ```
 
-- Top-level readonly variables may also cache simple startup decisions for fixed script output channels, such as whether help on stdout or errors on stderr should be colored.
 - Runtime state belongs in `main()` or local function variables.
 - Do not store derived state that depends on arguments, command results, or user input in globals.
 - The only standard mutable global is temporary resource state used by `cleanup()`, such as `tmp_dir=""`.
@@ -141,7 +119,7 @@ done < <(find . -name '*.md' -print0)
 
 ## Color
 
-Color is included to make help and errors quick to scan, not as a general output styling system.
+Color is optional. Add it when the user asks for color, and keep it limited to help and error readability.
 
 - Respect `NO_COLOR`.
 - Decide help and error color once near the top of the script.
@@ -150,9 +128,45 @@ Color is included to make help and errors quick to scan, not as a general output
 - Use `cyan` for help headings, command names, paths, environment variable names, and placeholders.
 - Use `red` for the `Error:` prefix only.
 - Use `reset` immediately after each colored segment.
+- Do not add `--color`, `--no-color`, or similar public options unless the user asks for them.
 - Do not add color to task output by default.
 - Do not add bold, warning colors, progress colors, success colors, or color helper functions by default.
 - Never color machine-readable stdout.
+
+Optional setup pattern:
+
+```bash
+readonly color_red=$'\033[31m'
+readonly color_cyan=$'\033[36m'
+readonly color_reset=$'\033[0m'
+
+help_cyan=''
+help_reset=''
+error_red=''
+error_reset=''
+
+if [[ -t 1 && -z "${NO_COLOR:-}" ]]; then
+  help_cyan=${color_cyan}
+  help_reset=${color_reset}
+fi
+
+if [[ -t 2 && -z "${NO_COLOR:-}" ]]; then
+  error_red=${color_red}
+  error_reset=${color_reset}
+fi
+
+readonly help_cyan help_reset error_red error_reset
+```
+
+Use those variables inline only where color is requested:
+
+```bash
+cat <<EOF
+${help_cyan}Usage:${help_reset}
+EOF
+
+printf '%sError:%s %s\n' "${error_red}" "${error_reset}" "${message}" >&2
+```
 
 ## Comments
 
