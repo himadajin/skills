@@ -1,19 +1,19 @@
 # Basic CLI Design
 
-Read this before choosing or changing a script interface. This is the normal path.
+Read this when choosing or changing a script interface.
 
-Do not start with flags. Do not read `advanced-option-parsing.md` during first-pass CLI design.
+Default to the smallest interface that is easy to remember and hard to misuse.
 
 ## Decision Order
 
-First choose the zero-argument behavior:
+First choose what zero arguments mean:
 
 - If the script has a natural zero-argument action, implement that action.
 - If the script has no useful zero-argument action, show `usage()` and exit `0`.
 
 This is part of the interface shape, not an error-handling special case.
 
-Stop at the first shape that fits the task:
+Prefer these shapes, but do not treat the list as a rigid ladder:
 
 1. Filter: read stdin and write stdout.
 2. Single positional argument: `script <input>`.
@@ -22,9 +22,9 @@ Stop at the first shape that fits the task:
 5. Optional file or stdin: `script [<file>]`.
 6. Subcommands for multiple modes: `script list <dir>` and `script show <file>`.
 7. Environment variables for stable configuration that should not clutter the CLI.
-8. Flags only when the simpler shapes make the interface worse.
+8. Flags for optional behavior that would be awkward as a positional argument or subcommand.
 
-If flags still look necessary, explain the tradeoff to the user. Read `advanced-option-parsing.md` only after the user accepts that tradeoff.
+If the script needs many flags, check whether it is doing too many jobs.
 
 ## Positional Arguments
 
@@ -119,13 +119,13 @@ die "unknown command: $1; use --help to see available commands" 2
 
 ## Flags
 
-Flags are a last resort for this skill.
+Use flags when they make the interface clearer.
 
-Before adding a flag, ask:
+Before adding several flags, ask:
 
 - Can this be a positional argument?
 - Can this be a subcommand?
 - Can this be an environment variable?
 - Is this feature making a disposable script too broad?
 
-If a flag is still necessary, do not invent a parser from memory. Read `advanced-option-parsing.md` only after the user accepts the tradeoff.
+For one or two simple flags, a small `case` parser in `main()` is fine. For short options, `getopts` is fine. Read `advanced-option-parsing.md` when the parser starts to dominate the script.

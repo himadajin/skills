@@ -1,6 +1,6 @@
 # Runtime Safety
 
-Read this before creating scripts, reviewing runtime behavior, or changing validation, errors, paths, temp files, output files, overwrites, deletion, or exit behavior.
+Read this when reviewing runtime behavior or changing validation, errors, paths, temp files, output files, overwrites, deletion, command dependencies, or exit behavior.
 
 ## Output Contract
 
@@ -20,10 +20,10 @@ Read this before creating scripts, reviewing runtime behavior, or changing valid
 
 ## Error Handling
 
-- Use `set -euo pipefail`.
+- Use `set -euo pipefail` for new scripts unless the script needs more explicit control over a specific failure mode.
 - Use `die()` for errors.
 - `die()` prints `Error:` to stderr and exits.
-- Error messages must say what is wrong and what the user should do next.
+- Error messages should say what is wrong. Mention `--help` or the next step when it helps recovery.
 - Do not automatically print usage on errors.
 - Zero arguments with no natural action are not an error; show `usage()` and exit `0` from `main()`.
 - Do not hide failing external commands behind unclear command substitutions.
@@ -39,7 +39,7 @@ fi
 
 ## Validation
 
-`validate()` checks preconditions only. It must not perform the task.
+Use `validate()` when preconditions are numerous enough that keeping them in `main()` makes the script harder to read. If used, `validate()` checks preconditions only and must not perform the task.
 
 Use `validate()` for:
 
@@ -50,7 +50,7 @@ Use `validate()` for:
 - Preconditions for destructive operations.
 
 User-supplied precondition failures, such as missing required arguments after a command, option, or mode has been selected, invalid argument values, and missing input paths, are usage errors and should exit with code `2`.
-Handle zero arguments before `validate()` when the script has no natural zero-argument action.
+Handle zero arguments before `validate()` or inline checks when the script has no natural zero-argument action.
 
 Missing commands should exit with code `127`:
 
@@ -64,7 +64,7 @@ command -v jq >/dev/null 2>&1 || die "required command not found: jq" 127
 - Use `script_dir` for files that live next to the script.
 - Do not force all user-provided paths to absolute paths.
 - Quote user-provided paths.
-- Validate input paths in `validate()`.
+- Validate input paths before use.
 - Do not write code that relies on `cd` and later returning to the previous directory.
 - If a temporary directory change is needed, use a subshell such as `(cd "${dir}" && command ...)`.
 
@@ -113,4 +113,4 @@ When a script does not create temporary files or directories, do not define `tmp
 
 - Prefer external CLI tools for their domains: `rg` for search, `jq` for JSON, `curl` for URLs and APIs, and `git` for Git operations.
 - Do not hand-roll parsers for JSON, CSV, YAML, or other structured formats in Bash.
-- If a required command is missing, fail during `validate()` with exit code `127`.
+- If a required command is missing, fail during validation with exit code `127`.
