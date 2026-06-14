@@ -1,22 +1,18 @@
 # Bash Style
 
-Read this before creating scripts, editing Bash code, or reviewing Bash implementation.
+Read this when editing non-trivial Bash logic, reviewing Bash implementation, or adding color.
 
 ## Structure
 
-Keep this order:
+Use this minimum shape for new scripts:
 
 ```bash
 #!/usr/bin/env bash
 set -euo pipefail
 
-# = Script setup =
-readonly tool_bin="${TOOL_BIN:-tool}"
-
 # = Script interface =
 usage() { ... }
 die() { ... }
-validate() { ... }
 
 # = Script logic =
 task_function() { ... }
@@ -28,15 +24,16 @@ main "$@"
 
 Rules:
 
-- Do not place task-specific functions between `usage()`, `die()`, `validate()`, and `cleanup()` when `cleanup()` is present.
-- Keep exactly these top-level section comments: `# = Script setup =`, `# = Script interface =`, and `# = Script logic =`.
-- Do not leave a blank line between a section comment and the first line in that section.
-- Put task-specific functions and `main()` in `# = Script logic =`; order task-specific functions by the order in which `main()` calls them, then define `main()`.
-- For new scripts, use the standard structure without help/error color scaffolding unless the user asks for color.
+- Put `usage()` and `die()` near the top.
+- Put `main()` near the bottom and call `main "$@"` as the final line.
+- Add task-specific functions only when they clarify the script or remove real duplication.
+- Put task-specific functions before `main()` when practical.
+- For new scripts, omit help/error color scaffolding unless the user asks for color.
 - When editing existing scripts, do not add or remove color support unless it is part of the requested change.
-- Add `script_dir` in `# = Script setup =` only when the script reads files that live next to the script.
+- Add `script_dir` only when the script reads files that live next to the script.
 - Add `tmp_dir`, `cleanup()`, and `trap cleanup EXIT` together only when the script creates temporary files or directories.
 - Do not create a dummy temporary directory just to keep `cleanup()` or `trap cleanup EXIT` in the script.
+- Section comments are optional. Use them only when the script is long enough that they help navigation.
 
 ## Variables
 

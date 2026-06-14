@@ -36,13 +36,6 @@ die() {
   exit "${code}"
 }
 
-validate() {
-  command -v "${tool_bin}" >/dev/null 2>&1 || die "required command not found: ${tool_bin}" 127
-
-  [[ $# -eq 1 ]] || die "expected exactly 1 argument, got $#; use --help for usage" 2
-  [[ -f "$1" ]] || die "input file not found: $1; pass an existing file" 2
-}
-
 # = Script logic =
 convert_file() {
   local input=$1
@@ -61,7 +54,9 @@ main() {
     exit 0
   fi
 
-  validate "$@"
+  command -v "${tool_bin}" >/dev/null 2>&1 || die "required command not found: ${tool_bin}" 127
+  [[ $# -eq 1 ]] || die "expected exactly 1 argument, got $#; use --help for usage" 2
+  [[ -f "$1" ]] || die "input file not found: $1; pass an existing file" 2
 
   convert_file "$1"
 }

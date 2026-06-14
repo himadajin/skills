@@ -1,23 +1,23 @@
 # Advanced Option Parsing
 
-This is a last-resort reference. Do not read or use it during first-pass CLI design.
+Read this when a script needs more than one or two flags or the parser is becoming the largest part of the script.
 
-Read this only when all of these are true:
+Before adding a larger parser, check whether a smaller interface would be clearer:
 
-- Positional arguments and subcommands make the interface worse.
-- A flag-based interface is still necessary.
-- The flag set is small and stable.
-- The user accepted the tradeoff.
+- Positional arguments for required inputs.
+- Subcommands for modes.
+- Environment variables for stable configuration.
+- A separate script for a separate job.
 
-`getopts` is forbidden. Use hand-written `case` parsing only.
-
-Do not switch to another language unless the user explicitly asks for it. If option parsing becomes complex, explain the tradeoff and ask the user before changing languages.
+Use `getopts` for short options. Use hand-written `while` plus `case` for long options. If option parsing becomes complex, consider a language with a real argument parser.
 
 Keep `Options:` order and parser order aligned.
 
+The examples call `validate()` because larger CLIs usually benefit from a separate precondition function. Replace that with inline checks when the script stays small.
+
 ## One Leading Flag
 
-Use this only when one optional flag is clearly better than another positional argument or subcommand.
+Use this when one optional flag is clearly better than another positional argument or subcommand.
 
 ```bash
 main() {
@@ -46,11 +46,48 @@ main() {
 }
 ```
 
-This permits at most one simple leading flag. If more flexibility is needed, reconsider the CLI before adding a loop.
+This keeps single-flag scripts readable without a full parser.
 
-## Last-Resort Flag Loop
+## Short Options With getopts
 
-Use `while` plus `case` only when all conditions at the top of this file are satisfied and the script genuinely needs more than one optional flag.
+Use `getopts` when the script has conventional short options.
+
+```bash
+main() {
+  local format='text'
+  local verbose=0
+
+  while getopts ':f:vh' option; do
+    case "${option}" in
+      f)
+        format=${OPTARG}
+        ;;
+      v)
+        verbose=1
+        ;;
+      h)
+        usage
+        exit 0
+        ;;
+      :)
+        die "missing value for -${OPTARG}; use --help for usage" 2
+        ;;
+      \?)
+        die "unknown option: -${OPTARG}; use --help for usage" 2
+        ;;
+    esac
+  done
+  shift $((OPTIND - 1))
+
+  run_task "${format}" "${verbose}" "$@"
+}
+```
+
+`getopts` does not handle GNU-style long options. If the public interface needs long options such as `--format`, use a `while` plus `case` parser.
+
+## Long Options With while/case
+
+Use `while` plus `case` when the script needs long options.
 
 ```bash
 main() {
@@ -98,4 +135,4 @@ main() {
 }
 ```
 
-Keep this form out of ordinary scripts. Its purpose is to make the exceptional case consistent, not to make flags easy to add.
+Keep this form compact. If this parser keeps growing, the script likely needs a smaller interface or a different implementation language.

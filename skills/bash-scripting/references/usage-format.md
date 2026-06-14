@@ -1,8 +1,8 @@
 # Usage Format
 
-Read this before writing or changing `usage()`, help output, arguments, commands, options, examples, or environment documentation.
+Read this when help output is part of the request or the script will be shared with other users.
 
-Keep the interface smaller before adding more notation. This file documents help output only. It does not authorize adding flags.
+Keep the interface smaller before adding more notation.
 
 ## Core Rule
 
@@ -18,7 +18,9 @@ If these sections become hard to keep consistent, simplify the CLI.
 
 ## Section Order
 
-Use English and ASCII only. Use this section order:
+Use concise language. Default to English unless the user asks for another language or the surrounding script already uses one.
+
+Recommended section order:
 
 1. One-line description.
 2. `Usage:`
@@ -41,10 +43,8 @@ Rules:
 - Examples must be copyable commands.
 - Do not include `--help` as an example.
 - Do not introduce behavior in `Examples:` that is not already documented elsewhere in help.
-- End descriptions with periods.
-- Keep item descriptions to one line. If they need wrapping, simplify the text.
-- Use 2 spaces of indentation for item lines.
-- Align descriptions within the same section with at least 2 spaces between the item and the description.
+- Keep descriptions short.
+- Use consistent indentation.
 - Use one blank line between sections.
 
 ## Usage Notation
@@ -82,13 +82,13 @@ Choose the zero-argument behavior before adding notation.
 
 ## Options
 
-`Options:` normally contains only `-h, --help`.
+`Options:` always contains `-h, --help` and any other accepted options.
 
 Rules:
 
 - List `-h, --help` first.
-- Prefer long option names.
-- Do not add short aliases except `-h` unless the user asks.
+- Prefer long option names for shared scripts.
+- Add short aliases when they are conventional or the user asks.
 - Values use the form `--format <format>`.
 - Boolean flags use the form `--json`.
 - Put default values at the end of option descriptions, such as `Default: text.`
@@ -208,7 +208,7 @@ Examples:
 
 ## One Leading Flag
 
-Use this only when one optional flag is clearer than another positional argument or subcommand, and the user accepted the tradeoff.
+Use this when one optional flag is clearer than another positional argument or subcommand.
 
 ```text
 Read a data file and write selected fields to stdout.
@@ -228,9 +228,9 @@ Examples:
   select-fields --json data.txt
 ```
 
-## Last-Resort Multiple Flags
+## Multiple Flags
 
-Use this only with the parser pattern in `advanced-option-parsing.md`, after the user accepted the tradeoff.
+Use this when multiple options are genuinely clearer than subcommands or smaller scripts.
 
 ```text
 Render a report from an input file.
