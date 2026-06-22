@@ -1,18 +1,41 @@
 ---
 name: decision-reconcile
-description: This skill should be used only when the user explicitly asks to run the decision-reconcile skill. It reviews the discussion so far and relevant project sources, distinguishes verified facts, explicit decisions, necessary consequences, AI assumptions or inferences, and unresolved topics, and asks questions to resolve genuine contradictions.
+description: This skill should be used only when the user explicitly asks to run the decision-reconcile skill. It reviews the discussion so far and relevant project sources, organizes background premises, explicit decisions, necessary consequences, and remaining discussion points, and asks questions to resolve genuine contradictions.
 ---
 
 これまでの議論と、判断に関係するコード、ドキュメント、参照されたWebページを読む。
 調べれば分かることは、それらの情報源から確認する。
+参照できない情報源や、現在のツールでは確認できない事実を、確認済みとして扱わない。
 
-確認できた事実、明示的に決まったこと、そこから必然的に導かれる帰結、仮定・推測、
-まだ議論中のことを区別して整理する。
+前提、決定事項、必然的な帰結、残る論点を区別して整理する。
+AI側の提案、実装案、推測は、ユーザーが採用した場合だけ決定として扱う。
+議論の途中で出た案は、最新のユーザー発言と採用済みの判断に照らして、
+採用済み、対象外・不採用、まだ決める必要があるもの、単に提示されただけのものに分けて扱う。
+残る論点には、ユーザーの目的を進めるためにこれから決める必要があるものだけを書く。
+単に提示されただけで採用されていない案や、最新の方針から外れた案は、決定事項にも残る論点にも含めない。
 
 同じ前提で同時に成立できない内容だけを矛盾として扱う。
 後の発言が以前の内容を明示的に修正している場合は、更新として反映する。
+単なる未決事項、追加検討、情報不足、表現の違い、採用されていないAI提案は矛盾として扱わない。
+曖昧さや情報不足は矛盾として扱わず、必要に応じて残る論点に含める。
 
-質問は矛盾の解消に限定する。矛盾が複数ある場合は、影響の大きいものから一度に一つ、
-衝突している内容を示してユーザーに確認する。回答を反映してから、残る矛盾を改めて判断する。
+質問は矛盾の解消に限定する。
+矛盾が複数ある場合は、先に解消しなければ残る矛盾を判断しにくいものをエージェントが一つ選ぶ。
+選んだ矛盾について、確認できた内容同士の食い違いと、ユーザーに決めてもらう一点だけを短く示す。
+回答を反映してから、残る矛盾を改めて判断する。
 
-最後に、現在の共通認識を簡潔に示す。
+質問を返す場合は、整理結果を書かず、選んだ矛盾についての質問だけを返す。
+未解消の矛盾を仮定や推測で埋めて、整理済みの内容として確定しない。
+
+矛盾がない、または矛盾が解消した場合は、これまでの議論を次の4種類に分けて簡潔に整理する。
+
+1. 前提
+2. 決定事項
+3. 必然的な帰結
+4. 残る論点
+
+前提には、議論の前から所与だった条件、ユーザーが前提として示した内容、コードやドキュメントから確認できた事実を書く。
+決定事項には、議論の中でユーザーが明示的に採用した判断だけを書く。
+必然的な帰結には、前提と決定事項から論理的に外せない内容だけを書く。
+残る論点には、これから決めること、これから議論すること、議論中の内容、仮定、推測、曖昧な点、情報不足を書く。
+固定の項目数を埋めることより、内容を正しく分類することを優先する。
