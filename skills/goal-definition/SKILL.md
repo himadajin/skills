@@ -1,7 +1,7 @@
 ---
 name: goal-definition
 description: >-
-  Use only for an explicit interview-style goal-definition phase for a software development task before implementation. PHASE1 defines purpose as a purpose brief; write purpose.md only when the user asks, PHASE1 stops there, or a separate handoff/context reset needs it. PHASE2 starts from an existing purpose.md or same-conversation purpose brief when the user explicitly asks to create/refine self-contained design.md. PHASE3 starts only from existing design.md and writes one selected companion file, such as ui.md or verification.md. Trigger when the user asks to be questioned, define/capture purpose, create/refine a design handoff from purpose brief/purpose.md, or create/refine a companion handoff from design.md. Do NOT use for ordinary clarification, planning, code review, issue execution, debugging, prompt/prose work, brainstorming, non-development goals, or when an existing plan/purpose/design/ui/verification/spec/issue/task list should be implemented, followed, reviewed, revised, or continued.
+  Interview the user to define the purpose behind a software development goal before implementation and prepare handoff documents. Use only when the user explicitly requests this skill or a goal-definition interview.
 ---
 
 # Goal Definition
