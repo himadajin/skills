@@ -6,7 +6,7 @@ Define the purpose itself before refining how it should be realized.
 
 - Keep the Root focused on the user's target state or unresolved question, not the initial wording of the request.
 - Avoid implementation means before purpose. Do not steer the interview toward an early technical shape, framework, library, architecture, verification method, or task sequence.
-- Ask about the most upstream unresolved Branch that could change the Root or `purpose.md`.
+- Ask about the most upstream unresolved Branch that could change the Root or purpose brief.
 - Treat constraints, non-goals, audience, and handoff boundaries as Branches only when they could change the purpose itself.
 - If the user names an implementation detail early, understand what purpose or constraint it represents before accepting it as direction.
 
@@ -14,4 +14,6 @@ Define the purpose itself before refining how it should be realized.
 
 Close this phase only when the purpose itself is clear enough to preserve without turning it into implementation detail.
 
-Before writing `purpose.md`, apply the Finalization rule. The choice must be between continuing to refine the purpose and writing `purpose.md` now.
+Before closing PHASE1, apply the Finalization rule. The choice must be between continuing to refine the purpose and closing PHASE1 now.
+
+When closing PHASE1, keep the purpose brief in conversation by default if the user will continue directly to PHASE2. Write `purpose.md` only when the user asks for it, PHASE1 is the stopping point, or a separate handoff/context reset needs a persistent file.

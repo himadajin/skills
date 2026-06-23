@@ -1,6 +1,6 @@
 # PHASE2
 
-Refine a written `purpose.md` into a practical, self-contained `design.md` without turning it into step-by-step implementation instructions.
+Refine a purpose brief or written `purpose.md` into a practical, self-contained `design.md` without turning it into step-by-step implementation instructions.
 
 ## Judgment
 
@@ -25,6 +25,6 @@ These prompts are not a checklist. Use them only when they reveal the most upstr
 
 ## Closing PHASE2
 
-Close this phase only when `design.md` would be self-contained enough for a later coding agent to act without guessing about shape, verification, dependencies, or boundaries, or when remaining unknowns are explicitly preserved as decision-relevant context.
+Close this phase only when `design.md` would be self-contained enough for a later coding agent to act without guessing about purpose, shape, verification, dependencies, or boundaries, or when remaining unknowns are explicitly preserved as decision-relevant context.
 
 Before writing `design.md`, apply the Finalization rule. The choice must be between continuing to refine the handoff and writing `design.md` now.
