@@ -29,9 +29,14 @@ The essential work is the interview loop and the phase artifact contract.
   - `Leaf`: wording or detail inside the active artifact.
 - Ask about the most upstream unresolved Branch whose answer could change the
   active artifact.
-- Ask one question per user turn. Include a recommended answer and a concise
-  reason. Frame the recommendation as a hypothesis for the user to accept,
-  reject, or revise.
+- Ask one question per user turn. Prefer a question that helps the user expand,
+  correct, or sharpen the active Branch.
+- Include a recommended answer that states the decision content that would enter
+  the active artifact if adopted. Give a concise reason explaining what the
+  answer would settle in the Root or active artifact.
+- When asking the user to decide, expose the choice surface: the current read,
+  the meaningful tradeoff or alternative space, and room for the user to choose,
+  revise, or add an option.
 - When investigation frames the question, share the useful finding in one or two
   short sentences before asking.
 - If the user wants to finish with remaining ambiguity, preserve

@@ -26,6 +26,14 @@ Useful prompts for judgment:
   `design.md` to avoid duplication?
 - What decisions would materially improve handoff quality if captured
   separately?
+- For the selected companion, which concrete choices would change downstream
+  judgment if left out of the companion?
+- For a selected `ui.md`, would screen structure, information hierarchy, visual
+  tone, density, color behavior, component library or design-system convention,
+  or interaction priority change whether the result is judged correct?
+- For a selected `verification.md`, would verification boundary, deterministic
+  controls, fixture shape, CI/manual balance, or evaluation criteria change
+  whether the result can be trusted?
 - Which existing project conventions or constraints should shape this companion
   file?
 - Which observable completion conditions belong in this companion rather than in
