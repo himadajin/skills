@@ -1,93 +1,95 @@
 ---
 name: goal-definition
 description: >-
-  Use only for an explicit interview-style goal-definition phase for a software development task before implementation. In PHASE1, interview to define the user's purpose and write purpose.md. In PHASE2, start only from an existing purpose.md when the user explicitly asks to refine realization into a self-contained design.md. In PHASE3, start only from an existing design.md and write one selected companion file at a time, such as ui.md or verification.md. Trigger when the user asks to be questioned, define/capture a purpose file, create/refine a design handoff from purpose.md, or create/refine a companion handoff from design.md. Do NOT use for ordinary clarification, planning, plan.md creation, code review, issue execution, debugging, prompt writing, prose editing, brainstorming, non-development goals, or when an existing plan/purpose/design/ui/verification/spec/issue/task list should simply be implemented, followed, reviewed, revised, or continued.
+  Interview the user to define software-development goals and handoff artifacts such as purpose.md, design.md, or one companion file before implementation. Use only when the user explicitly requests this skill or a goal-definition interview.
 ---
 
 # Goal Definition
 
-Interview the user until the purpose behind their development goal is clear enough to write `purpose.md`, refine a written purpose into a practical, self-contained `design.md` only when PHASE2 is explicitly requested, then refine selected design companions one at a time only when PHASE3 is explicitly requested or accepted. Treat the initial request as a hypothesis and preserve the user's real intent without locking in unnecessary step-by-step implementation.
+Define a software-development goal through an interview before implementation.
+Keep the work in definition mode: clarify the purpose, shape the selected
+handoff artifact, and leave implementation work for a later task.
 
-## Activation Gate
+The essential work is the interview loop and the phase artifact contract.
 
-Use only when all are true:
+## Core Loop
 
-- Software development work.
-- Intent or realization is unresolved.
-- User wants interview/guided clarification.
-- Final output is `purpose.md` in PHASE1, `design.md` in PHASE2, or a selected companion file such as `ui.md` or `verification.md` in PHASE3.
-
-Do not activate merely because a request is vague, high-level, asks "what should we check?", or needs ordinary clarification. If a `plan.md`, `purpose.md`, `design.md`, `ui.md`, `verification.md`, issue, PR, task list, spec, or implementation brief is already the source of truth, read that artifact and proceed with the ordinary implementation, review, revision, or debugging workflow instead of using Root/Branch/Leaf framing or creating a new handoff brief. Activate only if the user explicitly asks to restart goal definition from scratch, replace the prior source of truth with a new purpose brief, be interviewed again before implementation, create/refine `design.md` from an existing `purpose.md`, or create/refine a companion file from an existing `design.md`.
-
-## Conduct
-
-- Investigate before asking: read relevant docs/code/configs and use web research only when outside knowledge would materially improve the brief. If investigation finds no relevant implementation context, say that briefly and ask the upstream purpose question that would most change the eventual brief.
-- Ask exactly one question per user turn.
-- Maintain a lightweight Root/Branch hypothesis tree:
-  - `Root`: the user's target state or unresolved question.
-  - `Branch`: an upstream decision or ambiguity that could change the Root or the active output file.
-  - `Leaf`: wording or detail for the active output file.
-- Ask about the most upstream unresolved Branch first. Do not follow a fixed checklist or phase order.
-- Each question must include your recommended answer and the reason. Present the recommendation as a hypothesis, not as the user's conclusion.
-- If the Root changes, revisit only the downstream Branches that the new Root invalidates.
-- Respect explicit constraints; if a constraint conflicts with the Root, ask whether it is mandatory.
-- Do not implement the defined work.
-- Do not maintain a separate memo or update the active output file incrementally. Write the final file once.
-- During PHASE1, write only `purpose.md`. During PHASE2, write only `design.md`. During PHASE3, write only the selected companion file; you may edit `design.md` only to add or update that companion file's reference in `Related Files`.
-- If the user asks to write the active file while ambiguity remains, allow an imperfect brief instead of forcing more questions. Preserve remaining decision-relevant unknowns in `Context`, do not invent specifics, and use `Direction` to guide the later agent away from premature implementation commitments.
-- Before stopping or writing the file, ask a narrow confirmation question so the user explicitly chooses whether to continue or finish.
-
-When asking after investigation, first share one or two short sentences with the useful finding that frames the question. Do not dump research notes.
-
-Branch examples include completion feeling, constraints, non-goals, audience, handoff boundaries, and direction-changing tradeoffs. These are examples, not a checklist; ask about them only when they could change the Root or the active output file. Avoid questions answerable from the repo/docs, implementation means before purpose, or low-value facts that are merely nice to record.
+- Read enough existing context to ask a better next question: the user's linked
+  artifact, relevant repository docs/code/configs, and current phase artifacts.
+  Use external research when outside knowledge materially changes the handoff.
+- Treat a user-provided `plan.md`, `purpose.md`, `design.md`, `ui.md`,
+  `verification.md`, issue, task list, spec, or implementation brief as the
+  current source for the definition work.
+- Maintain `Root` / `Branch` / `Leaf` as an internal model for choosing the next
+  question:
+  - `Root`: the target state or unresolved question the user is trying to
+    define.
+  - `Branch`: an upstream decision or ambiguity that could change the Root or
+    the active artifact.
+  - `Leaf`: wording or detail inside the active artifact.
+- Ask about the most upstream unresolved Branch whose answer could change the
+  active artifact.
+- Ask one question per user turn. Prefer a question that helps the user expand,
+  correct, or sharpen the active Branch.
+- Include a recommended answer that states the decision content that would enter
+  the active artifact if adopted. Give a concise reason explaining what the
+  answer would settle in the Root or active artifact.
+- When asking the user to decide, expose the choice surface: the current read,
+  the meaningful tradeoff or alternative space, and room for the user to choose,
+  revise, or add an option.
+- When investigation frames the question, share the useful finding in one or two
+  short sentences before asking.
+- If the user wants to finish with remaining ambiguity, preserve
+  decision-relevant unknowns in the artifact's `Context` and use `Direction` to
+  guide the later agent.
 
 ## Phases
 
-Use the same Root/Branch/Leaf question model in every phase. The phases exist only to protect the boundary between defining the purpose, making it practical, and defining selected companion concerns without duplicating them in the implementation design.
+Each phase defines one artifact contract. Choose the active phase from the
+current user request and available artifact:
 
-- `PHASE1`: define the purpose itself and write `purpose.md`; follow [phases/phase1.md](phases/phase1.md) and [formats/purpose.md](formats/purpose.md).
-- `PHASE2`: refine a written purpose into a self-contained `design.md`; follow [phases/phase2.md](phases/phase2.md) and [formats/design.md](formats/design.md).
-- `PHASE3`: refine a design into one selected companion file; follow [phases/phase3.md](phases/phase3.md) and the matching format file.
+- `PHASE1`: define the purpose brief. Read [phases/phase1.md](phases/phase1.md)
+  and [formats/purpose.md](formats/purpose.md).
+- `PHASE2`: refine a confirmed purpose brief or `purpose.md` into self-contained
+  `design.md`. Read [phases/phase2.md](phases/phase2.md) and
+  [formats/design.md](formats/design.md).
+- `PHASE3`: refine `design.md` into one selected companion file. Read
+  [phases/phase3.md](phases/phase3.md) and the selected companion format:
+  [formats/ui.md](formats/ui.md) or
+  [formats/verification.md](formats/verification.md).
 
-Load only the phase file and matching format file needed for the current interview:
+Begin with `PHASE1` when the current phase is unclear. Begin from `PHASE2` or
+`PHASE3` when the user supplies the artifact that phase needs. A phase that
+names an input artifact begins only from that artifact. Move from one phase to
+the next through the Confirmation Gate.
 
-- Start with `phases/phase1.md` by default.
-- Start with PHASE2 only when the user provides or points to an existing `purpose.md` and explicitly asks to begin PHASE2 or create/refine `design.md`.
-- Start with PHASE3 only when the user provides or points to an existing `design.md` and explicitly asks to begin PHASE3, create/refine a companion file, or accepts the recommendation to continue into a selected companion definition.
-- If the user chooses to continue from PHASE1 to PHASE2, write `purpose.md` first. Load PHASE2 and its format only after that.
-- If the user chooses to continue from PHASE2 to PHASE3, write `design.md` first. Load PHASE3 and its format only after that.
+## Confirmation Gate
 
-## Finalization
+Use a confirmation gate before closing a phase, moving to the next phase, or
+writing an artifact. Ask one narrow question in the user's conversation
+language. The question must include:
 
-Stop asking only when the active phase's rule file says the interview is ready to close and the user's own questions about what they want are resolved enough to proceed.
+- what the current phase has defined;
+- the recommended next action and reason;
+- how the active artifact will be handled;
+- the proposed path when writing a file;
+- an explicit choice to continue refining, close the phase, move to the next
+  phase, or write the active artifact.
 
-Before writing the active file, ask one narrow confirmation question in the user's conversation language so the user controls when refinement stops. Do not copy a fixed template verbatim.
+When proposing a path without a user-specified destination, use
+`docs/<filename>` where `<filename>` is the active artifact filename:
+`purpose.md`, `design.md`, `ui.md`, or `verification.md`. If that path would
+collide with an existing file or multiple handoffs need separation, prefix the
+filename with a natural English kebab-case topic while keeping the artifact
+filename at the end.
 
-The question must briefly convey:
+Proceed after the user confirms the chosen action and any proposed path.
 
-- The active file is ready to be written, with a brief direction.
-- Writing it now is the recommended next step, with a concise reason.
-- The user can choose either to continue refining or to write the active file now.
+## Writing Artifacts
 
-If the user confirms or otherwise asks you to proceed, write the file.
-
-When writing `design.md`, always include its `Related Files` section. After writing `design.md`, consider whether `ui.md` or `verification.md` should be created as companion files. Recommend continuing into PHASE3 only for companion files that would materially reduce downstream guesswork; do not reference companion files that are not created.
-
-## File Path
-
-Use the user-specified path when provided. Otherwise write under the repository `docs/` directory. If `docs/` does not exist, create it without asking.
-
-- In PHASE1, use `docs/purpose.md` if it does not exist.
-- In PHASE2, use `docs/design.md` if it does not exist.
-- In PHASE3, use the matching default path such as `docs/ui.md` or `docs/verification.md` if it does not exist.
-- If the target file exists, choose a short, meaningful English kebab-case filename under `docs/`, such as `docs/purpose-refine-search-ui.md`, `docs/design-refine-search-ui.md`, `docs/ui-refine-search-ui.md`, or `docs/verification-refine-search-ui.md`.
-- Do not ask the user to name the file.
-
-## File Format
-
-Follow only the matching format file for the active phase or selected companion:
-
-- PHASE1: [formats/purpose.md](formats/purpose.md)
-- PHASE2: [formats/design.md](formats/design.md)
-- PHASE3 `ui.md`: [formats/ui.md](formats/ui.md)
-- PHASE3 `verification.md`: [formats/verification.md](formats/verification.md)
+- Write only the active artifact and path confirmed through the Confirmation
+  Gate.
+- Write one active artifact at a time.
+- Follow the active format file exactly.
+- In PHASE3, when writing the selected companion file, also update `design.md`
+  only to reference the companion in `Related Files`.
