@@ -59,8 +59,9 @@ current user request and available artifact:
   [formats/verification.md](formats/verification.md).
 
 Begin with `PHASE1` when the current phase is unclear. Begin from `PHASE2` or
-`PHASE3` when the user supplies the artifact that phase needs. Move from one
-phase to the next through the Confirmation Gate.
+`PHASE3` when the user supplies the artifact that phase needs. A phase that
+names an input artifact begins only from that artifact. Move from one phase to
+the next through the Confirmation Gate.
 
 ## Confirmation Gate
 
@@ -70,25 +71,25 @@ language. The question must include:
 
 - what the current phase has defined;
 - the recommended next action and reason;
+- how the active artifact will be handled;
+- the proposed path when writing a file;
 - an explicit choice to continue refining, close the phase, move to the next
   phase, or write the active artifact.
 
-Proceed after the user confirms the chosen action.
+When proposing a path without a user-specified destination, use
+`docs/<filename>` where `<filename>` is the active artifact filename:
+`purpose.md`, `design.md`, `ui.md`, or `verification.md`. If that path would
+collide with an existing file or multiple handoffs need separation, prefix the
+filename with a natural English kebab-case topic while keeping the artifact
+filename at the end.
+
+Proceed after the user confirms the chosen action and any proposed path.
 
 ## Writing Artifacts
 
+- Write only the active artifact and path confirmed through the Confirmation
+  Gate.
 - Write one active artifact at a time.
 - Follow the active format file exactly.
-- Use a user-specified path when provided. Otherwise create `docs/` as needed
-  and write a natural English kebab-case filename that identifies the phase and
-  topic.
-- Choose the filename yourself from the artifact purpose.
-- Keep a PHASE1 purpose brief in conversation when the user continues directly
-  to PHASE2. Persist `purpose.md` when the user asks for it, PHASE1 closes as
-  the stopping point, or a handoff/context reset needs a file.
-- Write `design.md` before entering PHASE3.
-- In PHASE3, write the selected companion file and update `design.md` only to
-  reference the companion in `Related Files`.
-- After writing `design.md`, recommend PHASE3 for a companion concern that would
-  materially reduce downstream guesswork. List created companion files in
-  `Related Files`; use `- None` when none exist.
+- In PHASE3, when writing the selected companion file, also update `design.md`
+  only to reference the companion in `Related Files`.

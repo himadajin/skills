@@ -21,10 +21,9 @@ Define the purpose itself before refining how it should be realized.
 Close this phase only when the purpose itself is clear enough to preserve
 without turning it into implementation detail.
 
-Before closing PHASE1, apply the Confirmation Gate. The choice must be between
-continuing to refine the purpose and closing PHASE1 now.
+Before closing PHASE1, apply the Confirmation Gate. The default closing action
+is to keep the purpose brief in conversation and move to PHASE2.
 
-When closing PHASE1, keep the purpose brief in conversation by default if the
-user will continue directly to PHASE2. Write `purpose.md` only when the user
-asks for it, PHASE1 is the stopping point, or a separate handoff/context reset
-needs a persistent file.
+Write `purpose.md` only when the user asks for it, PHASE1 is the stopping point,
+or a separate handoff/context reset needs a persistent file. In those cases,
+include the proposed path in the Confirmation Gate.

@@ -45,5 +45,8 @@ later coding agent to act without guessing about purpose, shape, verification,
 dependencies, or boundaries, or when remaining unknowns are explicitly preserved
 as decision-relevant context.
 
-Before writing `design.md`, apply the Confirmation Gate. The choice must be
-between continuing to refine the handoff and writing `design.md` now.
+Before closing PHASE2, apply the Confirmation Gate. The default closing action
+is to write `design.md` to the proposed path.
+
+After writing `design.md`, recommend PHASE3 for a companion concern that would
+materially reduce downstream guesswork.

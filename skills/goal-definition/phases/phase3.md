@@ -49,10 +49,5 @@ enough for a later coding agent to act without guessing about that companion's
 owned concern, or when remaining unknowns are explicitly preserved as
 decision-relevant context.
 
-Before writing the companion file, apply the Confirmation Gate. The choice must
-be between continuing to refine the companion definition and writing the
-companion file now.
-
-When writing a companion file, also update `design.md` only to reference that
-file in `Related Files`. Do not edit the implementation design body during
-PHASE3.
+Before closing PHASE3, apply the Confirmation Gate. The default closing action
+is to write the selected companion file to the proposed path.
