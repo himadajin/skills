@@ -22,7 +22,11 @@ Resolve at least these decisions before implementation:
 - Command-line options
 - Libraries
 
-After the decisions are clear, summarize the agreed specification briefly, then create the script.
+After the decisions are clear, summarize the agreed specification briefly.
+
+Then ask for explicit permission to create the script from that specification. Phrase the confirmation naturally for the current conversation and make it clear that implementation will start only after approval.
+
+Create the script only after the user approves.
 
 ## Script Rules
 
