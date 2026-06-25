@@ -17,12 +17,14 @@ interview.
 
 ## Structure
 
-- Put script behavior in logic functions.
-- Keep `usage`, option parsing, positional argument validation, and entry-point
-  code in the interface section.
-- Use `getopts` inside `main` for option parsing.
-- Do not define `parse_args`.
-- Pass values explicitly from `main` into logic functions.
+- Put the script's behavior in logic functions.
+- Treat the interface section as the boundary from CLI concerns to script
+  behavior. Keep `usage`, option parsing, positional argument validation,
+  stdin/stdout/file wiring, diagnostics, and entry-point code there.
+- Keep logic functions focused on the script's operation. They should not know
+  option names, interpret `-`, validate CLI arguments, or print CLI diagnostics.
+- Adapt input and output at the interface boundary so each operation has one
+  logic path instead of duplicated transformations for different input sources.
 - Use `main "$@"` as the entry point.
 
 Use this structure as the required skeleton, adapting names, arguments, and
@@ -35,7 +37,7 @@ set -euo pipefail
 # = Logic =
 
 process() {
-  ...
+    :
 }
 
 # = Interface =
@@ -55,7 +57,7 @@ USAGE
 
 main() {
     local input_path=""
-    local output_path=""
+    local output_path="-"
     local option
 
     while getopts ":ho:" option; do
@@ -85,7 +87,27 @@ main() {
     }
 
     input_path="$1"
-    process "$input_path" "$output_path"
+
+    if [[ "${input_path}" != "-" ]]; then
+        [[ -f "${input_path}" ]] || {
+            printf 'Error: input is not a file: %s\n' "${input_path}" >&2
+            return 1
+        }
+        [[ -r "${input_path}" ]] || {
+            printf 'Error: input is not readable: %s\n' "${input_path}" >&2
+            return 1
+        }
+    fi
+
+    if [[ "${input_path}" == "-" && "${output_path}" == "-" ]]; then
+        process
+    elif [[ "${input_path}" == "-" ]]; then
+        process >"${output_path}"
+    elif [[ "${output_path}" == "-" ]]; then
+        process <"${input_path}"
+    else
+        process <"${input_path}" >"${output_path}"
+    fi
 }
 
 main "$@"
