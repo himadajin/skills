@@ -41,13 +41,20 @@ Create the script only after the user approves.
 
 ## Script Rules
 
+### File Format
+
 - Write one self-contained Python file.
 - Start the file with `#!/usr/bin/env python3`.
+
+### Python and Dependencies
+
 - Target Python 3.11+.
-- Follow PEP 8.
 - Use only the Python standard library unless the user explicitly approves
   another library.
 - Prefer standard-library-only implementations.
+
+### Command-Line Parsing
+
 - Always use `argparse` for command-line option parsing.
 - Represent parsed command-line options with a frozen dataclass.
 - Parse command-line options in one function named `parse_options`.
@@ -55,8 +62,15 @@ Create the script only after the user approves.
   the options dataclass.
 - Build the `argparse.ArgumentParser` and construct the options dataclass inside
   `parse_options`.
+
+### Program Structure
+
 - Pass the parsed options dataclass to `main`.
 - Use `raise SystemExit(main(parse_options()))` in the entry point.
+
+### Code Style
+
+- Follow PEP 8.
 - Add type annotations to every function definition.
 - Do not write comments.
 - Express behavior through types, names, functions, and simple control flow.
