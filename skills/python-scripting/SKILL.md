@@ -14,9 +14,10 @@ behavior. Do not treat the required decisions below as a checklist whose
 completion automatically ends the interview.
 
 Break down the user's request into the decisions that affect the implementation.
-Resolve the decisions in dependency order, asking about the most constraining
-unresolved point first. If multiple reasonable implementations remain, ask
-another question instead of guessing.
+Resolve decisions in dependency order, asking about the most constraining
+unresolved behavior first. Defer naming and other derived decisions until the
+behavior they describe is stable. If multiple reasonable implementations remain,
+ask another question instead of guessing.
 
 Ask one question at a time and wait for the user's answer before continuing. For
 each question, provide a recommended answer as a concrete proposal the user can
@@ -25,11 +26,11 @@ accept or revise.
 Resolve at least these decisions before implementation:
 
 - Purpose
-- Script name
 - Input
 - Output
 - Command-line options
 - Libraries
+- Script name
 
 After the decisions are clear, summarize the agreed specification briefly.
 
