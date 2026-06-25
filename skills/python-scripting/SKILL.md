@@ -55,18 +55,16 @@ Create the script only after the user approves.
 
 ### Command-Line Parsing
 
-- Always use `argparse` for command-line option parsing.
-- Represent parsed command-line options with a frozen dataclass.
-- Parse command-line options in one function named `parse_options`.
-- `parse_options` should accept `argv: Sequence[str] | None = None` and return
-  the options dataclass.
-- Build the `argparse.ArgumentParser` and construct the options dataclass inside
-  `parse_options`.
+- Always use `argparse` for command-line argument parsing.
+- Represent parsed command-line arguments with a frozen dataclass named `Args`.
+- Parse command-line arguments in one function named `parse_args`.
+- Build the `argparse.ArgumentParser` and construct `Args` inside `parse_args`.
+- Treat `argparse.Namespace` as an intermediate value and convert it to `Args`.
 
 ### Required Structure
 
-- Pass the parsed options dataclass to `main`.
-- Use `raise SystemExit(main(parse_options()))` in the entry point.
+- Pass the parsed `Args` dataclass to `main`.
+- Use `raise SystemExit(main(parse_args()))` in the entry point.
 
 Use this structure as the required skeleton:
 
@@ -81,7 +79,7 @@ from dataclasses import dataclass
 # = Types =
 
 @dataclass(frozen=True)
-class Options:
+class Args:
     ...
 
 
@@ -93,19 +91,19 @@ def process(...) -> ...:
 
 # = Interface =
 
-def parse_options(argv: Sequence[str] | None = None) -> Options:
+def parse_args(argv: Sequence[str] | None = None) -> Args:
     parser = argparse.ArgumentParser()
     ...
-    args = parser.parse_args(argv)
-    return Options(...)
+    namespace = parser.parse_args(argv)
+    return Args(...)
 
 
-def main(options: Options) -> int:
+def main(args: Args) -> int:
     ...
 
 
 if __name__ == "__main__":
-    raise SystemExit(main(parse_options()))
+    raise SystemExit(main(parse_args()))
 ```
 
 ### Code Style
