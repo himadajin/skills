@@ -40,25 +40,39 @@ that implementation will start only after approval.
 
 Create the script only after the user approves.
 
-## Interview Constraints
+## Bash CLI Rules
+
+Use these rules while interviewing so the proposed specification already fits
+the Bash script that will be implemented.
+
+### Scope
 
 - Follow Unix command-line conventions.
 - Keep the interface small.
-- Write one self-contained Bash file.
-- Resolve required external commands during the interview.
-- Do not hand-roll parsers for structured data formats in Bash; use an agreed
-  purpose-built command or choose another language.
+- Create one self-contained Bash command-line tool.
+- Do not add extra features unless they are needed for the agreed specification.
+
+### Inputs and Outputs
+
 - Prefer positional arguments for primary inputs.
 - Prefer `-` to mean stdin or stdout when that fits the task.
 - Write primary output to stdout by default.
 - Treat `-o <path>` as the standard option for saving primary output to a file
   when file output is part of the script's behavior.
+- Write diagnostics and errors to stderr.
+- Do not print success messages by default.
+
+### Options
+
 - Use short options as the standard Bash interface.
 - Do not add long option aliases by default.
 - Always support `-h`.
-- Write diagnostics and errors to stderr.
-- Do not print success messages by default.
-- Do not add extra features unless they are needed for the agreed specification.
+
+### Commands
+
+- Resolve required external commands during the interview.
+- Do not hand-roll parsers for structured data formats in Bash; use an agreed
+  purpose-built command or choose another language.
 
 ## Implementation Rules
 
