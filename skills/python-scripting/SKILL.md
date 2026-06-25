@@ -5,13 +5,22 @@ description: Use only when the user explicitly asks to use this skill. Create a 
 
 # python-scripting
 
-Use this skill to create a small, single-file Python command-line script with a shebang.
+Use this skill to create a single-file Python command-line tool.
 
 ## Workflow
 
-Start with an interview before implementing anything.
+Interview the user until you and the user share the same expected script
+behavior. Do not treat the required decisions below as a checklist whose
+completion automatically ends the interview.
 
-Ask one question at a time and wait for the user's answer before continuing. For each question, provide your recommended answer.
+Break down the user's request into the decisions that affect the implementation.
+Resolve the decisions in dependency order, asking about the most constraining
+unresolved point first. If multiple reasonable implementations remain, ask
+another question instead of guessing.
+
+Ask one question at a time and wait for the user's answer before continuing. For
+each question, provide a recommended answer as a concrete proposal the user can
+accept or revise.
 
 Resolve at least these decisions before implementation:
 
@@ -24,7 +33,9 @@ Resolve at least these decisions before implementation:
 
 After the decisions are clear, summarize the agreed specification briefly.
 
-Then ask for explicit permission to create the script from that specification. Phrase the confirmation naturally for the current conversation and make it clear that implementation will start only after approval.
+Then ask for explicit permission to create the script from that specification.
+Phrase the confirmation naturally for the current conversation and make it clear
+that implementation will start only after approval.
 
 Create the script only after the user approves.
 
@@ -34,18 +45,21 @@ Create the script only after the user approves.
 - Start the file with `#!/usr/bin/env python3`.
 - Target Python 3.11+.
 - Follow PEP 8.
-- Use only the Python standard library unless the user explicitly approves another library.
+- Use only the Python standard library unless the user explicitly approves
+  another library.
 - Prefer standard-library-only implementations.
 - Always use `argparse` for command-line option parsing.
 - Represent parsed command-line options with a frozen dataclass.
 - Parse command-line options in one function named `parse_options`.
-- `parse_options` should accept `argv: Sequence[str] | None = None` and return the options dataclass.
-- Build the `argparse.ArgumentParser` and construct the options dataclass inside `parse_options`.
+- `parse_options` should accept `argv: Sequence[str] | None = None` and return
+  the options dataclass.
+- Build the `argparse.ArgumentParser` and construct the options dataclass inside
+  `parse_options`.
 - Pass the parsed options dataclass to `main`.
 - Use `raise SystemExit(main(parse_options()))` in the entry point.
 - Add type annotations to every function definition.
 - Do not write comments.
-- Express behavior through types, names, small functions, and simple control flow.
+- Express behavior through types, names, functions, and simple control flow.
 
 Use this structure:
 
