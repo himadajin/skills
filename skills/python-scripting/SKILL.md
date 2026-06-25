@@ -63,19 +63,12 @@ Create the script only after the user approves.
 - Build the `argparse.ArgumentParser` and construct the options dataclass inside
   `parse_options`.
 
-### Program Structure
+### Required Structure
 
 - Pass the parsed options dataclass to `main`.
 - Use `raise SystemExit(main(parse_options()))` in the entry point.
 
-### Code Style
-
-- Follow PEP 8.
-- Add type annotations to every function definition.
-- Do not write comments.
-- Express behavior through types, names, functions, and simple control flow.
-
-Use this structure:
+Use this structure as the required skeleton:
 
 ```python
 #!/usr/bin/env python3
@@ -104,6 +97,13 @@ def main(options: Options) -> int:
 if __name__ == "__main__":
     raise SystemExit(main(parse_options()))
 ```
+
+### Code Style
+
+- Follow PEP 8.
+- Add type annotations to every function definition.
+- Do not write comments.
+- Express behavior through types, names, functions, and simple control flow.
 
 ## CLI Design
 
