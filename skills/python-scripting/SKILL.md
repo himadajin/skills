@@ -121,9 +121,9 @@ if __name__ == "__main__":
 - Keep the interface small.
 - Prefer positional arguments for primary inputs.
 - Prefer `-` to mean stdin or stdout when that fits the task.
-- Write primary output to stdout.
-- When the script supports file output, use `-o` / `--output` for the output
-  path and keep stdout as the default when practical.
+- Write primary output to stdout by default.
+- Treat `-o` / `--output` as the standard option for saving primary output to a
+  file when file output is part of the script's behavior.
 - Write diagnostics and errors to stderr.
 - Do not print success messages by default.
 - Do not add extra features unless they are needed for the agreed specification.
