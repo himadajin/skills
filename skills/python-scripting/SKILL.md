@@ -78,10 +78,20 @@ from collections.abc import Sequence
 from dataclasses import dataclass
 
 
+# = Types =
+
 @dataclass(frozen=True)
 class Options:
     ...
 
+
+# = Logic =
+
+def process(...) -> ...:
+    ...
+
+
+# = Interface =
 
 def parse_options(argv: Sequence[str] | None = None) -> Options:
     parser = argparse.ArgumentParser()
@@ -102,7 +112,9 @@ if __name__ == "__main__":
 
 - Follow PEP 8.
 - Add type annotations to every function definition.
-- Do not write comments.
+- Do not write explanatory comments.
+- Use section comments from the required skeleton to keep top-level code grouped
+  by role.
 - Express behavior through types, names, functions, and simple control flow.
 
 ## CLI Design
