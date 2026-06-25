@@ -59,12 +59,19 @@ Create the script only after the user approves.
 
 ### Command-Line Parsing
 
-- Always support `-h` and `--help`.
+- Always define `usage`.
 - Document the actual public interface in `usage`.
-- Parse command-line arguments in one function named `parse_args`.
-- Use a short `case` loop in `parse_args`.
-- Treat variables set by `parse_args` as interface state only; pass values
-  explicitly from `main` into logic functions.
+- Read `references/cli-interface.md` when writing `usage` and option parsing.
+- Use `getopts` inside `main` for option parsing.
+- Do not define `parse_args`.
+- Use short options as the standard interface.
+- Do not add long option aliases by default.
+- Always support `-h`.
+- Use `-o <path>` for saving primary output to a file when file output is part
+  of the script's behavior.
+- Keep option parsing, positional argument validation, and logic function calls
+  in `main`.
+- Pass values explicitly from `main` into logic functions.
 
 ### Required Structure
 
@@ -88,45 +95,48 @@ process() {
 
 # = Interface =
 
-input_path=""
-output_path=""
-
 usage() {
     cat <<'USAGE'
-Usage: script-name [options] input
+Usage: script-name [-o output] input
+
+Options:
+  -h          Show this help.
+  -o output   Write output to file.
 USAGE
 }
 
-parse_args() {
-    while (($#)); do
-        case "$1" in
-            -h|--help)
+main() {
+    local input_path=""
+    local output_path=""
+    local option
+
+    while getopts ":ho:" option; do
+        case "${option}" in
+            h)
                 usage
-                exit 0
+                return 0
                 ;;
-            -o|--output)
-                output_path="${2:?missing value for $1}"
-                shift 2
+            o)
+                output_path="${OPTARG}"
                 ;;
-            --)
-                shift
-                break
-                ;;
-            -*)
-                printf 'Error: unknown option: %s\n' "$1" >&2
-                usage >&2
+            :)
+                printf 'Error: missing value for -%s\n' "${OPTARG}" >&2
                 return 2
                 ;;
-            *)
-                input_path="$1"
-                shift
+            \?)
+                printf 'Error: unknown option: -%s\n' "${OPTARG}" >&2
+                return 2
                 ;;
         esac
     done
-}
+    shift "$((OPTIND - 1))"
 
-main() {
-    parse_args "$@"
+    [[ $# -eq 1 ]] || {
+        printf 'Error: expected 1 argument, got %s\n' "$#" >&2
+        return 2
+    }
+
+    input_path="$1"
     process "$input_path" "$output_path"
 }
 
@@ -136,9 +146,6 @@ main "$@"
 ### Code Style
 
 - Write ShellCheck-friendly Bash.
-- Quote variable expansions.
-- Use arrays for lists of arguments or paths.
-- Use `local` for function-local variables.
 - Do not write explanatory comments.
 - Use section comments from the required skeleton to keep top-level code grouped
   by role.
@@ -151,8 +158,8 @@ main "$@"
 - Prefer positional arguments for primary inputs.
 - Prefer `-` to mean stdin or stdout when that fits the task.
 - Write primary output to stdout by default.
-- Treat `-o` / `--output` as the standard option for saving primary output to a
-  file when file output is part of the script's behavior.
+- Treat `-o <path>` as the standard option for saving primary output to a file
+  when file output is part of the script's behavior.
 - Write diagnostics and errors to stderr.
 - Do not print success messages by default.
 - Do not add extra features unless they are needed for the agreed specification.
@@ -162,6 +169,6 @@ main "$@"
 After creating the script, run lightweight CLI checks when feasible:
 
 - Confirm `bash -n` passes.
-- Confirm `--help` works.
+- Confirm `-h` works.
 - Run at least one representative command for the agreed behavior.
 - Run `shellcheck` when it is available.
