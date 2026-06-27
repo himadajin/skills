@@ -1,7 +1,6 @@
 ---
 name: option-proposer
-description: >-
-  Use only when the user explicitly asks agent to propose, list, compare, or generate options, choices, candidates, approaches, or alternatives before doing work. Help the user decide by investigating enough context, presenting the requested number of distinct options or 3 by default, comparing each option with Summary, Pros, and Cons, then recommending one. Stop at decision support: do not perform the underlying work, implementation, file edits, commits, sends, purchases, or irreversible actions. Do NOT trigger for ordinary planning, implementation, debugging, code review, brainstorming, or advice unless options, choices, candidates, approaches, alternatives, or a recommendation among choices are explicitly requested as the output.
+description: A skill for deliberate decision support: investigate enough context, present distinct options, compare their tradeoffs, and recommend one. Use only when the user explicitly names this skill or says to use this skill.
 ---
 
 # Option Proposer
