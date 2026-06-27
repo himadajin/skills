@@ -13,18 +13,17 @@ judgment.
 ## External Sources
 
 Consult current official documentation when a task depends on general Agent
-Skills behavior, format, or development practice:
+Skills behavior, format, or development practice. Prefer
 
-- [Agent Skills overview](https://agentskills.io/home)
-- [Agent Skills specification](https://agentskills.io/specification)
-- [Best practices for skill creators](https://agentskills.io/skill-creation/best-practices)
-- [Optimizing skill descriptions](https://agentskills.io/skill-creation/optimizing-descriptions)
-- [Evaluating skill output quality](https://agentskills.io/skill-creation/evaluating-skills)
-- [Using scripts in skills](https://agentskills.io/skill-creation/using-scripts)
-- [OpenAI prompt guidance](https://developers.openai.com/api/docs/guides/prompt-guidance)
+- [Agent Skills LLM index](https://agentskills.io/llms.txt)
+- [Agent Skills specification](https://agentskills.io/specification.md)
+- [Best practices for skill creators](https://agentskills.io/skill-creation/best-practices.md)
+- [Optimizing skill descriptions](https://agentskills.io/skill-creation/optimizing-descriptions.md)
+- [OpenAI prompt guidance](https://developers.openai.com/api/docs/guides/prompt-guidance.md)
 
-Do not copy general guidance from those pages into this repository unless it is
-being specialized into a concrete local rule.
+Use the Agent Skills LLM index to find additional topic-specific pages, such as
+evaluating skill output quality or using scripts in skills, when the task calls
+for them.
 
 ## Engineering Principles
 
