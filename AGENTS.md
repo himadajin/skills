@@ -1,30 +1,21 @@
 # AGENTS.md
 
-## Project Role
+## Repository Scope
 
 This repository contains Himadajin's personal Agent Skills. It does not define a
-separate skill framework or local best-practice system. When changing skills,
-treat the public Agent Skills documentation as the source of truth for the
-general format and development guidance.
+separate skill framework or local best-practice system.
 
-Use this file only for repository-specific routing, priorities, and editing
-judgment.
+For general Agent Skills behavior, format, or development practice, treat the
+official documentation as the source of truth:
 
-## External Sources
+- [Agent Skills LLM index](https://agentskills.io/llms.txt)
+- [Agent Skills specification](https://agentskills.io/specification.md)
+- [Best practices for skill creators](https://agentskills.io/skill-creation/best-practices.md)
+- [Optimizing skill descriptions](https://agentskills.io/skill-creation/optimizing-descriptions.md)
+- [OpenAI prompt guidance](https://developers.openai.com/api/docs/guides/prompt-guidance.md)
 
-Consult current official documentation when a task depends on general Agent
-Skills behavior, format, or development practice:
-
-- [Agent Skills overview](https://agentskills.io/home)
-- [Agent Skills specification](https://agentskills.io/specification)
-- [Best practices for skill creators](https://agentskills.io/skill-creation/best-practices)
-- [Optimizing skill descriptions](https://agentskills.io/skill-creation/optimizing-descriptions)
-- [Evaluating skill output quality](https://agentskills.io/skill-creation/evaluating-skills)
-- [Using scripts in skills](https://agentskills.io/skill-creation/using-scripts)
-- [OpenAI prompt guidance](https://developers.openai.com/api/docs/guides/prompt-guidance)
-
-Do not copy general guidance from those pages into this repository unless it is
-being specialized into a concrete local rule.
+Use the Agent Skills LLM index to find additional topic-specific pages when a
+task needs them.
 
 ## Engineering Principles
 
@@ -61,46 +52,19 @@ Keep rules close to their source of truth:
 - Repository-wide editing rules belong in this file only when they apply across
   skills and are not already covered by official documentation.
 
-## Local Source Of Truth
+## Local Map
 
 - The root `README.md` owns human-facing installation and cross-agent sharing
-  notes; this file owns agent-facing repository editing judgment.
-- Each `skills/<skill-name>/SKILL.md` owns that skill's current behavior.
-- Files under a skill's `references/`, `assets/`, or `scripts/` directory support
-  that skill only, unless another skill explicitly links to them.
+  notes.
+- Each `skills/<skill-name>/SKILL.md` owns that skill's behavior. Supporting
+  files under that skill's subdirectories belong to that skill unless another
+  skill explicitly links to them.
+- Many skills are intentionally written in Japanese; keep the affected skill's
+  language unless the task asks otherwise.
 - `/works/`, `/local/`, and `/tmp/` are local workspace context. Use them when
   the user points to them, but do not infer repository rules from them.
-
-## Editing Skills
-
-- Read the affected `SKILL.md` completely before editing it.
-- Read only the referenced files needed for the behavior being changed.
-- Preserve the language and style of the file being edited; many files in this
-  repository are intentionally written in Japanese.
-- When changing public skill behavior, check whether the `description`,
-  `SKILL.md`, relevant references, and any agent-specific metadata or prompts
-  must change together.
-- Prefer ASCII for machine-facing identifiers, filenames, fixed labels, and
-  stable IDs unless an existing convention requires otherwise.
 
 ## Validation
 
 There is no repository-wide build step at the time of writing. For skill and
-documentation changes, validate by:
-
-- Re-reading the changed files for internal consistency.
-- Checking links and relative file references you touched.
-- Using `rg` in tracked source files to find stale terminology, trigger phrases,
-  filenames, and cross-references affected by the change.
-
-If future work adds package metadata, scripts, or eval harnesses, document the
-exact commands here rather than relying on generic advice.
-
-## Change Hygiene
-
-- Keep changes narrowly scoped to the requested skill, reference, or repository
-  instruction file.
-- Do not rewrite unrelated prose for style consistency alone.
-- Do not overwrite user work or generated artifacts unrelated to the task.
-- Before finalizing, inspect the diff, then briefly report the files changed and
-  any validation that was or was not run.
+documentation changes, validate the touched files and references directly.
