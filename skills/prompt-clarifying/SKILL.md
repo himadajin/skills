@@ -18,6 +18,16 @@ When not to use:
 - One-off throwaway prompts (evaluation cost does not pay off)
 - When the goal is not to improve success rate but merely to reflect the writer's subjective preferences
 
+## Prompt-writing grounding pass
+
+Before Workflow step 0, run this pass once for the target prompt. The goal is to ground the work in current prompt-writing source material before designing scenarios, checklists, or fixes.
+
+1. Read the relevant official source material listed in Related. If the target is a skill, include the Agent Skills specification / best practices. Also read current general prompt-engineering references from more than one source when available.
+2. Extract 2-5 provider-neutral principles that matter for this target prompt. Focus on general instruction-writing concerns such as hierarchy, success criteria, examples, context boundaries, ambiguity, and evaluation.
+3. Record those principles briefly in the iteration notes before preparing scenarios or requirements.
+4. Use the recorded principles as background constraints throughout the loop: scenario design, checklist wording, unclear-point interpretation, and fixes.
+5. Do not copy prompt-engineering techniques into this SKILL.md, and do not branch the workflow by model / provider unless the target prompt itself is explicitly provider-specific.
+
 ## Workflow
 
 0. **Iteration 0 — description / body consistency check** (static, no dispatch needed)
@@ -50,6 +60,7 @@ When not to use:
    - The requirements checklist must include **at least one** `[critical]`-tagged item (if there are zero, the success judgment becomes vacuous). Do not add or remove [critical] tags after the fact.
 5. **Apply the diff**: Put the minimum fix into the prompt to eliminate the unclear points. One theme per iteration (multiple related fixes are OK, unrelated fixes go to next time).
    - **Before applying the fix, explicitly state "which item in the requirements checklist / judgment wording this fix satisfies"** (fixes inferred from axis names often do not land. See the "Fix propagation patterns" section below.)
+   - Check the fix against the grounding principles recorded at the start. If the failure reveals that the grounding was insufficient, reread the relevant official references before editing.
    - **Consult the failure pattern ledger first**. If the structured reflection's `General Fix Rule` already matches a known pattern, the first question is "why didn't the existing fix prevent it?" — the fix may need to move closer to the top of the prompt, or be re-worded, before a new ledger entry is added.
 6. **Re-evaluate**: Run 2 → 5 again with a new executor agent (do not reuse the same agent: it has learned the previous improvements). Increase parallelism if iterating further does not plateau improvements.
 7. **Convergence check**: The rough rule is "stop when 2 consecutive iterations have zero new unclear points AND metric improvements fall below the thresholds (below)". Make it 3 consecutive for high-importance prompts.
@@ -274,6 +285,12 @@ Record and present to the user with the following form at each iteration:
 ## Related
 
 - `skill-creator` — the draft → test → review → improve loop for skill creation. Essentially the same as this skill's "baseline → fix → rerun with an executor agent"
-- `retrospective-codify` — fixating learnings after a task. This skill is during prompt development, retrospective-codify is after a task ends; use them differently
+- Agent Skills official docs — source of truth for skill format, trigger boundaries, bundled resources, and description behavior:
+  - [Agent Skills specification](https://agentskills.io/specification.md)
+  - [Best practices for skill creators](https://agentskills.io/skill-creation/best-practices.md)
+  - [Optimizing skill descriptions](https://agentskills.io/skill-creation/optimizing-descriptions.md)
+- General prompt-engineering references — read during the Prompt-writing grounding pass to refresh provider-neutral instruction-writing principles:
+  - [OpenAI Prompt engineering](https://developers.openai.com/api/docs/guides/prompt-engineering)
+  - [OpenAI Prompt guidance](https://developers.openai.com/api/docs/guides/prompt-guidance)
+  - [Anthropic Prompt engineering overview](https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/overview)
 - Delegation mechanisms such as subagents, handoffs, or agent-as-tool patterns are used for running multiple scenarios in parallel
-- External eval CLIs such as `waxa-eval` can still cover persistence, CI repeatability, or external adoption gates. This skill (prompt-clarifying) covers the **methodology and the in-session delegated-agent flow**, including Iter 0 static check, `[critical]`-tagged checklists, lookup-footprint diagnosis, and spec-gate compliance.
