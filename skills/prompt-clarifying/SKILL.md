@@ -41,7 +41,10 @@ When not to use:
      - Accuracy (achievement rate of the requirements checklist, %. ○ = full score, × = 0, partial = 0.5; sum and divide by total items)
      - Lookup footprint (number and categories of local / external references inspected beyond the target prompt. Extract from the executor agent's self-report; ask the executor to report it explicitly)
      - Unresolved judgment count (how many decisions the executor filled in because the instruction did not resolve them. Decisions that were explicitly routed to specs / acceptance criteria instead of filled in should be listed separately and count as 0 filled judgments)
-     - Spec-gate / acceptance-gate compliance (○ only when the executor does not invent semantics for behavior the target prompt leaves unspecified, and instead routes them to specs, acceptance criteria, or user clarification)
+     - Spec-gate / acceptance-gate compliance:
+       - ○ only when the executor does not invent semantics for behavior the target prompt leaves unspecified, and instead routes them to specs, acceptance criteria, or user clarification.
+       - Count a decision as "invented" when the deliverable silently chooses behavior that is not grounded in the target prompt, scenario, or inspected references.
+       - Count it as "routed" when the executor names the missing decision and sends it to the proper spec / acceptance / clarification gate.
      - Retry count (how many times the executor agent redid the same decision. Extract from the executor agent's self-report; not measurable from the instruction side)
      - **On failure, add a one-line note to the "unclear points" section of the presentation format stating "which [critical] item dropped"** (for root cause tracing)
    - The requirements checklist must include **at least one** `[critical]`-tagged item (if there are zero, the success judgment becomes vacuous). Do not add or remove [critical] tags after the fact.
@@ -66,7 +69,7 @@ When not to use:
   - How to capture: Decisions filled in because the instruction did not resolve them
   - Meaning: Signal of implicit specification
 - Axis: Spec-gate / acceptance-gate compliance
-  - How to capture: Whether unspecified product behavior was routed instead of invented
+  - How to capture: Whether unspecified product behavior was explicitly routed to specs / acceptance criteria / user clarification instead of silently decided
   - Meaning: Signal of implementation discipline
 - Axis: Retry count
   - How to capture: How many times the same decision was redone
@@ -84,7 +87,7 @@ When not to use:
 
 Looking only at accuracy hides skill problems. Using lookup footprint as a **relative value across scenarios** reveals structural defects:
 
-- If one scenario inspects **3-5x or more** references vs the others, that skill is a sign of being **decision-tree-index-leaning with low self-containment**. The executor is being forced into references descent.
+- If one scenario inspects **3-5x or more** references vs the others, treat it as a suspicion threshold for **low self-containment**. The executor may be forced into references descent because the skill acts like an index of decisions rather than a usable recipe.
 - Typical example: all scenarios inspect 1-3 relevant files but one scenario alone inspects 15+ → there is no recipe for that scenario in the skill itself, so it is cross-searching references/
 - Countermeasure: adding an "inline minimum complete example" or "guidance on when to read references" at the top of SKILL.md in iter 2 significantly drops lookup footprint
 
@@ -148,13 +151,14 @@ The caller extracts the self-report portion from the report and fills the evalua
 
 ## Environment constraints
 
-In environments where dispatching a fresh independent executor agent is not possible (already running inside a delegated agent without access to a delegation mechanism, subagent / handoff tools are disabled, etc.), **do not apply** this skill.
+The full empirical loop requires dispatching a fresh independent executor agent. In environments where that is not possible (already running inside a delegated agent without access to a delegation mechanism, subagent / handoff tools are disabled, etc.), **do not run Workflow steps 2-7 as empirical evaluation**.
 
 - Alternative 1: ask the parent session's user to start a separate agent session and delegate the evaluation there
 - Alternative 2: give up on evaluation and explicitly report to the user "empirical evaluation skipped: dispatch unavailable"
-- **NG**: substitute with a self-reread (bias enters, so you must not trust the evaluation result)
+- Static exception: Iteration 0 and structural review mode are text-only consistency checks. They may still be run, but label them as static / structural review and do not count them toward convergence.
+- **NG**: substitute self-reread for the executor run (bias enters, so you must not trust the evaluation result)
 
-**Structural review mode**: when you want to check only the **consistency and clarity of the description** of the skill / prompt rather than run empirical evaluation, carve it out explicitly as structural review mode. Note clearly in the request prompt to the executor agent "this round is structural review mode: text consistency check, not execution". That way the executor agent will not trip on the skip behavior in the environment-constraints section and can return a static review. Structural review is an aid to empirical, not a replacement (it cannot be used for consecutive-clear judgment).
+**Structural review mode**: when you want to check only the **consistency and clarity of the description** of the skill / prompt rather than run empirical evaluation, carve it out explicitly as structural review mode. If using a delegated executor, note clearly in the request prompt "this round is structural review mode: text consistency check, not execution". Structural review is an aid to empirical, not a replacement (it cannot be used for consecutive-clear judgment).
 
 ## Iteration stopping criteria
 
@@ -185,7 +189,7 @@ Rules:
 
 - Before generating a fix in Workflow step 5, scan the ledger. If the current `General Fix Rule` matches an existing entry, update `Seen in` and investigate why the existing fix did not prevent recurrence (wording ambiguity? position too late in the prompt? missing example?) before creating a new entry.
 - A pattern that recurs 3+ times despite targeted fixes is a structural signal — escalate to the "Divergence" criterion above rather than continuing to patch.
-- The ledger is per-target-prompt, not global across all empirical-prompt-tuning runs.
+- The ledger is per-target-prompt, not global across all prompt-clarifying runs. Keep it with the current run's iteration notes or review artifact; do not invent a new storage system just for the ledger.
 
 ## Variant exploration (optional, plateau-breaking)
 
@@ -264,7 +268,7 @@ Record and present to the user with the following form at each iteration:
 
 - **Scenario too easy / too hard**: neither produces signal. One at the median of real use, one edge
 - **Only looking at metrics**: chasing only low lookup footprint strips important explanations and makes it fragile
-- **Too many changes per iteration**: you can no longer trace "which fix back then worked". One fix per iteration
+- **Too many changes per iteration**: you can no longer trace "which fix back then worked". One theme per iteration
 - **Tuning scenarios to match the fix**: making the scenario side easier just to make unclear points look eliminated → putting the cart before the horse
 
 ## Related
