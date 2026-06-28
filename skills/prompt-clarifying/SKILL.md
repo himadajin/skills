@@ -20,13 +20,9 @@ When not to use:
 
 ## Prompt-writing grounding pass
 
-Before Workflow step 0, run this pass once for the target prompt. The goal is to ground the work in current prompt-writing source material before designing scenarios, checklists, or fixes.
+Before Workflow step 0, briefly read the relevant official source material listed in Related. The goal is not to collect prompt-engineering rules; it is to calibrate judgment before editing the target prompt: what this kind of agent-facing instruction should make explicit, what should stay implicit, and what style of wording is likely to steer behavior without overfitting.
 
-1. Read the relevant official source material listed in Related. If the target is a skill, include the Agent Skills specification / best practices. Also read current general prompt-engineering references from more than one source when available.
-2. Extract 2-5 provider-neutral principles that matter for this target prompt. Focus on general instruction-writing concerns such as hierarchy, success criteria, examples, context boundaries, ambiguity, and evaluation.
-3. Record those principles briefly in the iteration notes before preparing scenarios or requirements.
-4. Use the recorded principles as background constraints throughout the loop: scenario design, checklist wording, unclear-point interpretation, and fixes.
-5. Do not copy prompt-engineering techniques into this SKILL.md, and do not branch the workflow by model / provider unless the target prompt itself is explicitly provider-specific.
+If the target is a skill, include the Agent Skills specification or best practices. Prefer the Markdown / LLM-readable links in Related so source access stays lightweight. Record only the short working notes that will shape the next edit, scenario, or checklist. Do not paste generic prompt-engineering techniques into this SKILL.md or branch the workflow by provider unless the target prompt itself is provider-specific.
 
 ## Workflow
 
@@ -38,7 +34,7 @@ Before Workflow step 0, run this pass once for the target prompt. The goal is to
    - If you skip this, the executor agent will "reinterpret" the body to match the description, and accuracy will come out high even though the skill does not actually meet the requirements (false positive)
 
 1. **Baseline preparation**: Fix the target prompt and prepare the following two things.
-   - **Evaluation scenarios**, 2 to 3 kinds (1 median + 1 to 2 edge). Realistic tasks that assume actual situations where the target prompt would apply.
+   - **Evaluation scenarios**, 2 to 3 kinds (1 median + 1 to 2 edge). Realistic bounded interactions that exercise how the target prompt is used in practice, not necessarily single-turn tasks.
    - **Requirements checklist** (for computing accuracy). For each scenario, enumerate 3 to 7 items the deliverable must satisfy. Accuracy % = items satisfied / total items. Fix this in advance (do not move it afterward).
 2. **Bias-free read**: Have a "blank-slate" executor read the instruction. **Delegate to a fresh independent executor agent** using the host environment's available delegation mechanism (subagent, handoff, agent-as-tool, or equivalent). Do not substitute with a self-reread (it is structurally impossible to view text you just wrote objectively). When running multiple scenarios in parallel, dispatch multiple independent executor agents in the same round where possible. For how to handle environments where dispatch is unavailable, see the "Environment constraints" section.
 3. **Execution**: Hand the executor agent a prompt that follows the **executor invocation contract** described below, and have it execute the scenario. The executor produces an implementation or output and returns a self-report at the end.
@@ -58,11 +54,12 @@ Before Workflow step 0, run this pass once for the target prompt. The goal is to
      - Retry count (how many times the executor agent redid the same decision. Extract from the executor agent's self-report; not measurable from the instruction side)
      - **On failure, add a one-line note to the "unclear points" section of the presentation format stating "which [critical] item dropped"** (for root cause tracing)
    - The requirements checklist must include **at least one** `[critical]`-tagged item (if there are zero, the success judgment becomes vacuous). Do not add or remove [critical] tags after the fact.
+   - Each executor owns one scenario execution: the bounded interaction needed to run that scenario and return its report. After the executor returns the report and the caller captures the needed evaluation fields, close that executor.
 5. **Apply the diff**: Put the minimum fix into the prompt to eliminate the unclear points. One theme per iteration (multiple related fixes are OK, unrelated fixes go to next time).
    - **Before applying the fix, explicitly state "which item in the requirements checklist / judgment wording this fix satisfies"** (fixes inferred from axis names often do not land. See the "Fix propagation patterns" section below.)
    - Check the fix against the grounding principles recorded at the start. If the failure reveals that the grounding was insufficient, reread the relevant official references before editing.
    - **Consult the failure pattern ledger first**. If the structured reflection's `General Fix Rule` already matches a known pattern, the first question is "why didn't the existing fix prevent it?" — the fix may need to move closer to the top of the prompt, or be re-worded, before a new ledger entry is added.
-6. **Re-evaluate**: Run 2 → 5 again with a new executor agent (do not reuse the same agent: it has learned the previous improvements). Increase parallelism if iterating further does not plateau improvements.
+6. **Re-evaluate**: Run 2 → 5 again with newly spawned executors, continuing the same lifecycle. Increase parallelism if iterating further does not plateau improvements.
 7. **Convergence check**: The rough rule is "stop when 2 consecutive iterations have zero new unclear points AND metric improvements fall below the thresholds (below)". Make it 3 consecutive for high-importance prompts.
 
 ## Evaluation axes
@@ -125,7 +122,7 @@ You are an executor reading <target prompt name> with a blank slate.
 <Paste the full body of the target prompt, or specify a path for Read>
 
 ## Scenario
-<One paragraph setting the scenario context>
+<Scenario context and any predefined interaction turns needed to exercise the behavior>
 
 ## Requirements checklist (items the deliverable must satisfy)
 1. [critical] <item that belongs to the minimum bar>
@@ -272,8 +269,8 @@ Record and present to the user with the following form at each iteration:
   - Reality: Low lookup footprint can also be a sign of being too thin. Keep qualitative primary.
 - Rationalization: "Rewriting from scratch is faster"
   - Reality: Correct if unclear points do not decrease across 3+ iterations. Before that stage, it is escape.
-- Rationalization: "Let's reuse the same executor agent"
-  - Reality: It has learned the previous improvements. Always dispatch a new one.
+- Rationalization: "Let's keep completed executors around in case we need them later"
+  - Reality: Completed executors consume concurrency and carry learned context. Capture the report, then close them.
 
 ## Common failures
 
@@ -286,11 +283,14 @@ Record and present to the user with the following form at each iteration:
 
 - `skill-creator` — the draft → test → review → improve loop for skill creation. Essentially the same as this skill's "baseline → fix → rerun with an executor agent"
 - Agent Skills official docs — source of truth for skill format, trigger boundaries, bundled resources, and description behavior:
+  - [Agent Skills LLM index](https://agentskills.io/llms.txt)
   - [Agent Skills specification](https://agentskills.io/specification.md)
   - [Best practices for skill creators](https://agentskills.io/skill-creation/best-practices.md)
   - [Optimizing skill descriptions](https://agentskills.io/skill-creation/optimizing-descriptions.md)
-- General prompt-engineering references — read during the Prompt-writing grounding pass to refresh provider-neutral instruction-writing principles:
-  - [OpenAI Prompt engineering](https://developers.openai.com/api/docs/guides/prompt-engineering)
-  - [OpenAI Prompt guidance](https://developers.openai.com/api/docs/guides/prompt-guidance)
-  - [Anthropic Prompt engineering overview](https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/overview)
+- General prompt-engineering references — skim during the Prompt-writing grounding pass when they help calibrate the next edit:
+  - [OpenAI Developers LLM index](https://developers.openai.com/llms.txt)
+  - [OpenAI Prompt engineering](https://developers.openai.com/api/docs/guides/prompt-engineering.md)
+  - [OpenAI Prompt guidance](https://developers.openai.com/api/docs/guides/prompt-guidance.md)
+  - [Anthropic LLM index](https://platform.claude.com/llms.txt)
+  - [Anthropic Prompt engineering overview](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/overview.md)
 - Delegation mechanisms such as subagents, handoffs, or agent-as-tool patterns are used for running multiple scenarios in parallel
