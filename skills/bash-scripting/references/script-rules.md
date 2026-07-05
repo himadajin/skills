@@ -26,9 +26,16 @@ interview.
 - Adapt input and output at the interface boundary so each operation has one
   logic path instead of duplicated transformations for different input sources.
 - Use `main "$@"` as the entry point.
+- Use exit status 2 for command-line usage errors and 1 for runtime failures.
 
-Use this structure as the required skeleton, adapting names, arguments, and
-option cases to the agreed specification:
+The skeleton below is the required frame, shown applied to a filter script with
+one input and one output. Keep the frame in every script: the shebang and `set`
+line, the section comments, `usage`, the `getopts`-based `main`, and
+`main "$@"`. Adapt names, arguments, and option cases to the agreed
+specification. The input and output wiring at the end of `main` — the `-`
+checks and the redirection cases — is the standard pattern only when the script
+is such a filter; for any other script shape, replace that wiring with what the
+agreed specification needs and keep the rest of the frame.
 
 ```bash
 #!/usr/bin/env bash
@@ -149,5 +156,9 @@ After creating the script, run lightweight CLI checks when feasible:
 
 - Confirm `bash -n` passes.
 - Confirm `-h` works.
-- Run at least one representative command for the agreed behavior.
+- Run at least one representative success command and one expected error case
+  for the agreed behavior.
 - Run `shellcheck` when it is available.
+- Create any test fixtures in the script's directory or a temporary location
+  and remove them after validation.
+- Report the checks you ran and their results when delivering the script.
