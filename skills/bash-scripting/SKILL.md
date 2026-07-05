@@ -9,15 +9,22 @@ Use this skill to create a single-file Bash command-line tool.
 
 ## Workflow
 
-Interview the user until you and the user share the same expected script
-behavior. Do not treat the required decisions below as a checklist whose
-completion automatically ends the interview.
+Interview the user to agree on the expected script behavior before
+implementation.
 
-Break down the user's request into the decisions that affect the implementation.
-Resolve decisions in dependency order, asking about the most constraining
+Break down the user's request into the decisions that affect the
+implementation, and classify each decision:
+
+- Decided: the request already fixes it.
+- Defaulted: the rules in this skill fix it.
+- Open: neither fixes it.
+
+Ask only about open decisions; carry decided and defaulted values into the
+specification summary instead of asking about them.
+
+Resolve open decisions in dependency order, asking about the most constraining
 unresolved behavior first. Defer naming and other derived decisions until the
-behavior they describe is stable. If multiple reasonable implementations remain,
-ask another question instead of guessing.
+behavior they describe is stable.
 
 Ask one question at a time and wait for the user's answer before continuing. For
 each question, provide a recommended answer as a concrete proposal the user can
@@ -32,9 +39,17 @@ Resolve at least these decisions before implementation:
 - Commands and dependencies
 - Script name
 
-After the decisions are clear, summarize the agreed specification briefly.
+End the interview only when every required decision has a value and you can
+describe the script's normal and error behavior without guessing. If multiple
+reasonable implementations remain, ask another question instead of guessing.
 
-Then ask for explicit permission to create the script from that specification.
+Then present the specification summary: one entry per required decision with
+its value, marking each value the user did not explicitly state or confirm as
+assumed. The summary is where the user reviews assumed values, so make it
+complete rather than brief.
+
+After presenting the summary, ask for explicit permission to create the script
+from that specification.
 Phrase the confirmation naturally for the current conversation and make it clear
 that implementation will start only after approval.
 
