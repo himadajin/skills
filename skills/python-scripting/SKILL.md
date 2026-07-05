@@ -19,13 +19,19 @@ implementation, and classify each decision:
 - Defaulted: the rules in this skill fix it.
 - Open: neither fixes it.
 
+The rules in this skill include its `references/` files; read them at any
+point, not only at the phase that names them. When the rules only partially
+constrain a behavior, classify it as open if the remaining choice changes
+user-visible behavior, and as defaulted otherwise.
+
 Ask only about open decisions; carry decided and defaulted values into the
 specification summary instead of asking about them. If no decisions are open,
 skip the questions and present the specification summary directly.
 
 Resolve open decisions in dependency order, asking about the most constraining
 unresolved behavior first. Defer naming and other derived decisions until the
-behavior they describe is stable.
+behavior they describe is stable; you may resolve them by proposing a value in
+the specification summary instead of asking.
 
 Ask one question at a time and wait for the user's answer before continuing. For
 each question, provide a recommended answer as a concrete proposal the user can
@@ -47,8 +53,9 @@ reasonable implementations remain, ask another question instead of guessing.
 
 Then present the specification summary: one entry per required decision with
 its value, marking each value the user did not explicitly state or confirm as
-assumed. The summary is where the user reviews assumed values, so make it
-complete rather than brief.
+assumed. A value is confirmed only at the granularity the user's words fix;
+mark anything you tightened or filled in as assumed. The summary is where the
+user reviews assumed values, so make it complete rather than brief.
 
 After presenting the summary, ask for explicit permission to create the script
 from that specification. Phrase the confirmation naturally for the current

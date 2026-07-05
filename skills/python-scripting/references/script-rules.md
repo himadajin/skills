@@ -153,6 +153,10 @@ After creating the script, run lightweight CLI checks when feasible:
 
 - Confirm `python3 -m py_compile <script>` passes.
 - Confirm `--help` works.
-- Run at least one representative command for the agreed behavior. Use
-  `uv run <script>` for scripts that declare PEP 723 dependencies.
-- Run `ruff check` when it is available.
+- Run at least one representative success command and one expected error case
+  for the agreed behavior. Use `uv run <script>` for scripts that declare
+  PEP 723 dependencies.
+- Run `ruff check` when it is available, on PATH or via `uvx ruff check`.
+- Create any test fixtures in the script's directory or a temporary location
+  and remove them after validation.
+- Report the checks you ran and their results when delivering the script.

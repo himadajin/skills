@@ -156,5 +156,9 @@ After creating the script, run lightweight CLI checks when feasible:
 
 - Confirm `bash -n` passes.
 - Confirm `-h` works.
-- Run at least one representative command for the agreed behavior.
+- Run at least one representative success command and one expected error case
+  for the agreed behavior.
 - Run `shellcheck` when it is available.
+- Create any test fixtures in the script's directory or a temporary location
+  and remove them after validation.
+- Report the checks you ran and their results when delivering the script.
