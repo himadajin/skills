@@ -20,7 +20,8 @@ implementation, and classify each decision:
 - Open: neither fixes it.
 
 Ask only about open decisions; carry decided and defaulted values into the
-specification summary instead of asking about them.
+specification summary instead of asking about them. If no decisions are open,
+skip the questions and present the specification summary directly.
 
 Resolve open decisions in dependency order, asking about the most constraining
 unresolved behavior first. Defer naming and other derived decisions until the
@@ -36,6 +37,7 @@ Resolve at least these decisions before implementation:
 - Input
 - Output
 - Command-line options
+- Error behavior
 - Libraries
 - Script name
 
@@ -141,6 +143,7 @@ if __name__ == "__main__":
 - Treat `-o` / `--output` as the standard option for saving primary output to a
   file when file output is part of the script's behavior.
 - Write diagnostics and errors to stderr.
+- Use exit status 2 for command-line usage errors and 1 for runtime failures.
 - Do not print success messages by default.
 - Do not add extra features unless they are needed for the agreed specification.
 
