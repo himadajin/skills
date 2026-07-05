@@ -51,106 +51,53 @@ assumed. The summary is where the user reviews assumed values, so make it
 complete rather than brief.
 
 After presenting the summary, ask for explicit permission to create the script
-from that specification.
-Phrase the confirmation naturally for the current conversation and make it clear
-that implementation will start only after approval.
+from that specification. Phrase the confirmation naturally for the current
+conversation and make it clear that implementation will start only after
+approval.
 
 Create the script only after the user approves.
 
-## Script Rules
+## Python CLI Rules
 
-### File Format
+Use these rules while interviewing so the proposed specification already fits
+the Python script that will be implemented.
 
-- Write one self-contained Python file.
-- Start the file with `#!/usr/bin/env python3`.
-
-### Python and Dependencies
-
-- Target Python 3.11+.
-- Use only the Python standard library unless the user explicitly approves
-  another library.
-- Prefer standard-library-only implementations.
-
-### Command-Line Parsing
-
-- Always use `argparse` for command-line argument parsing.
-- Represent parsed command-line arguments with a frozen dataclass named `Args`.
-- Parse command-line arguments in one function named `parse_args`.
-- Build the `argparse.ArgumentParser` and construct `Args` inside `parse_args`.
-- Treat `argparse.Namespace` as an intermediate value and convert it to `Args`.
-
-### Required Structure
-
-- Pass the parsed `Args` dataclass to `main`.
-- Use `raise SystemExit(main(parse_args()))` in the entry point.
-
-Use this structure as the required skeleton:
-
-```python
-#!/usr/bin/env python3
-
-import argparse
-from collections.abc import Sequence
-from dataclasses import dataclass
-
-
-# = Types =
-
-@dataclass(frozen=True)
-class Args:
-    ...
-
-
-# = Logic =
-
-def process(...) -> ...:
-    ...
-
-
-# = Interface =
-
-def parse_args(argv: Sequence[str] | None = None) -> Args:
-    parser = argparse.ArgumentParser()
-    ...
-    namespace = parser.parse_args(argv)
-    return Args(...)
-
-
-def main(args: Args) -> int:
-    ...
-
-
-if __name__ == "__main__":
-    raise SystemExit(main(parse_args()))
-```
-
-### Code Style
-
-- Follow PEP 8.
-- Add type annotations to every function definition.
-- Do not write explanatory comments.
-- Use section comments from the required skeleton to keep top-level code grouped
-  by role.
-- Express behavior through types, names, functions, and simple control flow.
-
-## CLI Design
+### Scope
 
 - Follow Unix command-line conventions.
 - Keep the interface small.
+- Create one self-contained Python command-line tool.
+- Do not add extra features unless they are needed for the agreed specification.
+
+### Inputs and Outputs
+
 - Prefer positional arguments for primary inputs.
 - Prefer `-` to mean stdin or stdout when that fits the task.
 - Write primary output to stdout by default.
 - Treat `-o` / `--output` as the standard option for saving primary output to a
   file when file output is part of the script's behavior.
-- Write diagnostics and errors to stderr.
+- Write diagnostics and errors to stderr as `<script name>: <message>`.
 - Use exit status 2 for command-line usage errors and 1 for runtime failures.
 - Do not print success messages by default.
-- Do not add extra features unless they are needed for the agreed specification.
+
+### Options
+
+- Build the interface with `argparse`; `-h` / `--help` comes from it.
+
+### Libraries
+
+- Target Python 3.11+.
+- Use only the Python standard library unless the user explicitly approves
+  another library during the interview.
+- Prefer standard-library-only implementations.
+- When a library outside the standard library is approved, the script declares
+  it in PEP 723 inline script metadata and is run with `uv run`.
+
+## Implementation Rules
+
+Before implementing, read `references/script-rules.md` and follow it.
 
 ## Validation
 
-After creating the script, run lightweight CLI checks when feasible:
-
-- Confirm the script starts.
-- Confirm `--help` works.
-- Run at least one representative command for the agreed behavior.
+After creating the script, run the lightweight CLI checks from
+`references/script-rules.md` when feasible.

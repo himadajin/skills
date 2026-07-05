@@ -51,9 +51,9 @@ assumed. The summary is where the user reviews assumed values, so make it
 complete rather than brief.
 
 After presenting the summary, ask for explicit permission to create the script
-from that specification.
-Phrase the confirmation naturally for the current conversation and make it clear
-that implementation will start only after approval.
+from that specification. Phrase the confirmation naturally for the current
+conversation and make it clear that implementation will start only after
+approval.
 
 Create the script only after the user approves.
 
