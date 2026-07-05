@@ -1,95 +1,145 @@
 ---
 name: goal-definition
 description: >-
-  Interview the user to define software-development goals and handoff artifacts such as purpose.md, design.md, or one companion file before implementation. Use only when the user explicitly requests this skill or a goal-definition interview.
+  Interview the user to define software-development goals and draft handoff artifacts — purpose.md, design.md, and companion files such as ui.md or verification.md — before implementation. Use only when the user explicitly requests this skill or a goal-definition interview.
 ---
 
 # Goal Definition
 
 Define a software-development goal through an interview before implementation.
-Keep the work in definition mode: clarify the purpose, shape the selected
-handoff artifact, and leave implementation work for a later task.
+Keep the work in definition mode: clarify the purpose, shape the handoff
+artifacts, and leave implementation work for a later task.
 
-The essential work is the interview loop and the phase artifact contract.
+The interview is draft-driven: the active artifact draft is the shared working
+state, shown and updated in conversation. Progress is a decision entering the
+draft, not a question asked.
 
 ## Core Loop
 
-- Read enough existing context to ask a better next question: the user's linked
-  artifact, relevant repository docs/code/configs, and current phase artifacts.
-  Use external research when outside knowledge materially changes the handoff.
-- Treat a user-provided `plan.md`, `purpose.md`, `design.md`, `ui.md`,
-  `verification.md`, issue, task list, spec, or implementation brief as the
-  current source for the definition work.
-- Maintain `Root` / `Branch` / `Leaf` as an internal model for choosing the next
-  question:
-  - `Root`: the target state or unresolved question the user is trying to
-    define.
-  - `Branch`: an upstream decision or ambiguity that could change the Root or
-    the active artifact.
-  - `Leaf`: wording or detail inside the active artifact.
-- Ask about the most upstream unresolved Branch whose answer could change the
-  active artifact.
-- Ask one question per user turn. Prefer a question that helps the user expand,
-  correct, or sharpen the active Branch.
-- Include a recommended answer that states the decision content that would enter
-  the active artifact if adopted. Give a concise reason explaining what the
-  answer would settle in the Root or active artifact.
-- When asking the user to decide, expose the choice surface: the current read,
-  the meaningful tradeoff or alternative space, and room for the user to choose,
-  revise, or add an option.
-- When investigation frames the question, share the useful finding in one or two
-  short sentences before asking.
-- If the user wants to finish with remaining ambiguity, preserve
-  decision-relevant unknowns in the artifact's `Context` and use `Direction` to
-  guide the later agent.
+1. Read enough context to draft: the user's request, any supplied artifact, and
+   relevant repository docs/code/configs. Use external research only when
+   outside knowledge would materially change the handoff.
+2. As soon as the active artifact has enough content to draft — normally
+   within one or two turns of its becoming active — show it as an
+   in-conversation draft in the artifact format. Mark each undecided point
+   inline with `[UNRESOLVED: <short question>]`, keeping the keyword in
+   English and the question in the body language. Introduce your own interpretations and
+   defaults as markers or named recommendations, never as silent decisions.
+3. Ask one question per user turn, aimed at the unresolved marker whose answer
+   would change the most of the draft; defer wording-level detail until no such
+   marker remains. Resolve markers in `Purpose` and `Context` before markers in
+   `Direction` and `Completion Conditions`.
+4. Match the question to its kind:
+   - A decision question chooses among alternatives. Include a recommended
+     answer stating the text that would enter the draft if adopted, a concise
+     reason, and room to choose, revise, or add an option.
+   - An elicitation question asks for facts only the user can supply. Ask
+     plainly; do not invent a recommendation.
+   When investigation shaped the question, share the finding in one or two
+   short sentences before asking. When no local signal grounds a
+   recommendation, say it rests on general practice.
+5. Do not ask when no plausible answer would change the draft: adopt the
+   recommendation into the draft and note it.
+6. After each answer, show the changed sections — or the whole draft when it is
+   short — with the remaining markers.
+7. Propose closing the artifact when the remaining markers could not change its
+   `Direction` or `Completion Conditions`. A remaining marker that belongs to a
+   later artifact moves into that artifact's first draft. When the user
+   finishes early, convert remaining markers into decision-relevant unknowns in
+   `Context` and use `Direction` to guide the later agent.
 
-## Phases
+## Artifacts
 
-Each phase defines one artifact contract. Choose the active phase from the
-current user request and available artifact:
+The interview moves through up to three artifacts. Read the artifact file when
+it becomes active, or before proposing it at a gate:
 
-- `PHASE1`: define the purpose brief. Read [phases/phase1.md](phases/phase1.md)
-  and [formats/purpose.md](formats/purpose.md).
-- `PHASE2`: refine a confirmed purpose brief or `purpose.md` into self-contained
-  `design.md`. Read [phases/phase2.md](phases/phase2.md) and
-  [formats/design.md](formats/design.md).
-- `PHASE3`: refine `design.md` into one selected companion file. Read
-  [phases/phase3.md](phases/phase3.md) and the selected companion format:
-  [formats/ui.md](formats/ui.md) or
-  [formats/verification.md](formats/verification.md).
+- Purpose brief — [artifacts/purpose.md](artifacts/purpose.md): what the user
+  wants and why.
+- `design.md` — [artifacts/design.md](artifacts/design.md): the self-contained
+  implementation handoff.
+- Companion files — [artifacts/companion.md](artifacts/companion.md): one file
+  per decision area that would otherwise bloat `design.md`, such as `ui.md` or
+  `verification.md`.
 
-Begin with `PHASE1` when the current phase is unclear. Begin from `PHASE2` or
-`PHASE3` when the user supplies the artifact that phase needs. A phase that
-names an input artifact begins only from that artifact. Move from one phase to
-the next through the Confirmation Gate.
+Choose the starting artifact from the user's input:
+
+- No input artifact: start the purpose brief.
+- An input supplied as settled groundwork starts the artifact it feeds: a
+  confirmed purpose brief or `purpose.md` — or an issue, spec, or task list
+  treated as one — starts `design.md`; a settled `design.md` starts a
+  companion.
+- An input supplied for refinement becomes the current draft of its own
+  artifact and keeps its path.
+- When the intent is unclear, make that the first question.
+
+Move between artifacts only through the Confirmation Gate.
+
+## Artifact Format
+
+Every artifact uses these English headings in this order, dropping the sections
+its artifact file excludes:
+
+```md
+# <Short Title>
+
+## Purpose
+
+## Context
+
+## Related Files
+
+## Direction
+
+## Completion Conditions
+```
+
+Write the body in the user's conversation language unless they ask otherwise.
+Keep filenames, headings, and the `<Short Title>` line in English.
+
+- `Purpose`: the discovered target outcome, not merely the initial request.
+- `Context`: only facts whose absence would likely cause a context-reset agent
+  to misjudge the work — explicit constraints, agreed choices, environment
+  facts, important investigation findings, relevant current state, and
+  decision-relevant unknowns preserved at close.
+- `Related Files`: bullet points only — companion handoff files that own
+  separate decision areas, or `- None`.
+- `Direction`: high-level judgment guidance that preserves agreed decisions,
+  boundaries, and things to avoid. Prefer short prose; use bullets only when
+  clearer. Do not prescribe unnecessary implementation means or step-by-step
+  tasks.
+- `Completion Conditions`: bullet points only — the observable state that
+  should be true when the work is complete; if a later agent made all of them
+  true, the target outcome should be achieved. Not a task list; do not describe
+  how to verify them or add a separate testing section.
 
 ## Confirmation Gate
 
-Use a confirmation gate before closing a phase, moving to the next phase, or
-writing an artifact. Ask one narrow question in the user's conversation
-language. The question must include:
+Gate before writing a file or moving to another artifact, with one short
+message in the user's conversation language containing:
 
-- what the current phase has defined;
-- the recommended next action and reason;
-- how the active artifact will be handled;
-- the proposed path when writing a file;
-- an explicit choice to continue refining, close the phase, move to the next
-  phase, or write the active artifact.
+- the current draft or its delta since last shown — before writing a file,
+  show in full any section the user has never seen in full;
+- the recommended next action with a concise reason, and the proposed path when
+  writing a file;
+- an explicit invitation to correct the draft or choose another available
+  action.
 
-When proposing a path without a user-specified destination, use
-`docs/<filename>` where `<filename>` is the active artifact filename:
-`purpose.md`, `design.md`, `ui.md`, or `verification.md`. If that path would
-collide with an existing file or multiple handoffs need separation, prefix the
-filename with a natural English kebab-case topic while keeping the artifact
-filename at the end.
-
-Proceed after the user confirms the chosen action and any proposed path.
+Offer only actions actually available from the current state. When an answer's
+draft update and a gate fall on the same turn, one combined message showing the
+delta serves both. Proceed after the user confirms the action and any path.
 
 ## Writing Artifacts
 
-- Write only the active artifact and path confirmed through the Confirmation
-  Gate.
-- Write one active artifact at a time.
-- Follow the active format file exactly.
-- In PHASE3, when writing the selected companion file, also update `design.md`
-  only to reference the companion in `Related Files`.
+- Write only the artifact, action, and path confirmed through the gate, one
+  artifact at a time, following its artifact file exactly.
+- A written artifact contains no `[UNRESOLVED]` markers: each is resolved or
+  converted into a decision-relevant unknown in `Context`.
+- A file supplied for refinement is rewritten at its own path by default;
+  confirm the overwrite — and the restructuring into the artifact format it
+  implies — at the gate.
+- Otherwise propose `docs/<filename>` where `<filename>` is the artifact
+  filename. If the path would collide or multiple handoffs need separation,
+  prefix a natural English kebab-case topic while keeping the artifact filename
+  at the end.
+- When writing a companion, also update `design.md` only to list the companion
+  in `Related Files`.
