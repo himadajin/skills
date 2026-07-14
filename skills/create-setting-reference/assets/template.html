@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>(作品タイトル、未定なら「タイトル:未定」)設定資料集</title>
+<style>
+:root {
+  color-scheme: light only;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: #ffffff;
+  color: #1a1a1a;
+  font-family: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Noto Sans JP",
+    "Yu Gothic", Meiryo, sans-serif;
+  font-size: 1rem;
+  line-height: 1.8;
+}
+
+main {
+  max-width: 42em;
+  margin: 0 auto;
+  padding: 2.5rem 1.25rem 5rem;
+}
+
+h1, h2, h3, h4 {
+  line-height: 1.4;
+  font-weight: 700;
+}
+
+h1 {
+  font-size: 1.5rem;
+  margin: 0 0 0.5em;
+}
+
+h1 + p {
+  margin: 0 0 2em;
+}
+
+h2 {
+  font-size: 1.25rem;
+  margin: 3em 0 1em;
+  padding-bottom: 0.3em;
+  border-bottom: 1px solid #cccccc;
+}
+
+h3 {
+  font-size: 1.125rem;
+  margin: 2.5em 0 0.75em;
+}
+
+h4 {
+  font-size: 0.9375rem;
+  margin: 1.75em 0 0.5em;
+}
+
+p {
+  margin: 0.5em 0;
+}
+
+ul,
+ol {
+  margin: 0.5em 0;
+  padding-left: 1.6em;
+}
+
+li {
+  margin: 0.2em 0;
+}
+
+dl {
+  display: grid;
+  grid-template-columns: fit-content(10em) 1fr;
+  column-gap: 1.5em;
+  row-gap: 0.25em;
+  margin: 0.5em 0;
+}
+
+dt {
+  font-weight: 700;
+}
+
+dd {
+  margin: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+:focus-visible {
+  outline: 2px solid #1a1a1a;
+  outline-offset: 2px;
+}
+
+nav ul {
+  list-style: none;
+  padding-left: 1.2em;
+  margin: 0.2em 0;
+}
+
+nav > ul {
+  padding-left: 0;
+}
+
+nav a {
+  text-decoration: none;
+}
+
+nav a:hover,
+nav a:focus-visible {
+  text-decoration: underline;
+}
+
+section {
+  scroll-margin-top: 1rem;
+}
+
+@media print {
+  body {
+    font-size: 11pt;
+  }
+
+  main {
+    max-width: none;
+    padding: 0;
+  }
+
+  nav {
+    display: none;
+  }
+
+  h2 {
+    break-before: page;
+  }
+
+  h2, h3, h4 {
+    break-after: avoid;
+  }
+
+  li, dl {
+    break-inside: avoid;
+  }
+
+  p {
+    orphans: 2;
+    widows: 2;
+  }
+}
+</style>
+</head>
+<body>
+<main>
+  <h1>(作品タイトル、未定なら「タイトル:未定」)</h1>
+  <p>(ログライン)</p>
+
+  <nav aria-label="目次">
+    <h2>目次</h2>
+    <ul>
+      <li><a href="#characters">登場人物</a>
+        <ul><li><a href="#(人物のid)">(人物名)</a></li></ul>
+      </li>
+      <li><a href="#relationships">人間関係</a></li>
+      <li><a href="#terms">固有用語</a></li>
+      <li><a href="#timeline">時系列</a></li>
+    </ul>
+  </nav>
+
+  <section id="characters">
+    <h2>登場人物</h2>
+    <section id="(人物のid)">
+      <h3>(人物名)</h3>
+      <h4>基本情報</h4>
+      <dl>
+        <dt>(項目名)</dt>
+        <dd>(確定している値)</dd>
+      </dl>
+      <h4>概要</h4>
+      <p>…</p>
+      <!-- 経歴・過去、目的、特徴も同様に h4 + p / ul -->
+    </section>
+  </section>
+
+  <section id="relationships">
+    <h2>人間関係</h2>
+    <section id="(ペアのid)">
+      <h3>(人物A)と(人物B)</h3>
+      <h4>関係</h4>
+      <p>…</p>
+      <h4>(人物A)から(人物B)</h4>
+      <p>…</p>
+      <h4>(人物B)から(人物A)</h4>
+      <p>…</p>
+    </section>
+  </section>
+
+  <section id="terms">
+    <h2>固有用語</h2>
+    <section id="(用語のid)">
+      <h3>(用語名)</h3>
+      <p>…</p>
+    </section>
+  </section>
+
+  <section id="timeline">
+    <h2>時系列</h2>
+    <p>同じ時期区分内の掲載順は、明示されていない限り前後関係を表さない。</p>
+    <section id="(時点のid)">
+      <h3>(時点)</h3>
+      <section id="(場面のid)">
+        <h4>(場面)</h4>
+        <ol>
+          <li>…</li>
+        </ol>
+      </section>
+    </section>
+  </section>
+</main>
+</body>
+</html>
