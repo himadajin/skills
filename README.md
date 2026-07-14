@@ -41,6 +41,16 @@ ln -sfn ~/.agents/skills ~/.claude/skills
 ln -sfn ~/.agents/skills ~/.copilot/skills
 ```
 
+## Using skills in chat apps
+
+Claude and ChatGPT accept skills as zip uploads. Each release of this repository
+attaches one `<skill-name>.zip` per skill, in the folder layout both services expect.
+
+Download the zip for the skill you need from the
+[latest release](https://github.com/himadajin/skills/releases/latest) and upload it
+in the chat app's skill settings.
+See [docs/releasing.md](docs/releasing.md) for how releases are produced.
+
 ## See Also
 
 References:

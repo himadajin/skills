@@ -56,6 +56,9 @@ Keep rules close to their source of truth:
 
 - The root `README.md` owns human-facing installation and cross-agent sharing
   notes.
+- `docs/releasing.md` records, as a factual description, how release zips are
+  produced. Releases happen only when the repository owner manually runs the
+  GitHub Actions release workflow; agents must not initiate releases.
 - Each `skills/<skill-name>/SKILL.md` owns that skill's behavior. Supporting
   files under that skill's subdirectories belong to that skill unless another
   skill explicitly links to them.
