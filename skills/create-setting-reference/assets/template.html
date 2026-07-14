@@ -9,47 +9,55 @@
   color-scheme: light only;
 }
 
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
 body {
   margin: 0;
   background: #ffffff;
   color: #1a1a1a;
   font-family: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Noto Sans JP",
     "Yu Gothic", Meiryo, sans-serif;
-  font-size: 16px;
+  font-size: 1rem;
   line-height: 1.8;
 }
 
 main {
-  max-width: 720px;
+  max-width: 42em;
   margin: 0 auto;
   padding: 2.5rem 1.25rem 5rem;
 }
 
+h1, h2, h3, h4 {
+  line-height: 1.4;
+  font-weight: 700;
+}
+
 h1 {
   font-size: 1.5rem;
-  font-weight: 700;
-  margin: 0 0 1.5em;
+  margin: 0 0 0.5em;
+}
+
+h1 + p {
+  margin: 0 0 2em;
 }
 
 h2 {
   font-size: 1.25rem;
-  font-weight: 700;
   margin: 3em 0 1em;
   padding-bottom: 0.3em;
   border-bottom: 1px solid #cccccc;
 }
 
 h3 {
-  font-size: 1.1rem;
-  font-weight: 700;
+  font-size: 1.125rem;
   margin: 2.5em 0 0.75em;
 }
 
 h4 {
-  font-size: 1rem;
-  font-weight: 700;
+  font-size: 0.9375rem;
   margin: 1.75em 0 0.5em;
-  color: #555555;
 }
 
 p {
@@ -67,6 +75,10 @@ li {
 }
 
 dl {
+  display: grid;
+  grid-template-columns: fit-content(10em) 1fr;
+  column-gap: 1.5em;
+  row-gap: 0.25em;
   margin: 0.5em 0;
 }
 
@@ -75,21 +87,41 @@ dt {
 }
 
 dd {
-  margin: 0 0 0.6em 1em;
+  margin: 0;
 }
 
 a {
-  color: #1a1a1a;
+  color: inherit;
   text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+:focus-visible {
+  outline: 2px solid #1a1a1a;
+  outline-offset: 2px;
 }
 
 nav ul {
   list-style: none;
   padding-left: 1.2em;
+  margin: 0.2em 0;
 }
 
 nav > ul {
   padding-left: 0;
+}
+
+nav a {
+  text-decoration: none;
+}
+
+nav a:hover,
+nav a:focus-visible {
+  text-decoration: underline;
+}
+
+section {
+  scroll-margin-top: 1rem;
 }
 
 @media print {
@@ -102,16 +134,25 @@ nav > ul {
     padding: 0;
   }
 
-  h2 {
-    break-before: page;
-  }
-
   nav {
     display: none;
   }
 
-  section {
-    break-inside: avoid-page;
+  h2 {
+    break-before: page;
+  }
+
+  h2, h3, h4 {
+    break-after: avoid;
+  }
+
+  li, dl {
+    break-inside: avoid;
+  }
+
+  p {
+    orphans: 2;
+    widows: 2;
   }
 }
 </style>
