@@ -124,6 +124,45 @@ section {
   scroll-margin-top: 1rem;
 }
 
+/* 時系列章: 縦のレールと時点マーカー。
+   水平位置の単位は rem で統一する。em を混ぜると h3 の font-size 基準で
+   解決され、レールとマーカーがズレる。 */
+#timeline > section {
+  position: relative;
+  margin-left: 0.5rem;
+  padding: 1.75rem 0 0.75rem 1.75rem;
+  border-left: 2px solid #cccccc;
+}
+
+#timeline > section:first-of-type {
+  padding-top: 0.75rem;
+}
+
+#timeline > section > h3 {
+  position: relative;
+  margin: 0 0 0.5em;
+}
+
+/* マーカー中心をレール中心(padding-left + 線幅の半分)に置き、
+   translate(-50%, -50%) で自己整列させる。top: 0.7em は h3 の
+   行送り(line-height 1.4)の半分 = 1行目の中心。
+   印刷では背景色が出力されないため、border だけで塗りつぶした円にする。 */
+#timeline > section > h3::before {
+  content: "";
+  position: absolute;
+  top: 0.7em;
+  left: calc(-1.75rem - 1px);
+  transform: translate(-50%, -50%);
+  width: 0;
+  height: 0;
+  border: 5px solid #1a1a1a;
+  border-radius: 50%;
+}
+
+#timeline > section > section > h4 {
+  margin: 1.25em 0 0.25em;
+}
+
 @media print {
   body {
     font-size: 11pt;
