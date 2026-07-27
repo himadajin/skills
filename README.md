@@ -22,8 +22,8 @@ Use `~/.agents/skills/` as the real directory, then connect agent-specific locat
   - Setup: use directly
 
 - **GitHub Copilot CLI**
-  - Location: `~/.agents/skills/` or `~/.copilot/skills/`
-  - Setup: prefer `~/.agents/skills/`; if you also use `~/.copilot/skills/`, symlink it to the same directory
+  - Location: `~/.agents/skills/`
+  - Setup: use directly
 
 - **GitHub Copilot cloud agent**
   - Location: `~/.agents/skills/` or `~/.copilot/skills/`
@@ -31,14 +31,13 @@ Use `~/.agents/skills/` as the real directory, then connect agent-specific locat
 
 - **GitHub Copilot in VS Code**
   - Location: `~/.agents/skills/`, `~/.claude/skills/`, or `~/.copilot/skills/`
-  - Setup: prefer `~/.agents/skills/`; keep the others as symlinks only if needed
+  - Setup: prefer `~/.agents/skills/`
 
 This keeps shared skills centralized in one place while still matching each agent's discovery rules.
 
 ```sh
-mkdir -p ~/.agents/skills ~/.claude ~/.copilot
+mkdir -p ~/.agents/skills ~/.claude
 ln -sfn ~/.agents/skills ~/.claude/skills
-ln -sfn ~/.agents/skills ~/.copilot/skills
 ```
 
 ## Using skills in chat apps
@@ -51,13 +50,20 @@ Download the zip for the skill you need from the
 in the chat app's skill settings.
 See [docs/releasing.md](docs/releasing.md) for how releases are produced.
 
+Note: Claude Desktop (Cowork) sessions do not read `~/.claude/skills/`; they sync
+the skills enabled on your claude.ai account instead. A skill uploaded to
+claude.ai under the same name as a locally installed one therefore shows up
+twice in those sessions, as a frozen copy that no longer tracks its source repo.
+Keep the local install as the source of truth and upload to claude.ai only for
+skills used in the chat apps themselves.
+
 ## See Also
 
 References:
 
 - [Overview - Agent Skills](https://agentskills.io/home)
 - [Extend Claude with skills - Claude Code Docs](https://code.claude.com/docs/en/skills)
-- [Agent Skills – Codex | OpenAI Developers](https://developers.openai.com/codex/skills)
+- [Build skills – Codex | ChatGPT Learn](https://learn.chatgpt.com/docs/build-skills)
 - [Adding agent skills for GitHub Copilot CLI - GitHub Docs](https://docs.github.com/en/copilot/how-tos/copilot-cli/customize-copilot/add-skills)
 - [Use Agent Skills in VS Code](https://code.visualstudio.com/docs/copilot/customization/agent-skills)
 
