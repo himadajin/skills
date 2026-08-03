@@ -2,11 +2,9 @@
 name: spec-drafting
 description: >-
   Interview the user to draft a first-draft specification
-  (docs/specs/<topic>/spec.md with companions such as ui.md)
-  and a disposable prototype implementation plan (docs/plans/<topic>.md)
-  before implementation.
-  Use only when the user explicitly requests this skill
-  or a spec-drafting interview.
+  and a disposable prototype implementation plan before implementation.
+  Invoke only on the user's explicit request.
+disable-model-invocation: true
 ---
 
 # Spec Drafting
