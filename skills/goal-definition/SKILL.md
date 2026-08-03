@@ -1,7 +1,11 @@
 ---
 name: goal-definition
 description: >-
-  Interview the user to define software-development goals and draft handoff artifacts — purpose.md, design.md, and companion files such as ui.md or verification.md — before implementation. Use only when the user explicitly requests this skill or a goal-definition interview.
+  Interview the user to define software-development goals
+  and draft handoff artifacts such as purpose.md and design.md
+  before implementation.
+  Invoke only on the user's explicit request.
+disable-model-invocation: true
 ---
 
 # Goal Definition

@@ -1,6 +1,12 @@
 ---
 name: orchestration-planning
-description: Plan a subagent-orchestrated implementation: the invoking agent becomes orchestrator and reviewer, delegates all implementation to subagents, and waits for the user's GO sign before making any changes. Use ONLY when the user explicitly invokes this skill by name. Never trigger proactively.
+description: >-
+  Plan a subagent-orchestrated implementation:
+  the invoking agent becomes orchestrator and reviewer,
+  delegates all implementation to subagents,
+  and waits for the user's GO sign before making any changes.
+  Invoke only on the user's explicit request.
+disable-model-invocation: true
 ---
 
 # orchestration-planning

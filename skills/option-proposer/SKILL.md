@@ -1,6 +1,10 @@
 ---
 name: option-proposer
-description: A skill for deliberate decision support: investigate enough context, present distinct options, compare their tradeoffs, and recommend one. Use only when the user explicitly names this skill or says to use this skill.
+description: >-
+  Deliberate decision support: investigate enough context,
+  present distinct options, compare their tradeoffs, and recommend one.
+  Invoke only on the user's explicit request.
+disable-model-invocation: true
 ---
 
 # Option Proposer

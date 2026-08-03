@@ -1,6 +1,11 @@
 ---
 name: prompt-clarifying
-description: Methodology for iteratively clarifying and improving agent-facing instructions (skills / slash commands / repository instruction files / code-gen prompts) via bias-free executor + two-sided evaluation (executor self-report + instruction-side metrics observable from delegated agents). Meta-skill, invoke ONLY when the user explicitly asks for an "empirical" eval, prompt tuning, prompt clarification, or the Iter-0 description / body consistency check. Do NOT auto-invoke after every instruction edit; this loop is operator-triggered by name.
+description: >-
+  Iteratively clarify and improve agent-facing instructions —
+  skills, slash commands, repository instruction files, code-gen prompts —
+  through bias-free executor runs and two-sided evaluation.
+  Invoke only on the user's explicit request.
+disable-model-invocation: true
 ---
 
 # Prompt Clarifying

@@ -1,9 +1,7 @@
 ---
 name: create-setting-reference
-description: >
-  ユーザーが明示的にこのスキルを呼んだときだけ使用する。
-  ここまでの会話で確定したシナリオ設定を整理し、登場人物・人間関係・固有用語・時系列の
-  4章構成の単一HTML設定資料集として出力する。推測や創作で情報を補完しない。
+description: ここまでの会話で確定したシナリオ設定を、登場人物・人間関係・固有用語・時系列の4章構成の単一HTML設定資料集として出力する。ユーザーの明示的な依頼でのみ起動する。
+disable-model-invocation: true
 ---
 
 # Create Setting Reference
