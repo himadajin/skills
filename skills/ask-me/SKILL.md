@@ -1,6 +1,11 @@
 ---
 name: ask-me
-description: Clarify what the user actually wants through a one-question-at-a-time dialogue before deciding or implementing anything. Use ONLY when the user explicitly invokes it, e.g. "ask me", "ask-me", "質問して整理して", "質問で整理したい". Never trigger this skill proactively.
+description: >-
+  Clarify what the user actually wants
+  through a one-question-at-a-time dialogue
+  before deciding or implementing anything.
+  Invoke only on the user's explicit request.
+disable-model-invocation: true
 ---
 
 # ask-me

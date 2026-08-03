@@ -1,6 +1,11 @@
 ---
 name: decision-distillation
-description: This skill should be used only when the user explicitly asks to run the decision-distillation skill. It re-reads the discussion so far, verifies sources relevant to the judgments made, and reports the currently valid premises, adopted decisions, necessary consequences, and remaining discussion points as a fixed four-section output with evidence attached to each item. Contradictions are recorded as remaining discussion points together with the single point the user needs to decide.
+description: >-
+  Re-read the discussion, verify the sources behind its judgments,
+  and report the valid premises, adopted decisions, necessary consequences,
+  and remaining discussion points with evidence.
+  Invoke only on the user's explicit request.
+disable-model-invocation: true
 ---
 
 # decision-distillation

@@ -1,6 +1,10 @@
 ---
 name: python-scripting
-description: Use only when the user explicitly asks to use this skill. Create a single-file Python command-line script after interviewing the user to decide its script specification.
+description: >-
+  Create a single-file Python command-line script
+  after interviewing the user to decide its script specification.
+  Invoke only on the user's explicit request.
+disable-model-invocation: true
 ---
 
 # python-scripting
