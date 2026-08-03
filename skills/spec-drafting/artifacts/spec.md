@@ -36,6 +36,8 @@ Exclude `Direction`.
   a decision that should still hold after the prototype belongs here;
   a decision made only to keep the prototype cheap
   belongs in the implementation plan.
+  Do not record plan-bound decisions in the spec draft;
+  hold them in conversation until the plan is drafted.
 - Ask only when the answer would materially reduce downstream guesswork.
   Ground recommendations in repo investigation,
   existing project conventions, and practical constraints.
@@ -49,8 +51,10 @@ use one only when it reveals a high-impact undecided point:
 - Which observable behavior defines the software —
   what would a user see it do?
 - Which interface or data shape would be costly to change after the prototype?
-- Is a tool or library choice part of the software's identity,
-  or only prototype convenience that belongs in the plan?
+- Judge a tool or library choice by the user's stated reason:
+  a reason that outlives the prototype ("the language I use daily")
+  belongs in the spec;
+  a reason about keeping the prototype cheap belongs in the plan.
 - Should reusable core logic be separated
   from UI, CLI, or external-service wrappers?
 - Which uncertainty should the prototype answer,

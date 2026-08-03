@@ -55,8 +55,10 @@ Progress is a decision entering the draft, not a question asked.
 6. After each answer, show the changed sections —
    or the whole draft when it is short — with the remaining markers.
 7. Propose closing the artifact when its artifact file's closing condition holds.
-   A remaining marker that belongs to a later artifact
-   moves into that artifact's first draft.
+   A remaining marker — or a settled decision — that belongs to a later artifact
+   moves into that artifact's first draft;
+   until that artifact is drafted, hold it in conversation,
+   not in the current draft.
    When the user finishes early,
    preserve remaining markers as `Open Questions` entries
    or decision-relevant unknowns in `Context`.
@@ -92,8 +94,10 @@ Choose the starting artifact from the user's input:
   a settled purpose — or an issue, spec sketch, or task list treated as one —
   starts `spec.md`;
   a settled `spec.md` starts a companion or the implementation plan.
-- An input supplied for refinement
-  becomes the current draft of its own artifact and keeps its path.
+- An input already in artifact form and supplied for refinement
+  becomes the current draft of its own artifact and keeps its path;
+  raw material such as a memo or notes starts the artifact it feeds
+  at the default path, leaving the source file untouched.
 - When the intent is unclear, make that the first question.
 
 Move between artifacts only through the Confirmation Gate.
@@ -132,6 +136,8 @@ Keep filenames, headings, and the `<Short Title>` line in English.
   important investigation findings, relevant current state;
   in artifacts without `Open Questions`,
   also decision-relevant unknowns preserved at close.
+  Never a decision that belongs to a later artifact, however settled —
+  hold it in conversation until that artifact is drafted.
 - `Direction`: high-level judgment guidance —
   intended direction, boundaries, and things to avoid.
   Prefer short prose; use bullets only when clearer.
@@ -164,6 +170,14 @@ When an answer's draft update and a gate fall on the same turn,
 one combined message showing the delta serves both.
 Proceed after the user confirms the action and any path.
 
+When the user pre-authorizes a write before seeing the draft,
+you may write without a separate gate turn;
+the writing message must then show the full content in the message body —
+a link is not a substitute — together with its path,
+name the decisions you filled in by judgment, and invite corrections.
+Pre-authorization covers only the artifact the user asked for;
+any other artifact still gates.
+
 ## Writing Artifacts
 
 - Write only the artifact, action, and path confirmed through the gate,
@@ -175,7 +189,7 @@ Proceed after the user confirms the action and any path.
   companions beside it in the same directory,
   and the implementation plan at `docs/plans/<topic>.md`,
   where `<topic>` is a natural English kebab-case topic proposed at the gate.
-- A file supplied for refinement is rewritten at its own path by default;
+- A file refined in place is rewritten at its own path;
   the gate confirms the overwrite
   and the restructuring into the artifact format it implies.
 - When writing a companion,
