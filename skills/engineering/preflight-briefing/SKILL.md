@@ -1,64 +1,68 @@
 ---
 name: preflight-briefing
-description: Turn a task description (a GitHub issue link, a spec file, or a prompt) into a discussion-ready briefing before any implementation or implementation planning begins. Invoke only on the user's explicit request.
+description: >-
+  Open a pre-implementation discussion phase for a task description
+  such as a GitHub issue link, a spec file, or a prompt.
+  Verify it against the current codebase, present a briefing,
+  and discuss direction until the user explicitly asks for
+  implementation.
+  Invoke only on the user's explicit request.
 disable-model-invocation: true
 ---
 
-# Preflight Briefing
+# preflight-briefing
 
-Given a task description, verify it against the current state of the codebase and produce a briefing that lets the user decide the direction. The briefing comes before implementation, and also before an implementation plan.
+## Goal
 
-## Scope and hard constraints
+Task descriptions age.
+By the time work starts, the description may reference code that has
+moved, rely on premises that are no longer true, or ask for something
+already partially solved.
+Before any implementation work, verify the task description against the
+current state of the codebase and give the user the material to decide
+the direction.
 
-- The deliverable of this skill is the briefing itself. The skill is complete when the briefing has been presented and you have stopped to wait for the user's decision.
-- Operate read-only. Do not edit files, create branches, commit, or change code in any way. Reading files and running read-only commands (git log, git diff, gh, grep, tests are NOT included — do not run tests) is fine.
-- Do not produce an implementation plan. The briefing must not contain: code snippets, file-by-file change lists, ordered implementation steps, or effort estimates. Stay at the level of "what should be decided", not "how to build it". If you notice yourself describing concrete edits, you have gone one level too deep — pull back up.
-- Implementation and planning are separate later phases. They begin only after the user has approved a direction in discussion. Do not start them yourself, even if the direction seems obvious or the user's tone seems eager.
+Invoking this skill opens a discussion phase.
+The opening deliverable is the briefing below;
+the conversation that follows stays in the same phase
+until the user explicitly closes it.
 
-## Workflow
+## Deliverable: the briefing
 
-### 1. Ingest the task description
+Present the briefing in the chat, in the user's language.
+Write it to a file or post it as an issue comment only when the user
+asks.
+Keep it readable in one sitting;
+if drift findings are extensive, summarize and offer to expand.
 
-The input may be a GitHub issue link, a spec or requirements file, or prose written directly in the prompt. Treat all of these the same way: as a task description.
+1. **Task summary** — the goal, not the method.
+2. **Drift findings** — gaps between the description and the current
+   main branch, with evidence (commits, merged PRs, moved or removed
+   code).
+   Cover: whether the files and structures it references still exist in
+   their assumed form, whether its premises still hold, and whether the
+   problem has been partially or fully solved since it was written.
+3. **Feasibility as written** — can it be implemented as described,
+   and if not, what reinterpretation is needed.
+4. **Candidate directions** — 2–3 options at policy level, each with
+   trade-offs.
+   Include "do it as written" when it is still viable.
+5. **Recommendation** — one of the candidates, with the reasoning.
+6. **Open questions** — the decisions only the user can make.
+   End the briefing here.
 
-- For an issue link, read the issue body, all comments, and any linked PRs or issues.
-- For a file, read it in full.
-- For prose, use it as-is.
+Altitude cap, for the briefing and all discussion that follows:
+stay at "what should be decided", not "how to build it".
+Do not include code snippets, file-by-file change lists, ordered
+implementation steps, or effort estimates.
 
-Read the task description completely before touching the codebase.
+## Phase rules
 
-### 2. Drift check
-
-Task descriptions age. Before discussing direction, verify the description against the current main branch:
-
-- Do the files, functions, and structures it references still exist in their assumed form?
-- Are the premises it relies on still true?
-- Has the problem been partially or fully solved since it was written? Check the git history from around the time the description was created, and look for related merged PRs.
-- Have recent changes reshaped the task, made it easier, harder, or unnecessary?
-
-Record concrete findings (what changed, where) — these are often the most valuable part of the briefing.
-
-### 3. Explore direction
-
-- Can the task be implemented as written? If not, what reinterpretation would be needed?
-- Identify 2–3 candidate directions, at policy level only, each with its trade-offs. Include "do it as written" as a candidate when it is still viable.
-- Form a recommendation and be explicit about why.
-
-### 4. Present the briefing and stop
-
-Present the briefing with this structure:
-
-1. Task summary — the goal, not the method
-2. Drift findings — gaps between the description and current main, with evidence
-3. Feasibility as written
-4. Candidate directions and trade-offs
-5. Recommendation and reasoning
-6. Open questions — the decisions you need the user to make
-
-End the briefing with the open questions, then stop and wait for the user's reply. Do not continue into planning or implementation in the same turn under any circumstances.
-
-## Output conventions
-
-- Write the briefing in the language the user is using.
-- Present the briefing in the chat by default. Write it to a file or post it as an issue comment only when the user explicitly asks.
-- Keep it readable in one sitting. If the drift findings are extensive, summarize and offer to expand on request rather than dumping everything.
+- The phase is read-only:
+  read files and run read-only commands (git log, git diff, gh, grep),
+  but do not edit files, run tests, or change any state.
+- The phase ends only when the user explicitly asks for implementation
+  or an implementation plan.
+  Agreement with a direction — "sounds good", "let's go with B" —
+  is a decision within the discussion, not that instruction.
+  When the phase ends, these rules end with it.
