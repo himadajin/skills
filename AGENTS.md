@@ -65,7 +65,15 @@ Keep rules close to their source of truth:
   Releases happen only when the repository owner
   manually runs the GitHub Actions release workflow;
   agents must not initiate releases.
-- Each `skills/<skill-name>/SKILL.md` owns that skill's behavior.
+- Skills live two levels deep, grouped by category:
+  `engineering` (artifacts that lead to implementation),
+  `productivity` (dialogue and decision support),
+  `meta` (skill and prompt development),
+  `writing` (Japanese prose),
+  and `creativity` (creative output).
+  `skills/deprecated/` holds retired skills;
+  they are kept for reference and excluded from releases.
+- Each `skills/<category>/<skill-name>/SKILL.md` owns that skill's behavior.
   Supporting files under that skill's subdirectories belong to that skill
   unless another skill explicitly links to them.
 - Many skills are intentionally written in Japanese;

@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
-"""Validate skills under skills/ against the Agent Skills specification.
+"""Validate skills under skills/<category>/ against the Agent Skills specification.
+
+Skills live two levels deep: skills/<category>/<skill-name>/SKILL.md.
 
 Checks the mandatory rules from https://agentskills.io/specification.md:
 
-- every directory under skills/ contains exactly one SKILL.md (at its root)
+- every skill directory under skills/<category>/ contains exactly one SKILL.md
+  (at its root), and no SKILL.md sits at the category level
 - SKILL.md starts with a closed YAML frontmatter block
 - name: 1-64 chars, lowercase alphanumerics and single hyphens, no leading /
   trailing hyphen, and matches the directory name
@@ -145,12 +148,18 @@ def main():
         print(f"error: {skills_root} is not a directory", file=sys.stderr)
         return 1
 
-    skill_dirs = sorted(p for p in skills_root.iterdir() if p.is_dir())
+    category_dirs = sorted(p for p in skills_root.iterdir() if p.is_dir())
+    skill_dirs = sorted(p for c in category_dirs for p in c.iterdir() if p.is_dir())
     if not skill_dirs:
         print(f"error: no skill directories found under {skills_root}", file=sys.stderr)
         return 1
 
     failed = False
+    for category_dir in category_dirs:
+        if (category_dir / "SKILL.md").is_file():
+            rel = category_dir.relative_to(root)
+            print(f"error: {rel}: SKILL.md at category level; skills belong in {rel}/<skill-name>/")
+            failed = True
     for skill_dir in skill_dirs:
         errors, warnings = validate_skill(skill_dir)
         rel = skill_dir.relative_to(root)
