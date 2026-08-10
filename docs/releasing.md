@@ -5,8 +5,9 @@
 
 ## 成果物
 
-リリースには `skills/` 配下の各スキルが `<skill-name>.zip` として 1 スキル 1 ファイルで
-添付される。zip の直下には `<skill-name>/` フォルダがあり、その中に `SKILL.md` と
+リリースには `skills/<category>/` 配下の各スキルが `<skill-name>.zip` として
+1 スキル 1 ファイルで添付される。`skills/deprecated/` 配下のスキルはリリースに含まれない。
+zip の直下には `<skill-name>/` フォルダがあり、その中に `SKILL.md` と
 関連ファイルが入っている。これは Claude と ChatGPT のスキルアップロードが期待する
 共通の形式である。最新のリリースは
 <https://github.com/himadajin/skills/releases/latest> から取得できる。

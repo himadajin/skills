@@ -38,9 +38,10 @@ jobs:
       - name: Build skill zips
         run: |
           mkdir -p dist
-          for dir in skills/*/; do
+          for dir in skills/*/*/; do
+            case "$dir" in skills/deprecated/*) continue ;; esac
             name="$(basename "$dir")"
-            (cd skills && zip -r -q "../dist/$name.zip" "$name" -x '*.DS_Store')
+            (cd "$(dirname "$dir")" && zip -r -q "../../dist/$name.zip" "$name" -x '*.DS_Store')
           done
           ls -l dist
 
