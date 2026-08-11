@@ -14,8 +14,8 @@ disable-model-invocation: true
 ## Goal
 
 Task descriptions age.
-By the time work starts, the description may reference code that has　moved,
-rely on premises that are no longer true, or ask for something　already partially solved.
+By the time work starts, the description may reference code that has moved,
+rely on premises that are no longer true, or ask for something already partially solved.
 Verify the task description against the current state of the codebase
 and give the user the material to decide the direction.
 
@@ -26,20 +26,37 @@ Write it to a file or post it as an issue comment only when the user asks.
 Keep it readable in one sitting;
 if drift findings are extensive, summarize and offer to expand.
 
-1. **Task summary**
-  — the goal, not the method.
-2. **Drift findings**
-  — gaps between the description and the current main branch, with evidence (commits, merged PRs, moved or removedcode).
+The briefing has four parts, in this order:
+
+1. **Task**
+  — what the description asks for, and why. The goal, not the method.
+    Restate it in your own words,
+    so the briefing stands alone for a reader
+    who has not opened the original description.
+2. **Situation**
+  — what is true now.
+    The gaps between the description and the current main branch
+    with evidence (commits, merged PRs, moved or removed code),
+    and whether the task can be implemented as described.
     Cover: whether the files and structures it references still exist in their assumed form,
     whether its premises still hold, and whether the problem has been partially or fully solved since it was written.
-3. **Feasibility as written**
-  — can it be implemented as described, and if not, what reinterpretation is needed.
-4. **Candidate directions**
-  — 2–3 options at policy level, each with trade-offs. Include "do it as written" when it is still viable.
-5. **Recommendation**
-  — one of the candidates, with the reasoning.
-6. **Open questions**
-  — the decisions only the user can make. End the briefing here.
+3. **Decision**
+  — what could be done.
+    Name the primary decision in one sentence,
+    then give 2–3 candidate directions at policy level.
+    Include "do it as written" when it is still viable.
+    Attach each candidate's preconditions, costs, and consequences to that candidate;
+    do not float them as standalone questions.
+4. **Proposal**
+  — what you suggest. End the briefing here.
+    One complete package as an itemized list:
+    the candidate you recommend plus a default for every remaining sub-decision,
+    so the user can override single items.
+    Accepting the proposal as-is must leave nothing undecided.
+    A sub-decision may stay open only when you cannot form a default,
+    and then state why the call is the user's.
+    Close by saying that "as proposed" settles everything
+    and that individual items can be swapped in the reply.
 
 ## Boundaries
 
