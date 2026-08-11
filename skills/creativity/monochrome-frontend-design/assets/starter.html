@@ -18,10 +18,8 @@
         --foreground: #171717;
         --muted: #f5f5f5;
         --border: #ebebeb;
-        --terminal: #101010;
-        --terminal-border: #282828;
-        --terminal-mute: #7d8187;
-        --cursor: #ffc799;
+        --cursor: #ffc799; /* カーソルの点専用 */
+        --header-h: 3.5rem;
         --font-sans:
           "Geist", "Noto Sans JP", system-ui, -apple-system, "Hiragino Sans",
           "Yu Gothic", Meiryo, sans-serif;
@@ -35,7 +33,7 @@
         color: var(--foreground);
         font-family: var(--font-sans);
         font-size: 16px;
-        line-height: 1.75;
+        line-height: 1.65;
       }
       ::selection {
         background: var(--foreground);
@@ -45,39 +43,50 @@
         outline: 2px solid var(--foreground);
         outline-offset: 1px;
       }
+      :target {
+        scroll-margin-block: calc(var(--header-h) + 1rem);
+      }
       h1,
       h2,
       h3 {
         line-height: 1.25;
         letter-spacing: -0.02em;
+        font-weight: 600;
       }
       h1 {
-        font-size: 2.25rem;
-        font-weight: 500;
-        margin: 0 0 0.75rem;
+        font-size: 1.5rem;
+        margin: 0 0 0.5rem;
       }
       h2 {
-        font-size: 1.5rem;
-        font-weight: 600;
-        margin: 2.5rem 0 0.75rem;
+        font-size: 1.25rem;
+        margin: 2rem 0 0.5rem;
       }
       h3 {
-        font-size: 1.25rem;
-        font-weight: 600;
-        margin: 2rem 0 0.75rem;
+        font-size: 1.125rem;
+        margin: 1.5rem 0 0.5rem;
+      }
+      p,
+      ul,
+      ol {
+        margin: 1rem 0;
+      }
+      li {
+        margin: 0.25rem 0;
       }
       .meta-label {
         font-family: var(--font-mono);
-        font-size: 0.75rem;
+        font-size: 0.6875rem;
+        font-weight: 400;
+        line-height: 1rem;
         text-transform: uppercase;
-        letter-spacing: 0.08em;
-        color: color-mix(in srgb, var(--foreground) 65%, transparent);
+        letter-spacing: 0.1em;
+        color: color-mix(in srgb, var(--foreground) 55%, transparent);
       }
       .page-desc {
         font-family: var(--font-mono);
         font-size: 0.8125rem;
         color: color-mix(in srgb, var(--foreground) 60%, transparent);
-        margin: 0.75rem 0 2.5rem;
+        margin: 0.5rem 0 1.5rem;
       }
       a {
         color: inherit;
@@ -90,22 +99,55 @@
           transparent
         );
         text-underline-offset: 4px;
-        transition: text-decoration-color 160ms ease;
+        transition:
+          text-decoration-color 160ms ease,
+          color 160ms ease;
       }
       a:hover {
         text-decoration-color: var(--foreground);
       }
+      .chrome-link {
+        color: color-mix(in srgb, var(--foreground) 70%, transparent);
+        text-decoration: none;
+      }
+      .chrome-link:hover {
+        color: var(--foreground);
+        text-decoration: underline;
+        text-decoration-style: dashed;
+        text-decoration-thickness: 1px;
+        text-decoration-color: color-mix(
+          in srgb,
+          var(--foreground) 35%,
+          transparent
+        );
+        text-underline-offset: 4px;
+      }
       .is-active {
+        color: var(--foreground);
         text-decoration: underline;
         text-decoration-style: solid;
         text-decoration-thickness: 2px;
         text-decoration-color: var(--foreground);
-        text-underline-offset: 8px;
+        text-underline-offset: 4px;
       }
       hr {
         border: 0;
         border-top: 1px solid var(--border);
         margin: 2rem 0;
+      }
+      .glass {
+        background: color-mix(in srgb, var(--background) 75%, transparent);
+        backdrop-filter: blur(12px);
+      }
+      .site-header {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        border-bottom: 1px solid transparent;
+        transition: border-color 200ms ease;
+      }
+      .site-header[data-scrolled] {
+        border-bottom-color: var(--border);
       }
       code {
         font-family: var(--font-mono);
@@ -114,86 +156,112 @@
         border-radius: 4px;
         padding: 0.125rem 0.3rem;
       }
-      .terminal {
-        background: var(--terminal);
-        border: 1px solid var(--terminal-border);
-        border-radius: 6px;
+      .codeblock {
+        background: var(--background);
+        border: 1px solid var(--foreground);
         overflow: hidden;
-        margin: 1.5rem 0;
+        margin: 1rem 0;
       }
-      .terminal-header {
+      .codeblock-header {
         display: flex;
         align-items: center;
         justify-content: space-between;
         min-height: 1.75rem;
         padding: 0.125rem 0.75rem;
-        border-bottom: 1px solid var(--terminal-border);
-        background: rgba(255, 255, 255, 0.03);
+        border-bottom: 1px solid var(--border);
       }
-      .terminal-header .meta-label {
-        font-size: 0.6875rem;
-        color: rgba(255, 255, 255, 0.45);
+      .codeblock-header .meta-label {
+        color: color-mix(in srgb, var(--foreground) 45%, transparent);
       }
-      .terminal pre {
+      .codeblock pre {
         margin: 0;
         padding: 1rem;
         overflow-x: auto;
-        color: #ffffff;
         font-family: var(--font-mono);
         font-size: 0.8125rem;
         line-height: 1.6;
-        scrollbar-color: #3a3a3a transparent;
+        scrollbar-color: #d4d4d4 transparent;
       }
-      .terminal pre code {
+      .codeblock pre code {
         background: none;
+        border-radius: 0;
         padding: 0;
         font-size: inherit;
       }
-      .terminal ::selection {
-        background: #f5f5f5;
-        color: var(--terminal);
+      .instrument {
+        display: inline-grid;
+        place-items: center;
+        border: 1px solid var(--border);
+        background: transparent;
+        color: color-mix(in srgb, var(--foreground) 50%, transparent);
+        transition:
+          background-color 160ms ease,
+          color 160ms ease;
+        cursor: pointer;
       }
-      .terminal .hl {
-        color: var(--cursor);
+      .instrument:hover {
+        background: var(--muted);
+        color: var(--foreground);
       }
 
-      /* ==== ページ構造 ==== */
+      /* ==== ページ構造: クローム / ステージ / コンテンツの 3 帯 ==== */
       .layout {
         max-width: 768px;
         margin: 0 auto;
         padding: 0 1rem;
       }
-      header.site {
-        padding: 1.25rem 0;
-      }
-      header.site .inner {
+      .site-header .inner {
         display: flex;
-        align-items: baseline;
+        align-items: center;
         justify-content: space-between;
+        height: var(--header-h);
       }
       .site-title {
-        font-size: 1.25rem;
+        font-size: 1rem;
         font-weight: 600;
         letter-spacing: -0.02em;
         text-decoration: none;
       }
       nav.site-nav {
         display: flex;
-        gap: 1.25rem;
+        align-items: center;
+        gap: 0.25rem;
       }
       nav.site-nav a {
-        text-decoration: none;
-        font-size: 0.9375rem;
+        font-size: 0.8125rem;
+        padding: 0.375rem 0.5rem;
       }
       main {
+        /* ステージ: ヘッダー下端から最初の要素まで 48px。全ページ同一 */
         padding: 3rem 0 4rem;
       }
       .breadcrumb {
-        margin-bottom: 2rem;
+        /* パンくずはタイトルの眉: タイトルの 8px 上に吸着 */
+        margin-bottom: 0.5rem;
       }
       .breadcrumb .sep {
         opacity: 0.4;
         margin: 0 0.5rem;
+      }
+      .tag-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem 1rem;
+        padding: 0;
+        margin: 1.5rem 0;
+        list-style: none;
+      }
+      .tag-list a {
+        text-decoration: none;
+        border-bottom: 1px dashed
+          color-mix(in srgb, var(--foreground) 35%, transparent);
+      }
+      .tag-list a:hover {
+        color: var(--foreground);
+        border-bottom-color: var(--foreground);
+      }
+      .tag-list .hash {
+        opacity: 0.6;
       }
       footer.site {
         border-top: 1px solid var(--border);
@@ -202,49 +270,69 @@
     </style>
   </head>
   <body>
-    <header class="site">
+    <header class="site-header glass" id="site-header">
       <div class="layout inner">
         <a class="site-title" href="/">site</a>
         <nav class="site-nav">
           <a class="is-active" href="/">Home</a>
-          <a href="/docs">Docs</a>
-          <a href="/about">About</a>
+          <a class="chrome-link" href="/docs">Docs</a>
+          <a class="chrome-link" href="/about">About</a>
         </nav>
       </div>
     </header>
 
     <main class="layout">
       <div class="breadcrumb meta-label">
-        <a href="/">Home</a><span class="sep">/</span><span>Page Title</span>
+        <a class="chrome-link" href="/">Home</a><span class="sep">/</span
+        ><span>Page Title</span>
       </div>
 
       <h1>Page Title</h1>
       <p class="page-desc">One-line description of this page</p>
 
       <p>
-        本文のテキスト。リンクは<a href="#">破線の下線</a>で示され、
-        hover で濃くなる。インラインコードは <code>--foreground</code> のように
-        紙面側のライトグレー地に載る。
+        本文のテキスト。リンクは<a href="#">破線の下線</a>で示され、hover
+        でインクが濃くなる。クローム内のリンクは平常時は下線なしで、
+        触れると破線が浮かぶ。インラインコードは
+        <code>--foreground</code> のように muted 地に載る。
       </p>
 
       <h2>Section</h2>
-      <p>セクション見出しの上には広い余白、直下には狭い余白を置く。</p>
+      <p>
+        セクション見出しは中身に吸着させる（上 32px・下 8px）。
+        リスト項目間は 4px、ブロック間は 16px。
+      </p>
 
-      <div class="terminal">
-        <div class="terminal-header">
+      <div class="codeblock">
+        <div class="codeblock-header">
           <span class="meta-label">Bash</span>
+          <button class="instrument" style="width: 1.5rem; height: 1.5rem" aria-label="Copy">
+            ⧉
+          </button>
         </div>
         <pre><code>$ npm run build
-<span class="hl">✓</span> Finished in 0.8s</code></pre>
+✓ Finished in 0.8s</code></pre>
       </div>
 
       <hr />
 
-      <p class="meta-label">Tags: <a href="#">design</a> <a href="#">memo</a></p>
+      <ul class="tag-list meta-label">
+        <li><a href="#"><span class="hash">#</span>design</a></li>
+        <li><a href="#"><span class="hash">#</span>memo</a></li>
+      </ul>
     </main>
 
     <footer class="site">
       <div class="layout meta-label">© your-name</div>
     </footer>
+
+    <script>
+      // スクロールした瞬間だけヘアラインが立ち上がる
+      const header = document.getElementById("site-header");
+      const update = () =>
+        header.toggleAttribute("data-scrolled", window.scrollY > 8);
+      document.addEventListener("scroll", update, { passive: true });
+      update();
+    </script>
   </body>
 </html>
