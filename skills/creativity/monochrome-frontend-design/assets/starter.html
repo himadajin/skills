@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#fafafa" />
+    <title>Page Title</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono&family=Noto+Sans+JP:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* ==== tokens.css（assets/tokens.css と同内容をインライン） ==== */
+      :root {
+        --background: #fafafa;
+        --foreground: #171717;
+        --muted: #f5f5f5;
+        --border: #ebebeb;
+        --terminal: #101010;
+        --terminal-border: #282828;
+        --terminal-mute: #7d8187;
+        --cursor: #ffc799;
+        --font-sans:
+          "Geist", "Noto Sans JP", system-ui, -apple-system, "Hiragino Sans",
+          "Yu Gothic", Meiryo, sans-serif;
+        --font-mono:
+          "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Consolas,
+          monospace;
+      }
+      body {
+        margin: 0;
+        background: var(--background);
+        color: var(--foreground);
+        font-family: var(--font-sans);
+        font-size: 16px;
+        line-height: 1.75;
+      }
+      ::selection {
+        background: var(--foreground);
+        color: var(--background);
+      }
+      :focus-visible {
+        outline: 2px solid var(--foreground);
+        outline-offset: 1px;
+      }
+      h1,
+      h2,
+      h3 {
+        line-height: 1.25;
+        letter-spacing: -0.02em;
+      }
+      h1 {
+        font-size: 2.25rem;
+        font-weight: 500;
+        margin: 0 0 0.75rem;
+      }
+      h2 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin: 2.5rem 0 0.75rem;
+      }
+      h3 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin: 2rem 0 0.75rem;
+      }
+      .meta-label {
+        font-family: var(--font-mono);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: color-mix(in srgb, var(--foreground) 65%, transparent);
+      }
+      .page-desc {
+        font-family: var(--font-mono);
+        font-size: 0.8125rem;
+        color: color-mix(in srgb, var(--foreground) 60%, transparent);
+        margin: 0.75rem 0 2.5rem;
+      }
+      a {
+        color: inherit;
+        text-decoration: underline;
+        text-decoration-style: dashed;
+        text-decoration-thickness: 1px;
+        text-decoration-color: color-mix(
+          in srgb,
+          var(--foreground) 35%,
+          transparent
+        );
+        text-underline-offset: 4px;
+        transition: text-decoration-color 160ms ease;
+      }
+      a:hover {
+        text-decoration-color: var(--foreground);
+      }
+      .is-active {
+        text-decoration: underline;
+        text-decoration-style: solid;
+        text-decoration-thickness: 2px;
+        text-decoration-color: var(--foreground);
+        text-underline-offset: 8px;
+      }
+      hr {
+        border: 0;
+        border-top: 1px solid var(--border);
+        margin: 2rem 0;
+      }
+      code {
+        font-family: var(--font-mono);
+        font-size: 0.875em;
+        background: var(--muted);
+        border-radius: 4px;
+        padding: 0.125rem 0.3rem;
+      }
+      .terminal {
+        background: var(--terminal);
+        border: 1px solid var(--terminal-border);
+        border-radius: 6px;
+        overflow: hidden;
+        margin: 1.5rem 0;
+      }
+      .terminal-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        min-height: 1.75rem;
+        padding: 0.125rem 0.75rem;
+        border-bottom: 1px solid var(--terminal-border);
+        background: rgba(255, 255, 255, 0.03);
+      }
+      .terminal-header .meta-label {
+        font-size: 0.6875rem;
+        color: rgba(255, 255, 255, 0.45);
+      }
+      .terminal pre {
+        margin: 0;
+        padding: 1rem;
+        overflow-x: auto;
+        color: #ffffff;
+        font-family: var(--font-mono);
+        font-size: 0.8125rem;
+        line-height: 1.6;
+        scrollbar-color: #3a3a3a transparent;
+      }
+      .terminal pre code {
+        background: none;
+        padding: 0;
+        font-size: inherit;
+      }
+      .terminal ::selection {
+        background: #f5f5f5;
+        color: var(--terminal);
+      }
+      .terminal .hl {
+        color: var(--cursor);
+      }
+
+      /* ==== ページ構造 ==== */
+      .layout {
+        max-width: 768px;
+        margin: 0 auto;
+        padding: 0 1rem;
+      }
+      header.site {
+        padding: 1.25rem 0;
+      }
+      header.site .inner {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+      }
+      .site-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        text-decoration: none;
+      }
+      nav.site-nav {
+        display: flex;
+        gap: 1.25rem;
+      }
+      nav.site-nav a {
+        text-decoration: none;
+        font-size: 0.9375rem;
+      }
+      main {
+        padding: 3rem 0 4rem;
+      }
+      .breadcrumb {
+        margin-bottom: 2rem;
+      }
+      .breadcrumb .sep {
+        opacity: 0.4;
+        margin: 0 0.5rem;
+      }
+      footer.site {
+        border-top: 1px solid var(--border);
+        padding: 2rem 0 3rem;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="site">
+      <div class="layout inner">
+        <a class="site-title" href="/">site</a>
+        <nav class="site-nav">
+          <a class="is-active" href="/">Home</a>
+          <a href="/docs">Docs</a>
+          <a href="/about">About</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="layout">
+      <div class="breadcrumb meta-label">
+        <a href="/">Home</a><span class="sep">/</span><span>Page Title</span>
+      </div>
+
+      <h1>Page Title</h1>
+      <p class="page-desc">One-line description of this page</p>
+
+      <p>
+        本文のテキスト。リンクは<a href="#">破線の下線</a>で示され、
+        hover で濃くなる。インラインコードは <code>--foreground</code> のように
+        紙面側のライトグレー地に載る。
+      </p>
+
+      <h2>Section</h2>
+      <p>セクション見出しの上には広い余白、直下には狭い余白を置く。</p>
+
+      <div class="terminal">
+        <div class="terminal-header">
+          <span class="meta-label">Bash</span>
+        </div>
+        <pre><code>$ npm run build
+<span class="hl">✓</span> Finished in 0.8s</code></pre>
+      </div>
+
+      <hr />
+
+      <p class="meta-label">Tags: <a href="#">design</a> <a href="#">memo</a></p>
+    </main>
+
+    <footer class="site">
+      <div class="layout meta-label">© your-name</div>
+    </footer>
+  </body>
+</html>

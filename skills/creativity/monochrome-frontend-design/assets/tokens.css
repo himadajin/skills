@@ -1,0 +1,179 @@
+/*
+ * monochrome-frontend-design: framework-agnostic tokens + base styles
+ * 前提フォント: Geist / Noto Sans JP / Geist Mono（読み込みは利用側で行う）
+ */
+
+:root {
+  /* 紙面（ライト面） */
+  --background: #fafafa;
+  --foreground: #171717;
+  --muted: #f5f5f5;
+  --border: #ebebeb;
+  /* ターミナル面（ダーク面） */
+  --terminal: #101010;
+  --terminal-border: #282828;
+  --terminal-mute: #7d8187;
+  --cursor: #ffc799;
+  /* フォント */
+  --font-sans:
+    "Geist", "Noto Sans JP", system-ui, -apple-system, "Hiragino Sans",
+    "Yu Gothic", Meiryo, sans-serif;
+  --font-mono:
+    "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+/* ---- ベース ---- */
+
+body {
+  margin: 0;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.75;
+}
+
+::selection {
+  background: var(--foreground);
+  color: var(--background);
+}
+
+:focus-visible {
+  outline: 2px solid var(--foreground);
+  outline-offset: 1px;
+}
+
+/* ---- タイポグラフィ ---- */
+
+h1,
+h2,
+h3,
+h4 {
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+}
+
+h1 {
+  font-size: 2.25rem; /* ページタイトルは大きく軽く */
+  font-weight: 500;
+  margin: 0 0 0.75rem;
+}
+
+h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 2.5rem 0 0.75rem; /* 上広・下狭のリズム */
+}
+
+h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 2rem 0 0.75rem;
+}
+
+/* メタ情報の mono 大文字ラベル */
+.meta-label {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: color-mix(in srgb, var(--foreground) 65%, transparent);
+}
+
+/* ページ説明文（イタリック禁止、mono 小型グレー） */
+.page-desc {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: color-mix(in srgb, var(--foreground) 60%, transparent);
+  margin: 0.75rem 0 2.5rem;
+}
+
+/* ---- 意味論: 破線＝リンク、実線＝現在地 ---- */
+
+a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-style: dashed;
+  text-decoration-thickness: 1px;
+  text-decoration-color: color-mix(in srgb, var(--foreground) 35%, transparent);
+  text-underline-offset: 4px;
+  transition: text-decoration-color 160ms ease;
+}
+
+a:hover {
+  text-decoration-color: var(--foreground);
+}
+
+.is-active {
+  text-decoration: underline;
+  text-decoration-style: solid;
+  text-decoration-thickness: 2px;
+  text-decoration-color: var(--foreground);
+  text-underline-offset: 8px;
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid var(--border);
+  margin: 2rem 0;
+}
+
+/* ---- インラインコード / ターミナル面 ---- */
+
+code {
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+  background: var(--muted);
+  border-radius: 4px;
+  padding: 0.125rem 0.3rem;
+}
+
+.terminal {
+  background: var(--terminal);
+  border: 1px solid var(--terminal-border);
+  border-radius: 6px;
+  overflow: hidden;
+  margin: 1.5rem 0;
+}
+
+.terminal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 1.75rem;
+  padding: 0.125rem 0.75rem;
+  border-bottom: 1px solid var(--terminal-border);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.terminal-header .meta-label {
+  font-size: 0.6875rem;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.terminal pre {
+  margin: 0;
+  padding: 1rem;
+  overflow-x: auto;
+  color: #ffffff;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  scrollbar-color: #3a3a3a transparent;
+}
+
+.terminal pre code {
+  background: none;
+  padding: 0;
+  font-size: inherit;
+}
+
+.terminal ::selection {
+  background: #f5f5f5;
+  color: var(--terminal);
+}
+
+/* シンタックス強調・カーソルはオレンジ一点のみ */
+.terminal .hl {
+  color: var(--cursor);
+}
