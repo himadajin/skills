@@ -26,24 +26,28 @@ Write it to a file or post it as an issue comment only when the user asks.
 Keep it readable in one sitting;
 if drift findings are extensive, summarize and offer to expand.
 
-The briefing has three parts, in this order:
+The briefing has four parts, in this order:
 
-1. **Situation**
+1. **Task**
+  — what the description asks for, and why. The goal, not the method.
+    Restate it in your own words,
+    so the briefing stands alone for a reader
+    who has not opened the original description.
+2. **Situation**
   — what is true now.
-    The goal of the task (not the method),
-    the gaps between the description and the current main branch
+    The gaps between the description and the current main branch
     with evidence (commits, merged PRs, moved or removed code),
     and whether the task can be implemented as described.
     Cover: whether the files and structures it references still exist in their assumed form,
     whether its premises still hold, and whether the problem has been partially or fully solved since it was written.
-2. **Decision**
+3. **Decision**
   — what could be done.
     Name the primary decision in one sentence,
     then give 2–3 candidate directions at policy level.
     Include "do it as written" when it is still viable.
     Attach each candidate's preconditions, costs, and consequences to that candidate;
     do not float them as standalone questions.
-3. **Proposal**
+4. **Proposal**
   — what you suggest. End the briefing here.
     One complete package as an itemized list:
     the candidate you recommend plus a default for every remaining sub-decision,
