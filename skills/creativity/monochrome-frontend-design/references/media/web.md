@@ -1,7 +1,8 @@
 # Web での実装
 
 Web プロジェクト（主に Tailwind CSS v4 の CSS-first 設定）に
-デザイン言語を組み込む実装仕様。原則は `design-system.md` を参照。
+デザイン言語を組み込む実装仕様。
+原則は `../design-system.md`（静的核）と `../interaction.md` を参照。
 
 ## フォント
 
