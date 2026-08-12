@@ -1,12 +1,6 @@
 ---
 name: monochrome-frontend-design
-description: >-
-  白い紙とインクだけで組む無彩色ミニマルデザインのコンセプトを、
-  Web UI・単発 HTML・スライド・図版など媒体を問わず適用する。
-  静的核（声の分離・余白ラダー・濃度）とインタラクション拡張
-  （インクの意味論・クローム3帯構造）の 2 層構成。
-  ユーザーが明示的に呼び出したときのみ使用する。
-disable-model-invocation: true
+description: An achromatic design language, set as if printed with ink on white paper, for web UI, standalone HTML, slides, or diagrams. Use ONLY when the user names this design language explicitly, for example "monochrome-frontend-design", "monochrome", "achromatic", "ink on paper". Never use it for frontend or design work that does not name it.
 ---
 
 # Monochrome Frontend Design
