@@ -34,7 +34,7 @@ import "./global.css";
   --accent: #171717;
   --muted: #f5f5f5;
   --border: #ebebeb;
-  --cursor: #ffc799; /* accent mark only, never functional */
+  --cursor: #ffc799; /* seal mark: one dot at the page's focal point, never functional */
   --header-h: 3.5rem; /* chrome band height */
 }
 
