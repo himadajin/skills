@@ -1,0 +1,220 @@
+/* monochrome-frontend-design: framework-agnostic tokens + base styles.
+   Fonts (Geist / Noto Sans JP / Geist Mono) must be loaded by the page. */
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+  --muted: #f5f5f5;
+  --border: #ebebeb;
+  --cursor: #ffc799; /* seal mark: one dot at the page's focal point, never functional */
+  --header-h: 3.5rem;
+  --font-sans:
+    "Geist", "Noto Sans JP", system-ui, -apple-system, "Hiragino Sans",
+    "Yu Gothic", Meiryo, sans-serif;
+  --font-mono:
+    "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+/* Base */
+
+body {
+  margin: 0;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.65;
+}
+
+:focus-visible {
+  outline: 2px solid var(--foreground);
+  outline-offset: 1px;
+}
+
+:target {
+  scroll-margin-block: calc(var(--header-h) + 1rem);
+}
+
+/* Typography */
+
+h1,
+h2,
+h3,
+h4 {
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  font-weight: 600;
+}
+
+h1 {
+  font-size: 1.5rem; /* title cap: 1.5 x body, never scales up */
+  margin: 0 0 0.5rem;
+}
+
+h2 {
+  font-size: 1.25rem;
+  margin: 2rem 0 0.5rem;
+}
+
+h3 {
+  font-size: 1.125rem;
+  margin: 1.5rem 0 0.5rem;
+}
+
+h4 {
+  font-size: 1.0625rem;
+  margin: 1.5rem 0 0.5rem;
+}
+
+p,
+ul,
+ol {
+  margin: 1rem 0;
+}
+
+li {
+  margin: 0.25rem 0;
+}
+
+.meta-label {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 400;
+  line-height: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: color-mix(in srgb, var(--foreground) 50%, transparent);
+}
+
+.page-desc {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: color-mix(in srgb, var(--foreground) 70%, transparent);
+  margin: 0.5rem 0 1.5rem;
+}
+
+/* Links */
+
+a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-style: dashed;
+  text-decoration-thickness: 1px;
+  text-decoration-color: color-mix(in srgb, var(--foreground) 35%, transparent);
+  text-underline-offset: 4px;
+  transition: text-decoration-color 160ms ease, color 160ms ease;
+}
+
+a:hover {
+  text-decoration-color: var(--foreground);
+}
+
+.chrome-link {
+  color: color-mix(in srgb, var(--foreground) 70%, transparent);
+  text-decoration: none;
+}
+
+.chrome-link:hover {
+  color: var(--foreground);
+  text-decoration: underline;
+  text-decoration-style: dashed;
+  text-decoration-thickness: 1px;
+  text-decoration-color: color-mix(in srgb, var(--foreground) 35%, transparent);
+  text-underline-offset: 4px;
+}
+
+.is-active {
+  color: var(--foreground);
+  text-decoration: underline;
+  text-decoration-style: solid;
+  text-decoration-thickness: 2px;
+  text-decoration-color: var(--foreground);
+  text-underline-offset: 4px;
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid var(--border);
+  margin: 2rem 0;
+}
+
+/* Header */
+
+.glass {
+  background: color-mix(in srgb, var(--background) 75%, transparent);
+  backdrop-filter: blur(12px);
+}
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  border-bottom: 1px solid transparent;
+  transition: border-color 200ms ease;
+}
+
+.site-header[data-scrolled] {
+  border-bottom-color: var(--border);
+}
+
+/* Code */
+
+code {
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+  background: var(--muted);
+  border-radius: 4px;
+  padding: 0.125rem 0.3rem;
+}
+
+.codeblock {
+  background: var(--background);
+  border: 1px solid var(--foreground);
+  overflow: hidden;
+  margin: 1rem 0;
+}
+
+.codeblock-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 1.75rem;
+  padding: 0.125rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.codeblock-header .meta-label {
+  color: color-mix(in srgb, var(--foreground) 50%, transparent);
+}
+
+.codeblock pre {
+  margin: 0;
+  padding: 1rem;
+  overflow-x: auto;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  scrollbar-color: #d4d4d4 transparent;
+}
+
+.codeblock pre code {
+  background: none;
+  border-radius: 0;
+  padding: 0;
+  font-size: inherit;
+}
+
+.instrument {
+  display: inline-grid;
+  place-items: center;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: color-mix(in srgb, var(--foreground) 50%, transparent);
+  transition: background-color 160ms ease, color 160ms ease;
+  cursor: pointer;
+}
+
+.instrument:hover {
+  background: var(--muted);
+  color: var(--foreground);
+}
