@@ -1,33 +1,21 @@
-/*
- * monochrome-frontend-design: framework-agnostic tokens + base styles
- * 前提フォント: Geist / Noto Sans JP / Geist Mono（読み込みは利用側で行う）
- */
+/* monochrome-frontend-design: framework-agnostic tokens + base styles.
+   Fonts (Geist / Noto Sans JP / Geist Mono) must be loaded by the page. */
 
 :root {
-  /* 紙とインク */
   --background: #ffffff;
   --foreground: #171717;
   --muted: #f5f5f5;
   --border: #ebebeb;
-  /* カーソルの点: ワンポイントの目印専用。機能要素に使わない */
-  --cursor: #ffc799;
-  /* クローム帯の高さ */
+  --cursor: #ffc799; /* accent mark only, never functional */
   --header-h: 3.5rem;
-  /* フォント */
   --font-sans:
     "Geist", "Noto Sans JP", system-ui, -apple-system, "Hiragino Sans",
     "Yu Gothic", Meiryo, sans-serif;
   --font-mono:
     "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  /*
-   * 余白ラダー（役割別 6 段）:
-   *  4px  同じものの内部     8px  見出しと中身の接続
-   * 16px  ブロックの区切り  24px  話題の小さな切り替え
-   * 32px  話題の大きな切り替え  48px  ページレベル（ステージ）
-   */
 }
 
-/* ---- ベース ---- */
+/* Base */
 
 body {
   margin: 0;
@@ -47,7 +35,7 @@ body {
   scroll-margin-block: calc(var(--header-h) + 1rem);
 }
 
-/* ---- タイポグラフィ（ドキュメント密度） ---- */
+/* Typography */
 
 h1,
 h2,
@@ -59,13 +47,13 @@ h4 {
 }
 
 h1 {
-  font-size: 1.5rem; /* 本文の 1.5 倍が天井。レスポンシブで育てない */
+  font-size: 1.5rem; /* title cap: 1.5 x body, never scales up */
   margin: 0 0 0.5rem;
 }
 
 h2 {
   font-size: 1.25rem;
-  margin: 2rem 0 0.5rem; /* 上広:下狭 = 4:1 の吸着 */
+  margin: 2rem 0 0.5rem;
 }
 
 h3 {
@@ -81,14 +69,13 @@ h4 {
 p,
 ul,
 ol {
-  margin: 1rem 0; /* ブロックの区切り 16px */
+  margin: 1rem 0;
 }
 
 li {
-  margin: 0.25rem 0; /* 同じものの内部 4px */
+  margin: 0.25rem 0;
 }
 
-/* メタ情報の単一スケールラベル: 11px / 0.10em / weight 400 */
 .meta-label {
   font-family: var(--font-mono);
   font-size: 0.6875rem;
@@ -99,7 +86,6 @@ li {
   color: color-mix(in srgb, var(--foreground) 50%, transparent);
 }
 
-/* ページ説明文（イタリック禁止、mono 小型グレー） */
 .page-desc {
   font-family: var(--font-mono);
   font-size: 0.8125rem;
@@ -107,7 +93,7 @@ li {
   margin: 0.5rem 0 1.5rem;
 }
 
-/* ---- インクの意味論: 破線＝行ける、実線＝いま居る ---- */
+/* Links */
 
 a {
   color: inherit;
@@ -123,7 +109,6 @@ a:hover {
   text-decoration-color: var(--foreground);
 }
 
-/* クローム内リンク: 平常時は下線なし、hover で破線が浮かぶ */
 .chrome-link {
   color: color-mix(in srgb, var(--foreground) 70%, transparent);
   text-decoration: none;
@@ -153,7 +138,7 @@ hr {
   margin: 2rem 0;
 }
 
-/* ---- クローム: ガラスの浮遊層 ---- */
+/* Header */
 
 .glass {
   background: color-mix(in srgb, var(--background) 75%, transparent);
@@ -172,20 +157,19 @@ hr {
   border-bottom-color: var(--border);
 }
 
-/* ---- コード面: 白い紙の上の引用 ---- */
+/* Code */
 
 code {
   font-family: var(--font-mono);
   font-size: 0.875em;
   background: var(--muted);
-  border-radius: 4px; /* インラインのみ角丸許容 */
+  border-radius: 4px;
   padding: 0.125rem 0.3rem;
 }
 
 .codeblock {
   background: var(--background);
   border: 1px solid var(--foreground);
-  /* 角丸なし */
   overflow: hidden;
   margin: 1rem 0;
 }
@@ -220,7 +204,6 @@ code {
   font-size: inherit;
 }
 
-/* コピーボタンなどの「計器」: 枠を持つ面。角丸なし */
 .instrument {
   display: inline-grid;
   place-items: center;

@@ -1,21 +1,16 @@
-/*
- * monochrome-frontend-design: 資料（markdown → HTML / PDF）向けスタイル
- * 写像は references/media/documents.md。セレクタは pandoc の出力に合わせてある。
- * 前提フォント: Geist / Noto Sans JP / Geist Mono（読み込みは利用側で行う）
- */
+/* monochrome-frontend-design: document stylesheet (markdown -> HTML / PDF).
+   Selectors match pandoc output. Fonts (Geist / Noto Sans JP / Geist Mono)
+   must be loaded by the page. */
 
 :root {
   color-scheme: light;
 
-  /* 紙とインク */
   --background: #ffffff;
   --foreground: #171717;
   --muted: #f5f5f5;
   --border: #ebebeb;
-  /* カーソルの点: ワンポイントの目印専用。機能要素に使わない */
-  --cursor: #ffc799;
+  --cursor: #ffc799; /* accent mark only, never functional */
 
-  /* インクの濃度 3 段（状態・重要度の差はすべて濃度で作る） */
   --foreground-35: color-mix(in srgb, var(--foreground) 35%, transparent);
   --foreground-50: color-mix(in srgb, var(--foreground) 50%, transparent);
   --foreground-70: color-mix(in srgb, var(--foreground) 70%, transparent);
@@ -26,33 +21,32 @@
     monospace;
 
   --font-size-base: 16px;
-  --font-size-title: 1.5rem;   /* 24px ページタイトル（天井） */
-  --font-size-h1: 1.25rem;     /* 20px 見出し 大 */
-  --font-size-h2: 1.125rem;    /* 18px 見出し 中 */
-  --font-size-h3: 1.0625rem;   /* 17px 見出し 小 */
-  --font-size-h4: 1rem;        /* 16px 見出し 最小。h5 以下は濃度→声で区別 */
-  --font-size-sm: 0.875rem;    /* 14px 表 */
-  --font-size-code: 0.8125rem; /* 13px コード・脚注 */
-  --font-size-label: 0.6875rem;/* 11px メタラベル（単一スケール） */
+  --font-size-title: 1.5rem;   /* 24px, page title cap */
+  --font-size-h1: 1.25rem;     /* 20px */
+  --font-size-h2: 1.125rem;    /* 18px */
+  --font-size-h3: 1.0625rem;   /* 17px */
+  --font-size-h4: 1rem;        /* 16px, smallest heading size */
+  --font-size-sm: 0.875rem;    /* 14px */
+  --font-size-code: 0.8125rem; /* 13px */
+  --font-size-label: 0.6875rem;/* 11px */
   --line-height: 1.65;
-  --letter-spacing-tight: -0.02em; /* 大きい文字のみ */
-  --letter-spacing-label: 0.1em;   /* メタラベル */
+  --letter-spacing-tight: -0.02em;
+  --letter-spacing-label: 0.1em;
 
-  /* 余白（役割別 6 段） */
-  --space-1: 0.25rem; /* 4px  同じものの内部（リスト項目間） */
-  --space-2: 0.5rem;  /* 8px  見出しと中身の接続 */
-  --space-3: 1rem;    /* 16px ブロックの区切り（段落・コード面） */
-  --space-4: 1.5rem;  /* 24px 話題の小さな切り替え（h3 の前） */
-  --space-5: 2rem;    /* 32px 話題の大きな切り替え（h2 の前・hr・ページ先頭） */
-  --space-6: 3rem;    /* 48px ページレベルの区切り */
+  /* Spacing ladder */
+  --space-1: 0.25rem; /* 4px  within a unit */
+  --space-2: 0.5rem;  /* 8px  heading to its content */
+  --space-3: 1rem;    /* 16px between blocks */
+  --space-4: 1.5rem;  /* 24px minor topic shift */
+  --space-5: 2rem;    /* 32px major topic shift */
+  --space-6: 3rem;    /* 48px page level */
 
   /* Layout */
   --content-width: 768px;
   --content-padding: 1rem;
-  --list-indent: 1.5rem;    /* 24px リストのぶら下げ幅（マーカー領域） */
-  --checkbox-size: 0.875rem;/* 14px タスクリストのチェックボックス */
+  --list-indent: 1.5rem;
+  --checkbox-size: 0.875rem;
 
-  /* インラインコードの角丸 */
   --radius-inline-code: 4px;
 }
 
@@ -84,12 +78,10 @@ p {
   margin: 0 0 var(--space-3);
 }
 
-/* 太字は 700 を使わず、意図は 600 で運ぶ */
 strong, b {
-  font-weight: 600;
+  font-weight: 600; /* 700 is never used */
 }
 
-/* メタラベル（単一スケール） */
 .author,
 .date,
 figcaption,
@@ -102,7 +94,7 @@ h6 {
   color: var(--foreground-50);
 }
 
-/* 3. Title block: メタ（著者・日付）→ タイトルの eyebrow 構図 */
+/* 3. Title block: meta (author, date) above the title */
 #title-block-header {
   display: flex;
   flex-direction: column;
@@ -130,7 +122,7 @@ h6 {
   display: none;
 }
 
-/* 4. Headings: 中身に吸着させる。h5 は濃度、h6 は声（メタラベル）で区別 */
+/* 4. Headings */
 h1, h2, h3, h4, h5, h6 {
   font-weight: 600;
   line-height: 1.25;
@@ -156,7 +148,7 @@ h6 {
   margin: var(--space-4) 0 var(--space-2);
 }
 
-/* 5. Links: 破線＝行ける（interaction.md から借りる唯一の語彙） */
+/* 5. Links */
 a {
   color: inherit;
   text-decoration-line: underline;
@@ -177,7 +169,7 @@ code {
   font-size: 0.875em;
   background-color: var(--muted);
   padding: 0.125em 0.35em;
-  border-radius: var(--radius-inline-code); /* 唯一の角丸許容 */
+  border-radius: var(--radius-inline-code);
 }
 
 /* Syntax highlighting: normalize all token styles */
@@ -209,8 +201,7 @@ pre > code {
   overflow-x: auto;
 }
 
-/* コード面ヘッダー: ヘアライン下線 + mono 大文字の言語ラベル。
-   列挙外の言語はヘッダーなし（枠のみ）に退化する */
+/* Language label header; languages not listed below get no header */
 pre::before {
   content: none;
   display: block;
@@ -259,7 +250,7 @@ blockquote blockquote {
   margin-top: var(--space-2);
 }
 
-/* 8. Lists: 項目間はブロック間より明確に狭く */
+/* 8. Lists */
 ul, ol {
   margin: 0 0 var(--space-3);
   padding-left: var(--list-indent);
@@ -275,10 +266,9 @@ li > ol {
   margin-bottom: 0;
 }
 
-/* Task lists: チェック状態も無彩色。
-   pandoc 既定の CSS がチェックボックスを -1.6em ぶら下げてマーカー位置に置くため、
-   ul の padding-left は消さず、ぶら下げ幅だけ --list-indent に合わせて上書きする。
-   （input は label で包まれているので子結合子は使わない） */
+/* Task lists. pandoc's default CSS hangs the checkbox -1.6em into the
+   marker area (the input sits inside a label, so no child combinator);
+   keep the ul indent and resize only the overhang. */
 ul.task-list {
   list-style: none;
 }
@@ -291,7 +281,7 @@ ul.task-list li input[type="checkbox"] {
     calc(-1 * var(--list-indent));
 }
 
-/* 9. Tables: 水平のヘアライン罫線のみ。ヘッダーは太さだけで立てる */
+/* 9. Tables */
 table {
   border-collapse: collapse;
   width: 100%;
@@ -310,7 +300,7 @@ thead th {
   font-weight: 600;
 }
 
-/* 10. Horizontal rule: 話題の大きな切り替え */
+/* 10. Horizontal rule */
 hr {
   border: none;
   border-top: 1px solid var(--border);
@@ -344,7 +334,7 @@ section.footnotes ol {
   margin-bottom: 0;
 }
 
-/* pandoc が脚注の頭に挿す hr は border-top と二重になるため消す */
+/* pandoc inserts an hr before footnotes; border-top above replaces it */
 section.footnotes > hr {
   display: none;
 }
