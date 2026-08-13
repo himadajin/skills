@@ -2,12 +2,12 @@
 
 Web プロジェクト（主に Tailwind CSS v4 の CSS-first 設定）に
 デザイン言語を組み込む実装仕様。
-原則は `../design-system.md`（静的核）と `../interaction.md` を参照。
+原則は `../design-system.md` と `../interaction.md` を参照。
 
 ## フォント
 
-Fontsource の variable 版を導入する
-（variable 版は 1 ファイルで 400〜600 をカバーし、ウェイト欠けが起きない）:
+variable 版は 1 ファイルで 400〜600 をカバーしてウェイト欠けが起きないため、
+Fontsource の variable 版を導入する:
 
 ```sh
 npm install @fontsource-variable/geist @fontsource-variable/geist-mono @fontsource-variable/noto-sans-jp
@@ -82,10 +82,10 @@ import "./global.css";
 }
 ```
 
-- `focus-visible:outline-2` はデフォルトで実線になる
-  （`outline-dashed` を付けない。破線フォーカスは意味論に反する）。
+- `focus-visible:outline-2` はデフォルトで実線になる。
+  破線フォーカスは意味論に反するため、`outline-dashed` を付けない。
 - サイズ・太さは meta-label に焼き込み、呼び出し側で上書きしない。
-  差を付けるのは色（濃度）だけ。
+  差を付けるのは濃度だけ。
 
 ## 頻出パターン
 
