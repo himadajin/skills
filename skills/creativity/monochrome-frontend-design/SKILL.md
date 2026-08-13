@@ -21,7 +21,7 @@ description: An achromatic design language, set as if printed with ink on white 
 | Web サイト・アプリの UI | + `references/interaction.md`。実装は `references/media/web.md` |
 | 単発の HTML | + `references/interaction.md`。`assets/starter.html` をコピーして書き換える（`assets/tokens.css` 組み込み済み） |
 | スライド | + `references/media/slides.md`。インタラクション語彙は休眠 |
-| 資料（markdown → HTML/PDF）・図版・印刷 | + `references/media/documents.md`。実装は `assets/document.css` をコピーして調整する |
+| markdown から変換する資料・図版・印刷 | + `references/media/documents.md`。実装は `assets/document.css` をコピーして調整する |
 
 HTML で作る成果物がどちらの行かは「読者が hover のある画面で読むか」で決める。
 ブラウザで開いて読むならインタラクション拡張を重ねる「単発の HTML」、
@@ -68,7 +68,7 @@ markdown 由来の文書や印刷・PDF 化が主目的なら、
 
 hover と遷移が存在する媒体でだけ、`references/interaction.md` の語彙を重ねる。
 
-8. **インクの意味論: 「破線＝行ける、実線＝いま居る、濃度＝状態」。**
+8. **インクの意味論: 破線は行ける場所、実線はいま居る場所、濃度は状態を表す。**
    リンクは破線下線、hover でインクが濃くなる。
    現在地（ナビ・タブ・トグルの選択中）は実線下線。
    インタラクティブ要素のうち面（背景色）と枠線を持てるのは、
@@ -77,8 +77,8 @@ hover と遷移が存在する媒体でだけ、`references/interaction.md` の�
    例外: 図版・グラフの内部ではインクの意味を本文とは別に定めてよく、
    破線を系列・予測に使える。
 9. **クロームは 3 帯構造。**
-   クローム帯（ヘッダー等）＝半透明ガラスの浮遊層 / ステージ＝一定の静寂 /
-   コンテンツ帯＝紙。パンくずはステージの下でタイトルの eyebrow にする。
+   クローム帯（ヘッダー等）は半透明ガラスの浮遊層、ステージは一定の静寂、
+   コンテンツ帯は紙。パンくずはステージの下でタイトルの eyebrow にする。
    ページ内ツールバーはバーではなく「計器」の見た目にし、クロームと格を分ける。
 10. **動きはほぼゼロ。**
     hover による移動・浮き上がり・バウンスは使わない。
