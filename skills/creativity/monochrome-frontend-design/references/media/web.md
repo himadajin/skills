@@ -7,14 +7,14 @@ Web プロジェクト（主に Tailwind CSS v4 の CSS-first 設定）に
 ## フォント
 
 variable 版は 1 ファイルで 400〜600 をカバーしてウェイト欠けが起きないため、
-Fontsource の variable 版を導入する:
+Fontsource の variable 版を導入する。
 
 ```sh
 npm install @fontsource-variable/geist @fontsource-variable/geist-mono @fontsource-variable/noto-sans-jp
 ```
 
 レイアウトの入口（Astro なら Layout.astro、Next.js なら root layout）で
-グローバル CSS より先に import する:
+グローバル CSS より先に import する。
 
 ```js
 import "@fontsource-variable/geist";
@@ -117,8 +117,8 @@ import "./global.css";
 </header>
 ```
 
-スクロール連動のヘアライン（最上部では紙に溶け、
-スクロールした瞬間に層として立ち上がる）:
+ヘアラインはスクロールに連動させ、最上部では紙に溶かし、
+スクロールした瞬間に層として立ち上げる。
 
 ```js
 const header = document.getElementById("site-header");
@@ -127,7 +127,7 @@ document.addEventListener("scroll", update, { passive: true });
 update();
 ```
 
-付随して必要になる調整:
+付随して次の調整が必要になる。
 
 - アンカージャンプの逃げ: `:target { scroll-margin-block: calc(var(--header-h) + 1rem); }`
 - ステージ: ヘッダー下端から最初の要素まで 48px（パンくずなら `mt-12`、
@@ -140,7 +140,7 @@ update();
 ## コードブロック（Shiki）
 
 テーマは `min-light`（light/dark 両方に指定）にし、
-白地 + インク枠の引用面として組む:
+白地 + インク枠の引用面として組む。
 
 ```css
 .code-block-wrapper {
@@ -164,5 +164,5 @@ update();
 }
 ```
 
-インラインコードは紙面の muted 地に残す:
-`rounded bg-muted/75 p-1`（インラインのみ角丸 4px 許容）。
+インラインコードは紙面の muted 地に残す。
+クラスは `rounded bg-muted/75 p-1`（インラインのみ角丸 4px 許容）。
