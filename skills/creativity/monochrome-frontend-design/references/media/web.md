@@ -6,8 +6,8 @@ Web プロジェクト（主に Tailwind CSS v4 の CSS-first 設定）に
 
 ## フォント
 
-variable 版は 1 ファイルで 400〜600 をカバーしてウェイト欠けが起きないため、
 Fontsource の variable 版を導入する。
+1 ファイルで 400〜600 をカバーするため、ウェイト欠けが起きない。
 
 ```sh
 npm install @fontsource-variable/geist @fontsource-variable/geist-mono @fontsource-variable/noto-sans-jp
@@ -34,7 +34,8 @@ import "./global.css";
   --accent: #171717;
   --muted: #f5f5f5;
   --border: #ebebeb;
-  --header-h: 3.5rem; /* クローム帯の高さ */
+  --cursor: #ffc799; /* accent mark only, never functional */
+  --header-h: 3.5rem; /* chrome band height */
 }
 
 @theme inline {
@@ -49,10 +50,11 @@ import "./global.css";
   --color-accent: var(--accent);
   --color-muted: var(--muted);
   --color-border: var(--border);
+  --color-cursor: var(--cursor);
 }
 ```
 
-`--font-mono` を `@theme` に定義すると、Tailwind v4 の preflight が
+`--font-mono` を `@theme inline` に定義すると、Tailwind v4 の preflight が
 `--default-mono-font-family` として `pre` / `code` に自動適用する。
 
 ## ベーススタイルとユーティリティ
@@ -71,12 +73,12 @@ import "./global.css";
   }
 }
 
-/* メタ情報の単一スケールラベル: 11px / 0.10em / weight 400 */
+/* single-scale meta label: 11px / 0.10em / weight 400 */
 @utility meta-label {
   @apply font-mono text-[0.6875rem] leading-4 font-normal tracking-[0.1em] uppercase;
 }
 
-/* クローム共通のガラス材質 */
+/* shared glass material for chrome */
 @utility glass-panel {
   @apply bg-background/75 backdrop-blur-md;
 }
@@ -112,13 +114,13 @@ import "./global.css";
 >
   <div class="mx-auto flex h-(--header-h) max-w-3xl items-center justify-between px-4">
     <a href="/" class="text-base font-semibold tracking-tight">site</a>
-    <nav class="flex items-center gap-1"><!-- クローム内リンク --></nav>
+    <nav class="flex items-center gap-1"><!-- chrome links --></nav>
   </div>
 </header>
 ```
 
-ヘアラインはスクロールに連動させ、最上部では紙に溶かし、
-スクロールした瞬間に層として立ち上げる。
+ヘアラインは最上部では紙に溶かし、
+少しでもスクロールしたら層として立ち上げる。
 
 ```js
 const header = document.getElementById("site-header");
@@ -145,7 +147,7 @@ update();
 ```css
 .code-block-wrapper {
   @apply my-4 overflow-hidden border border-foreground bg-background;
-  /* 角丸なし */
+  /* no rounded corners */
 }
 .code-block-wrapper .astro-code {
   @apply m-0 overflow-x-auto rounded-none border-0;
@@ -157,7 +159,7 @@ update();
 .code-block-language {
   @apply meta-label text-foreground/50;
 }
-/* コピーボタンは「計器」: 枠を持つ面。角丸なし */
+/* copy button is an instrument: bordered surface, no rounding */
 .copy-code {
   @apply grid size-6 place-items-center border border-border text-foreground/50;
   @apply hover:bg-muted hover:text-foreground;
