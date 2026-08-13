@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#fafafa" />
+    <meta name="theme-color" content="#ffffff" />
     <title>Page Title</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -14,7 +14,7 @@
     <style>
       /* ==== tokens.css（assets/tokens.css と同内容をインライン） ==== */
       :root {
-        --background: #fafafa;
+        --background: #ffffff;
         --foreground: #171717;
         --muted: #f5f5f5;
         --border: #ebebeb;
@@ -65,6 +65,10 @@
         font-size: 1.125rem;
         margin: 1.5rem 0 0.5rem;
       }
+      h4 {
+        font-size: 1.0625rem;
+        margin: 1.5rem 0 0.5rem;
+      }
       p,
       ul,
       ol {
@@ -80,12 +84,12 @@
         line-height: 1rem;
         text-transform: uppercase;
         letter-spacing: 0.1em;
-        color: color-mix(in srgb, var(--foreground) 55%, transparent);
+        color: color-mix(in srgb, var(--foreground) 50%, transparent);
       }
       .page-desc {
         font-family: var(--font-mono);
         font-size: 0.8125rem;
-        color: color-mix(in srgb, var(--foreground) 60%, transparent);
+        color: color-mix(in srgb, var(--foreground) 70%, transparent);
         margin: 0.5rem 0 1.5rem;
       }
       a {
@@ -171,7 +175,7 @@
         border-bottom: 1px solid var(--border);
       }
       .codeblock-header .meta-label {
-        color: color-mix(in srgb, var(--foreground) 45%, transparent);
+        color: color-mix(in srgb, var(--foreground) 50%, transparent);
       }
       .codeblock pre {
         margin: 0;
@@ -240,7 +244,7 @@
         margin-bottom: 0.5rem;
       }
       .breadcrumb .sep {
-        opacity: 0.4;
+        opacity: 0.35;
         margin: 0 0.5rem;
       }
       .tag-list {
@@ -261,7 +265,7 @@
         border-bottom-color: var(--foreground);
       }
       .tag-list .hash {
-        opacity: 0.6;
+        opacity: 0.5;
       }
       footer.site {
         border-top: 1px solid var(--border);

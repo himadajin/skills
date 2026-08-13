@@ -29,7 +29,7 @@ import "./global.css";
 @import "tailwindcss";
 
 :root {
-  --background: #fafafa;
+  --background: #ffffff;
   --foreground: #171717;
   --accent: #171717;
   --muted: #f5f5f5;
@@ -96,10 +96,10 @@ import "./global.css";
 - ナビの現在地:
   `underline decoration-foreground decoration-2 underline-offset-4`
 - タグ:
-  `meta-label text-foreground/65 border-b border-dashed border-foreground/35 hover:border-accent hover:text-accent`
-  （接頭に mono の `#` を `opacity-60` の span で置く。アイコンは使わない）
+  `meta-label text-foreground/70 border-b border-dashed border-foreground/35 hover:border-accent hover:text-accent`
+  （接頭に mono の `#` を `opacity-50` の span で置く。アイコンは使わない）
 - ページタイトル: `text-2xl font-semibold tracking-tight`（レスポンシブで育てない）
-- ページ説明文: `mt-2 mb-6 font-mono text-[0.8125rem] text-foreground/60`
+- ページ説明文: `mt-2 mb-6 font-mono text-[0.8125rem] text-foreground/70`
 - 本文コンテナ: `prose leading-[1.65]` に、段落・リスト前後 `my-4`、
   リスト項目 `my-1`、h2 `mt-8 mb-2`、h3 `mt-6 mb-2`、hr `my-8` を上書きする。
 
@@ -155,7 +155,7 @@ update();
   @apply flex min-h-7 items-center justify-between border-b border-border px-3;
 }
 .code-block-language {
-  @apply meta-label text-foreground/45;
+  @apply meta-label text-foreground/50;
 }
 /* コピーボタンは「計器」: 枠を持つ面。角丸なし */
 .copy-code {
