@@ -63,7 +63,7 @@ import "./global.css";
     @apply border-border outline-accent;
   }
   body {
-    @apply bg-background font-sans text-foreground selection:bg-foreground selection:text-background;
+    @apply bg-background font-sans text-foreground;
   }
   a,
   button {
