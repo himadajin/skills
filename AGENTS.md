@@ -6,10 +6,8 @@ For general Agent Skills behavior, format, or development practice,
 treat the official documentation as the source of truth:
 
 - [Agent Skills LLM index](https://agentskills.io/llms.txt)
-- [Agent Skills specification](https://agentskills.io/specification.md)
-- [Best practices for skill creators](https://agentskills.io/skill-creation/best-practices.md)
-- [Optimizing skill descriptions](https://agentskills.io/skill-creation/optimizing-descriptions.md)
 - [OpenAI prompt guidance](https://developers.openai.com/api/docs/guides/prompt-guidance.md)
+- [Anthropic Prompt engineering overview](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/overview.md)
 
 Use the Agent Skills LLM index to find additional topic-specific pages
 when a task needs them.
