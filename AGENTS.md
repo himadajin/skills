@@ -14,30 +14,32 @@ when a task needs them.
 
 ## Engineering Principles
 
-Prefer a few well-formed rules with real explanatory power
-over many local instructions or special cases.
-A good rule should be coherent with the rest of the repository,
-explain more than one case,
-and make future decisions easier.
+Rules in this repository are read by agents,
+both in this file and in each skill.
+Prefer a few rules that state their intent
+over many local instructions or special cases:
+a rule with a reason generalizes to cases its author did not foresee,
+so the next decision can be derived instead of newly specified.
 
-A well-formed rule in this repository should:
+Before keeping a rule, check two things:
 
-- Fit the existing skill definition, official source material,
-  and repository structure.
-- Apply beyond a single incident or personal preference.
-- Change what an agent should do next, not merely state taste.
-- Reduce ambiguity by naming the default behavior or validation signal
-  instead of adding competing options.
+- Removing it would change what an agent does next.
+  If not, it is not a rule; drop it.
+- It explains more than the single incident that prompted it.
+  If not, generalize it or leave it out.
 
-When adding or changing skill behavior,
-first try to derive it from the existing skill definition
-and its source-of-truth documents.
-If the behavior does not fit, consider changes in this order:
+When behavior needs to change,
+first try to derive it from the existing rules
+and their source-of-truth documents.
+If it does not fit, make changes in this order:
 
-1. Remove an unnecessary rule or special case.
-2. Refine or generalize an existing rule so it explains the new behavior.
-3. Add a new rule only when the behavior cannot be expressed cleanly
-   by the existing rules.
+1. Remove a rule or special case.
+2. Generalize an existing rule so it covers the new behavior.
+3. Add a new rule only when 1 and 2 cannot express it.
+
+A new or changed rule names one default behavior
+and the signal that shows it was followed,
+rather than listing competing options.
 
 Keep rules close to their source of truth:
 
