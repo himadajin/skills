@@ -68,9 +68,12 @@ in the layout the Agent Skills specification defines.
 
 ## Validation
 
-There is no repository-wide build step at the time of writing.
-For skill and documentation changes,
-validate the touched files and references directly.
+`scripts/validate_skills.py` checks every `skills/<category>/<skill-name>/SKILL.md`
+against the mandatory rules of the Agent Skills specification;
+CI runs it on every pull request and the release workflow runs it again.
+After changing a skill, run `python3 scripts/validate_skills.py`
+and treat a zero exit as the signal that the change is valid.
+It does not check prose or links; validate those in the touched files directly.
 
 ## Commits and pull requests
 
