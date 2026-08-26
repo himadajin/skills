@@ -1,7 +1,5 @@
 # AGENTS.md
 
-## Repository Scope
-
 This repository contains Himadajin's personal Agent Skills.
 It does not define a separate skill framework or local best-practice system.
 
