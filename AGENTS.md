@@ -85,16 +85,8 @@ validate the touched files and references directly.
 
 ## Commits and pull requests
 
-One-line titles — pull request titles and commit messages —
-are concise English following [Conventional Commits](https://www.conventionalcommits.org/),
-because they flow through tooling.
-A change is titled once:
-the pull request title is written as the commit message for the whole change,
-so that it can land on `main` unedited.
-Never write the ` (#N)` suffix by hand; GitHub appends it on squash merge.
-The scope is the skill directory name when a change is confined to one skill
-(`feat(spec-drafting): add a prototype planning phase`);
-omit it otherwise (`docs: update the skill placement guide`).
-Mark the type with `!` only when a skill is renamed or removed,
-since that breaks existing invocations.
-Bodies may be English or Japanese.
+When writing a pull request title or a commit message:
+
+- Keep it to a single line.
+- Write it in concise English.
+- Follow the [Conventional Commits](https://www.conventionalcommits.org/) format.
