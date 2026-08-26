@@ -1,105 +1,82 @@
 # AGENTS.md
 
-## Repository Scope
-
 This repository contains Himadajin's personal Agent Skills.
-It does not define a separate skill framework or local best-practice system.
 
 For general Agent Skills behavior, format, or development practice,
 treat the official documentation as the source of truth:
 
 - [Agent Skills LLM index](https://agentskills.io/llms.txt)
-- [Agent Skills specification](https://agentskills.io/specification.md)
-- [Best practices for skill creators](https://agentskills.io/skill-creation/best-practices.md)
-- [Optimizing skill descriptions](https://agentskills.io/skill-creation/optimizing-descriptions.md)
 - [OpenAI prompt guidance](https://developers.openai.com/api/docs/guides/prompt-guidance.md)
+- [Anthropic Prompt engineering overview](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/overview.md)
 
 Use the Agent Skills LLM index to find additional topic-specific pages
 when a task needs them.
 
 ## Engineering Principles
 
-Prefer a few well-formed rules with real explanatory power
-over many local instructions or special cases.
-A good rule should be coherent with the rest of the repository,
-explain more than one case,
-and make future decisions easier.
+Rules in this repository are read by agents,
+both in this file and in each skill.
+Prefer a few rules that state their intent
+over many local instructions or special cases:
+a rule with a reason generalizes to cases its author did not foresee,
+so the next decision can be derived instead of newly specified.
 
-A well-formed rule in this repository should:
+Before keeping a rule, check two things:
 
-- Fit the existing skill definition, official source material,
-  and repository structure.
-- Apply beyond a single incident or personal preference.
-- Change what an agent should do next, not merely state taste.
-- Reduce ambiguity by naming the default behavior or validation signal
-  instead of adding competing options.
+- Removing it would change what an agent does next.
+  If not, it is not a rule; drop it.
+- It explains more than the single incident that prompted it.
+  If not, generalize it or leave it out.
 
-When adding or changing skill behavior,
-first try to derive it from the existing skill definition
-and its source-of-truth documents.
-If the behavior does not fit, consider changes in this order:
+When behavior needs to change,
+first try to derive it from the existing rules
+and their source-of-truth documents.
+If it does not fit, make changes in this order:
 
-1. Remove an unnecessary rule or special case.
-2. Refine or generalize an existing rule so it explains the new behavior.
-3. Add a new rule only when the behavior cannot be expressed cleanly
-   by the existing rules.
+1. Remove a rule or special case.
+2. Generalize an existing rule so it covers the new behavior.
+3. Add a new rule only when 1 and 2 cannot express it.
 
-Keep rules close to their source of truth:
+A new or changed rule names one default behavior
+and the signal that shows it was followed,
+rather than listing competing options.
 
-- Skill activation boundaries belong in the frontmatter `description`;
-  if a behavior change affects when a skill should or should not activate,
-  reflect that boundary there rather than only in the body.
-- Mandatory workflow and decision rules belong in the skill's `SKILL.md`.
-- Detailed rubrics, templates, examples, and long references
-  belong under that skill's `references/`, `assets/`, or `scripts/` directory.
-- Repository-wide editing rules belong in this file
-  only when they apply across skills
-  and are not already covered by official documentation.
+This file holds only rules that apply across skills
+and are not already covered by the official documentation above.
+Everything specific to one skill lives in that skill's directory,
+in the layout the Agent Skills specification defines.
 
 ## Local Map
 
-- The root `README.md` owns human-facing installation
-  and cross-agent sharing notes.
-- `docs/releasing.md` records, as a factual description,
-  how release zips are produced.
-  Releases happen only when the repository owner
-  manually runs the GitHub Actions release workflow;
-  agents must not initiate releases.
-- Skills live two levels deep, grouped by category:
-  `engineering` (artifacts that lead to implementation),
+- `README.md`: human-facing installation and cross-agent sharing notes.
+- `docs/releasing.md`: how release zips are produced.
+  Releases are started manually by the repository owner;
+  agents must not initiate one.
+- `skills/<category>/<skill-name>/SKILL.md` owns that skill,
+  including the supporting files under its directory.
+  Categories: `engineering` (artifacts that lead to implementation),
   `productivity` (dialogue and decision support),
   `meta` (skill and prompt development),
   `writing` (Japanese prose),
   and `creativity` (creative output).
-  `skills/deprecated/` holds retired skills;
-  they are kept for reference and excluded from releases.
-- Each `skills/<category>/<skill-name>/SKILL.md` owns that skill's behavior.
-  Supporting files under that skill's subdirectories belong to that skill
-  unless another skill explicitly links to them.
+  `skills/deprecated/` holds retired skills kept for reference.
 - Many skills are intentionally written in Japanese;
-  keep the affected skill's language unless the task asks otherwise.
-- `/works/`, `/local/`, and `/tmp/` are local workspace context.
-  Use them when the user points to them,
-  but do not infer repository rules from them.
+  keep each skill's language unless the task asks otherwise.
+- `works/`, `local/`, and `tmp/` at the repository root
+  are gitignored local workspace.
+  Use them only when the user points to them,
+  and never infer repository rules from them.
 
 ## Validation
 
-There is no repository-wide build step at the time of writing.
-For skill and documentation changes,
-validate the touched files and references directly.
+`scripts/validate_skills.py` checks every `skills/<category>/<skill-name>/SKILL.md`
+against the mandatory rules of the Agent Skills specification;
+CI runs it on every pull request and the release workflow runs it again.
+After changing a skill, run `python3 scripts/validate_skills.py`
+and treat a zero exit as the signal that the change is valid.
+It does not check prose or links; validate those in the touched files directly.
 
 ## Commits and pull requests
 
-One-line titles — pull request titles and commit messages —
-are concise English following [Conventional Commits](https://www.conventionalcommits.org/),
-because they flow through tooling.
-A change is titled once:
-the pull request title is written as the commit message for the whole change,
-so that it can land on `main` unedited.
-Never write the ` (#N)` suffix by hand; GitHub appends it on squash merge.
-The scope is the skill directory name when a change is confined to one skill
-(`feat(spec-drafting): add a prototype planning phase`);
-omit it otherwise (`docs: update the skill placement guide`).
-Mark the type with `!` only when a skill is renamed or removed,
-since that breaks existing invocations.
-Bodies may be English or Japanese.
+Write pull request titles and commit subjects in concise English,
+following the [Conventional Commits](https://www.conventionalcommits.org/) format.
