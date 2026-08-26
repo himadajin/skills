@@ -1,7 +1,6 @@
 # AGENTS.md
 
 This repository contains Himadajin's personal Agent Skills.
-It does not define a separate skill framework or local best-practice system.
 
 For general Agent Skills behavior, format, or development practice,
 treat the official documentation as the source of truth:
