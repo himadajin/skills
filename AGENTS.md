@@ -77,8 +77,5 @@ It does not check prose or links; validate those in the touched files directly.
 
 ## Commits and pull requests
 
-When writing a pull request title or a commit message:
-
-- Keep it to a single line.
-- Write it in concise English.
-- Follow the [Conventional Commits](https://www.conventionalcommits.org/) format.
+Write pull request titles and commit subjects in concise English,
+following the [Conventional Commits](https://www.conventionalcommits.org/) format.
