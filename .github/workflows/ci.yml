@@ -9,7 +9,17 @@ jobs:
   validate-skills:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      - name: Set up uv and Python
+        uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
+        with:
+          version: "0.12.5"
+          python-version: "3.11"
+          enable-cache: false
+
+      - name: Test the validator
+        run: uv run --locked python -m unittest discover -s tests -v
 
       - name: Validate skills
-        run: python3 scripts/validate_skills.py
+        run: uv run --locked python scripts/validate_skills.py
