@@ -62,7 +62,8 @@ in the layout the Agent Skills specification defines.
   `skills/deprecated/` holds retired skills kept for reference.
 - Many skills are intentionally written in Japanese;
   keep each skill's language unless the task asks otherwise.
-- `/works/`, `/local/`, and `/tmp/` are gitignored local workspace.
+- `works/`, `local/`, and `tmp/` at the repository root
+  are gitignored local workspace.
   Use them only when the user points to them,
   and never infer repository rules from them.
 
