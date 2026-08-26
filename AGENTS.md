@@ -53,29 +53,23 @@ Keep rules close to their source of truth:
 
 ## Local Map
 
-- The root `README.md` owns human-facing installation
-  and cross-agent sharing notes.
-- `docs/releasing.md` records, as a factual description,
-  how release zips are produced.
-  Releases happen only when the repository owner
-  manually runs the GitHub Actions release workflow;
-  agents must not initiate releases.
-- Skills live two levels deep, grouped by category:
-  `engineering` (artifacts that lead to implementation),
+- `README.md`: human-facing installation and cross-agent sharing notes.
+- `docs/releasing.md`: how release zips are produced.
+  Releases are started manually by the repository owner;
+  agents must not initiate one.
+- `skills/<category>/<skill-name>/SKILL.md` owns that skill,
+  including the supporting files under its directory.
+  Categories: `engineering` (artifacts that lead to implementation),
   `productivity` (dialogue and decision support),
   `meta` (skill and prompt development),
   `writing` (Japanese prose),
   and `creativity` (creative output).
-  `skills/deprecated/` holds retired skills;
-  they are kept for reference and excluded from releases.
-- Each `skills/<category>/<skill-name>/SKILL.md` owns that skill's behavior.
-  Supporting files under that skill's subdirectories belong to that skill
-  unless another skill explicitly links to them.
+  `skills/deprecated/` holds retired skills kept for reference.
 - Many skills are intentionally written in Japanese;
-  keep the affected skill's language unless the task asks otherwise.
-- `/works/`, `/local/`, and `/tmp/` are local workspace context.
-  Use them when the user points to them,
-  but do not infer repository rules from them.
+  keep each skill's language unless the task asks otherwise.
+- `/works/`, `/local/`, and `/tmp/` are gitignored local workspace.
+  Use them only when the user points to them,
+  and never infer repository rules from them.
 
 ## Validation
 
