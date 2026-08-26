@@ -41,17 +41,10 @@ A new or changed rule names one default behavior
 and the signal that shows it was followed,
 rather than listing competing options.
 
-Keep rules close to their source of truth:
-
-- Skill activation boundaries belong in the frontmatter `description`;
-  if a behavior change affects when a skill should or should not activate,
-  reflect that boundary there rather than only in the body.
-- Mandatory workflow and decision rules belong in the skill's `SKILL.md`.
-- Detailed rubrics, templates, examples, and long references
-  belong under that skill's `references/`, `assets/`, or `scripts/` directory.
-- Repository-wide editing rules belong in this file
-  only when they apply across skills
-  and are not already covered by official documentation.
+This file holds only rules that apply across skills
+and are not already covered by the official documentation above.
+Everything specific to one skill lives in that skill's directory,
+in the layout the Agent Skills specification defines.
 
 ## Local Map
 
