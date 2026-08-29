@@ -1,6 +1,6 @@
 ---
 name: delegate-implementation
-description: Implement what was agreed in the conversation, adopting the recommended option if one is still pending. Delegate all implementation to the subagent the user names and act as reviewer until the result passes. Invoke only on the user's explicit request.
+description: Implement what was agreed in the conversation,　adopting the recommended option if one is still pending. Delegate all implementation to a subagent chosen for the task, preferring one the user names, and review the result as a merge reviewer, sending problems back rather than fixing them. Invoke only on the user's explicit request.
 disable-model-invocation: true
 ---
 
