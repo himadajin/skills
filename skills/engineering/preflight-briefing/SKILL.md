@@ -49,10 +49,15 @@ The briefing has four parts, in this order:
     do not float them as standalone questions.
 4. **Proposal**
   — what you suggest. End the briefing here.
-    One complete package as an itemized list:
+    One complete package built on the requirements carried forward,
+    with proposed decisions as an itemized list:
     the candidate you recommend plus a default for each remaining decision
     needed to agree on the goal, scope, and constraints,
     so the user can override single items.
+    Summarize the requirements carried forward as needed to understand the proposal,
+    and distinguish them from the decisions you propose to add or change.
+    When recommending a change to an existing requirement,
+    state what changes and why.
     Accepting the proposal as-is must settle the direction.
     Implementation details that can be decided within that agreement
     belong to implementation and need not be settled in the briefing.
