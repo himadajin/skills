@@ -42,20 +42,30 @@ The briefing has four parts, in this order:
     whether its premises still hold, and whether the problem has been partially or fully solved since it was written.
 3. **Decision**
   — what could be done.
-    Name the primary decision in one sentence,
-    then give 2–3 candidate directions at policy level.
-    Include "do it as written" when it is still viable.
+    State what needs to be chosen at policy level.
+    Compare viable directions when their differences in goal achievement,
+    scope, constraints, costs, or consequences could affect that choice.
+    Include "do it as written" when it meets this criterion.
+    If there is no substantive choice, briefly explain why.
     Attach each candidate's preconditions, costs, and consequences to that candidate;
     do not float them as standalone questions.
 4. **Proposal**
   — what you suggest. End the briefing here.
-    One complete package as an itemized list:
-    the candidate you recommend plus a default for every remaining sub-decision,
+    One complete package built on the requirements carried forward,
+    with proposed decisions as an itemized list:
+    the candidate you recommend plus a default for each remaining decision
+    needed to agree on the goal, scope, and constraints,
     so the user can override single items.
-    Accepting the proposal as-is must leave nothing undecided.
+    Summarize the requirements carried forward as needed to understand the proposal,
+    and distinguish them from the decisions you propose to add or change.
+    When recommending a change to an existing requirement,
+    state what changes and why.
+    Accepting the proposal as-is must settle the direction.
+    Implementation details that can be decided within that agreement
+    belong to implementation and need not be settled in the briefing.
     A sub-decision may stay open only when you cannot form a default,
     and then state why the call is the user's.
-    Close by saying that "as proposed" settles everything
+    Close by saying that "as proposed" settles the direction
     and that individual items can be swapped in the reply.
 
 ## Boundaries
