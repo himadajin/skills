@@ -50,12 +50,15 @@ The briefing has four parts, in this order:
 4. **Proposal**
   — what you suggest. End the briefing here.
     One complete package as an itemized list:
-    the candidate you recommend plus a default for every remaining sub-decision,
+    the candidate you recommend plus a default for each remaining decision
+    needed to agree on the goal, scope, and constraints,
     so the user can override single items.
-    Accepting the proposal as-is must leave nothing undecided.
+    Accepting the proposal as-is must settle the direction.
+    Implementation details that can be decided within that agreement
+    belong to implementation and need not be settled in the briefing.
     A sub-decision may stay open only when you cannot form a default,
     and then state why the call is the user's.
-    Close by saying that "as proposed" settles everything
+    Close by saying that "as proposed" settles the direction
     and that individual items can be swapped in the reply.
 
 ## Boundaries
