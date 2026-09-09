@@ -42,9 +42,11 @@ The briefing has four parts, in this order:
     whether its premises still hold, and whether the problem has been partially or fully solved since it was written.
 3. **Decision**
   — what could be done.
-    Name the primary decision in one sentence,
-    then give 2–3 candidate directions at policy level.
-    Include "do it as written" when it is still viable.
+    State what needs to be chosen at policy level.
+    Compare viable directions when their differences in goal achievement,
+    scope, constraints, costs, or consequences could affect that choice.
+    Include "do it as written" when it meets this criterion.
+    If there is no substantive choice, briefly explain why.
     Attach each candidate's preconditions, costs, and consequences to that candidate;
     do not float them as standalone questions.
 4. **Proposal**
