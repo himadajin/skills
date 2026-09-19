@@ -2,7 +2,7 @@
 name: github-issue-roadmap
 description: >-
   Analyze a GitHub repository's open issue backlog as one portfolio: group workstreams,
-  distinguish explicitly stated dependencies from those grounded in code or design, inspect referenced issues and pull requests,
+  distinguish required prerequisites from ordering that reduces rework or conflicts, inspect referenced issues and pull requests,
   assess importance, and recommend an implementation order with parallelizable work.
   Use whenever a user asks to review, prioritize, sequence, or map dependencies across multiple
   open GitHub issues or an issue backlog. Do not use for investigating only one issue.
@@ -43,15 +43,11 @@ GitHub の本文とコメントは計画の明示的な根拠として、設計�
 - コードや設計に基づく依存関係を判断するときは、issue が挙げるファイルパスや関数名で `grep` し、複数の issue が同じ実装箇所を変更するかを実際に確かめる。
 - コードを読む範囲は依存関係の判断に必要な箇所に限定する。
 
-### 3. 依存関係を分類する
+### 3. 実装順序への影響を確認する
 
-各関係を次のいずれかに分類する。
-
-- **明示的な必須依存**：sub-issue の親子、`depends on`、`after`、`blocked by`、epic の完了条件など、本文またはコメントが前提としている関係。
-  リポジトリの契約や設計文書が「A が入るまで B は満たせない」と明記している関係も、issue 本文になくてもこの分類に含める。
-- **明示的な推奨順序**：`desirable before`、`coordinates with` など、順序は書かれているが blocker ではない関係。
-- **コードや設計に基づく依存関係**：同じ契約やデータ構造を先に安定させる必要がある、基盤をそれを利用する側より先に入れると手戻りを避けられる、同じ実装箇所の変更順で競合を減らせる、といったコードや設計上の関係。
-- **関連のみ**：同じ領域に属するが順序制約はなく、並行できる関係。
+issue 間の関係が実装順序を制約するかを、本文、コメント、設計文書、コードから確認する。
+順序を付ける場合は、先行作業が必須の前提なのか、手戻りや競合を減らすために先行させるのかを区別する。
+順序の制約がない作業は、並行して進める候補にする。
 
 ### 4. 重要度と実装順序を決める
 
@@ -72,7 +68,7 @@ GitHub の本文とコメントは計画の明示的な根拠として、設計�
 読者が知りたい順に、結論を先に、理由と詳細を後に書く。
 分析で得た事実でも、推奨順序を変えないものは書かない。
 同じ事実は、それが順序を決めている場所で一度だけ述べる。
-手順 3 の分類は順序と確信度を決めるための分析であってレポートの構成ではないので、依存関係を独立したセクションとして列挙しない。
+依存関係は実装順序を決める根拠として示し、独立したセクションとして列挙しない。
 
 issue 番号だけでは人間は内容を思い出せないので、言及するときは常に `#N(数語の説明)` の形にする。
 URL は貼らない。
