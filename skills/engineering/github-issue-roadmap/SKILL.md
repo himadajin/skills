@@ -2,7 +2,7 @@
 name: github-issue-roadmap
 description: >-
   Analyze a GitHub repository's open issue backlog as one portfolio: group workstreams,
-  distinguish explicit from inferred dependencies, inspect referenced issues and pull requests,
+  distinguish explicitly stated dependencies from those grounded in code or design, inspect referenced issues and pull requests,
   assess importance, and recommend an implementation order with parallelizable work.
   Use whenever a user asks to review, prioritize, sequence, or map dependencies across multiple
   open GitHub issues or an issue backlog. Do not use for investigating only one issue.
@@ -41,7 +41,7 @@ GitHub の本文とコメントは計画の明示的な根拠として、設計�
 - 参照先の closed issue や merged PR は、open issue の計画がその内容を前提にしているときに本文を読む。
   閉じているだけではマージされたことにならないので、索引の `merged` 表示かローカルの `git log` で着地を確かめる。
 - ローカル checkout がある場合は、適用される `AGENTS.md`、ドキュメントの案内、issue が直接参照する設計文書やコードを読む。
-- 推定依存を立てるときは、issue が挙げるファイルパスや関数名で `grep` し、複数の issue が同じ実装箇所を変更するかを実際に確かめる。
+- コードや設計に基づく依存関係を判断するときは、issue が挙げるファイルパスや関数名で `grep` し、複数の issue が同じ実装箇所を変更するかを実際に確かめる。
   本文に書かれていない競合はこの照合でしか見つからない。
 - コードを読む範囲は依存関係の判断に必要な箇所に限定する。
 
@@ -52,7 +52,7 @@ GitHub の本文とコメントは計画の明示的な根拠として、設計�
 - **明示的な必須依存**：sub-issue の親子、`depends on`、`after`、`blocked by`、epic の完了条件など、本文またはコメントが前提としている関係。
   リポジトリの契約や設計文書が「A が入るまで B は満たせない」と明記している関係も、issue 本文になくてもこの分類に含める。
 - **明示的な推奨順序**：`desirable before`、`coordinates with` など、順序は書かれているが blocker ではない関係。
-- **依存関係**：同じ契約やデータ構造を先に安定させる必要がある、基盤をそれを利用する側より先に入れると手戻りを避けられる、同じ実装箇所の変更順で競合を減らせる、といったコードや設計上の関係。
+- **コードや設計に基づく依存関係**：同じ契約やデータ構造を先に安定させる必要がある、基盤をそれを利用する側より先に入れると手戻りを避けられる、同じ実装箇所の変更順で競合を減らせる、といったコードや設計上の関係。
 - **関連のみ**：同じ領域に属するが順序制約はなく、並行できる関係。
 
 ### 4. 重要度と実装順序を決める
@@ -78,7 +78,8 @@ GitHub の本文とコメントは計画の明示的な根拠として、設計�
 
 issue 番号だけでは人間は内容を思い出せないので、言及するときは常に `#N(数語の説明)` の形にする。
 URL は貼らない。
-issue 以外の根拠（設計文書、契約、コード）はパスで示し、推定依存を順序の理由に使うときは(推定)と明示して根拠のパスを添える。
+issue 以外の根拠（設計文書、契約、コード）はパスで示す。
+コードや設計に基づく依存関係を順序の理由に使うときは、確認した実装上の関係と、それが順序を決める理由を説明する。
 
 次の構成で報告する。
 
