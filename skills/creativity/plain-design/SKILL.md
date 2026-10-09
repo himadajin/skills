@@ -49,12 +49,6 @@ Color has two roles only:
 Each hue has exactly one meaning, stated in one sentence and kept consistent across the artifact.
 There is no fixed palette or hue count; choose values that fit the context, and keep colored text at 4.5:1 or more against paper.
 
-- Never use color to tell kinds apart (categories, tags, node types, sections).
-- Attention test: remove the color. If the eye's first landing point does not change, it was ornament; delete it.
-- State is said with words and characters ("Error:", `×`). Only errors and destructive actions may take a color, and that hue then means danger and nothing else.
-- In a figure you draw, color may highlight one series against ink, or encode quantity as shades of one hue.
-  Separate series by line style, shape, or direct labels; use per-series hues only when those cannot carry the distinctions, and keep those hues inside the figure.
-
 ## Shapes
 
 - No shadows or gradients.
