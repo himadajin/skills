@@ -58,9 +58,11 @@ There is no fixed palette or hue count; choose values that fit the context, and 
 
 ## Links and buttons
 
-Links are set in the action color with a solid underline, so they survive grayscale print.
-If the artifact has no action color, links are ink with a solid underline.
-Buttons use the same action color. No dashed or dotted underlines.
+Links and buttons both mean "this can be operated", so they share one signal:
+text in the action color with a solid underline, which survives grayscale print.
+Do not frame or fill them. No dashed or dotted underlines.
+If the artifact has no action color, the signal is ink with a solid underline.
+The current choice in a group (a pressed toggle, the selected tab) is no longer an action: set it in ink at weight 600, without underline.
 
 ## Shapes
 
