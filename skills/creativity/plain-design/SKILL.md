@@ -38,7 +38,6 @@ No typeface is prescribed; use what the medium offers.
 Treat the body size on the current medium as 1× and keep every ratio when scaling.
 Gaps between blocks follow 1:2:4:6:8:12 of a base unit that is ¼ of the body size (4px at 16px).
 A heading sits closer to its content than to what precedes it, 4:1 above to below.
-Keep content dense and the frame generous.
 
 ## Color
 
@@ -56,19 +55,10 @@ There is no fixed palette or hue count; choose values that fit the context, and 
 - In a figure you draw, color may highlight one series against ink, or encode quantity as shades of one hue.
   Separate series by line style, shape, or direct labels; use per-series hues only when those cannot carry the distinctions, and keep those hues inside the figure.
 
-## Links and buttons
-
-Links and buttons both mean "this can be operated", so they share one signal:
-text in the action color with a solid underline, which survives grayscale print.
-Do not frame or fill them. No dashed or dotted underlines.
-If the artifact has no action color, the signal is ink with a solid underline.
-The current choice in a group (a pressed toggle, the selected tab) is no longer an action: set it in ink at weight 600, without underline.
-
 ## Shapes
 
-- No shadows, gradients, or rounded corners. A small radius on inline code is the only exception.
+- No shadows or gradients.
 - Hairline rules mark structure; fills are rare.
-- Symbols are typed characters (`→`, `/`, `#`), not icons or emoji. Use an icon only where no character says the same thing.
 - No marketing hero: no oversized title over a tiny caption and wide empty space.
 
 ## Derivation
