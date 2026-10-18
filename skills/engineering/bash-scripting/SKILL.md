@@ -25,3 +25,9 @@ description: >-
 - Keep CLI argument parsing and validation in `main()`.
 - Extract functions when naming a distinct operation makes the flow easier
   to follow.
+
+## Strings and variable expansion
+
+- Quote strings and expansions unless shell interpretation is intended.
+- Use braces when expanding variable names of two or more characters,
+  as in `"${directory}"`.
