@@ -4,7 +4,6 @@ description: >-
   Create a new agent-facing prompt or refine an existing one
   by questioning the user with the installed grilling skill,
   then write the result to ./tmp/<title>.md.
-  Not for creating or improving skills.
   Invoke only on the user's explicit request.
 disable-model-invocation: true
 ---
