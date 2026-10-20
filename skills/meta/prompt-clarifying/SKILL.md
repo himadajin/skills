@@ -12,7 +12,7 @@ disable-model-invocation: true
 
 Invoke the installed "grilling" skill and create a prompt based on the information received from the user.
 
-Depending on the language model you are using, refer to the following prompt engineering references:
+Select and read the relevant prompt engineering references below based on the language model the prompt is intended for. If no target model is specified, use the model you are currently using:
 
 - [Claude Prompt engineering overview](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/overview.md)
 - [Claude Prompting best practices](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices.md)
