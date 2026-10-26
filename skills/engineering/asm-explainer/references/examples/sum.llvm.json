@@ -1,0 +1,266 @@
+{
+ "schema_version": 2,
+ "function": {
+  "name": "sum",
+  "isa": "llvm",
+  "summary": "配列 a の先頭 n 個の long を足し合わせて返す。n ≤ 0 なら 0 を返す。",
+  "compiler": "clang 19 -O1 -emit-llvm",
+  "params": [
+   {
+    "name": "a",
+    "type": "const long *",
+    "location": "%a"
+   },
+   {
+    "name": "n",
+    "type": "long",
+    "location": "%n"
+   }
+  ],
+  "returns": {
+   "type": "long",
+   "location": "%s.0.lcssa"
+  }
+ },
+ "blocks": [
+  {
+   "id": "entry",
+   "label": "entry",
+   "summary": "n > 0 かどうかでループに入るか決める。",
+   "explanation": "`icmp sgt` で n > 0 を求め、true ならループ本体 for.body へ、false なら for.cond.cleanup へ進む。",
+   "instructions": [
+    {
+     "text": "%cmp4 = icmp sgt i64 %n, 0",
+     "defs": [
+      "%cmp4"
+     ],
+     "uses": [
+      "%n"
+     ],
+     "note": "n > 0 ?"
+    },
+    {
+     "text": "br i1 %cmp4, label %for.body, label %for.cond.cleanup",
+     "defs": [],
+     "uses": [
+      "%cmp4"
+     ],
+     "note": "true ならループへ、false なら出口へ"
+    }
+   ],
+   "successors": [
+    {
+     "target": "for.body",
+     "kind": "true"
+    },
+    {
+     "target": "for.cond.cleanup",
+     "kind": "false"
+    }
+   ]
+  },
+  {
+   "id": "for.cond.cleanup",
+   "label": "for.cond.cleanup",
+   "summary": "合計を返す出口。",
+   "explanation": "phi が「どこから来たか」で値を選ぶ：entry から来たら 0、for.body から来たらループで作った %add。それを ret で返す。",
+   "instructions": [
+    {
+     "text": "%s.0.lcssa = phi i64 [ 0, %entry ], [ %add, %for.body ]",
+     "defs": [
+      "%s.0.lcssa"
+     ],
+     "uses": [],
+     "note": "来た経路で 0 か %add を選ぶ"
+    },
+    {
+     "text": "ret i64 %s.0.lcssa",
+     "defs": [],
+     "uses": [
+      "%s.0.lcssa"
+     ],
+     "note": "合計を返す"
+    }
+   ],
+   "successors": []
+  },
+  {
+   "id": "for.body",
+   "label": "for.body",
+   "summary": "ループ本体：a[i] を読んで足し、i を進める。",
+   "explanation": "2 つの phi が添字 %i.06 と合計 %s.05 を受け取る（初回は 0、2 回目以降は前の周の %inc / %add）。`getelementptr` で &a[i] を作り、load して足す。%inc == n なら true でループを抜け、そうでなければ false で for.body に戻る（back-edge）。",
+   "instructions": [
+    {
+     "text": "%i.06 = phi i64 [ %inc, %for.body ], [ 0, %entry ]",
+     "defs": [
+      "%i.06"
+     ],
+     "uses": [],
+     "note": "i：初回 0、以降 i+1"
+    },
+    {
+     "text": "%s.05 = phi i64 [ %add, %for.body ], [ 0, %entry ]",
+     "defs": [
+      "%s.05"
+     ],
+     "uses": [],
+     "note": "s：初回 0、以降 前回の合計"
+    },
+    {
+     "text": "%arrayidx = getelementptr inbounds i64, ptr %a, i64 %i.06",
+     "defs": [
+      "%arrayidx"
+     ],
+     "uses": [
+      "%a",
+      "%i.06"
+     ],
+     "note": "&a[i] を計算"
+    },
+    {
+     "text": "%0 = load i64, ptr %arrayidx, align 8",
+     "defs": [
+      "%0"
+     ],
+     "uses": [
+      "%arrayidx"
+     ],
+     "note": "a[i] を読む"
+    },
+    {
+     "text": "%add = add nsw i64 %0, %s.05",
+     "defs": [
+      "%add"
+     ],
+     "uses": [
+      "%0",
+      "%s.05"
+     ],
+     "note": "s + a[i]"
+    },
+    {
+     "text": "%inc = add nuw nsw i64 %i.06, 1",
+     "defs": [
+      "%inc"
+     ],
+     "uses": [
+      "%i.06"
+     ],
+     "note": "i + 1"
+    },
+    {
+     "text": "%exitcond.not = icmp eq i64 %inc, %n",
+     "defs": [
+      "%exitcond.not"
+     ],
+     "uses": [
+      "%inc",
+      "%n"
+     ],
+     "note": "i + 1 == n ?"
+    },
+    {
+     "text": "br i1 %exitcond.not, label %for.cond.cleanup, label %for.body",
+     "defs": [],
+     "uses": [
+      "%exitcond.not"
+     ],
+     "note": "終わりなら出口、そうでなければ繰り返す"
+    }
+   ],
+   "successors": [
+    {
+     "target": "for.cond.cleanup",
+     "kind": "true"
+    },
+    {
+     "target": "for.body",
+     "kind": "false"
+    }
+   ]
+  }
+ ],
+ "registers": [
+  {
+   "name": "%a",
+   "role": "argument",
+   "usage": "引数 a（配列の先頭ポインタ）。"
+  },
+  {
+   "name": "%n",
+   "role": "argument",
+   "usage": "引数 n（要素数）。"
+  },
+  {
+   "name": "%cmp4",
+   "role": "ssa-value",
+   "usage": "n > 0 の判定結果（i1）。"
+  },
+  {
+   "name": "%s.0.lcssa",
+   "role": "return",
+   "usage": "返す合計。ループに入らなければ 0。"
+  },
+  {
+   "name": "%i.06",
+   "role": "ssa-value",
+   "usage": "ループの添字 i。"
+  },
+  {
+   "name": "%s.05",
+   "role": "ssa-value",
+   "usage": "それまでの合計 s。"
+  },
+  {
+   "name": "%arrayidx",
+   "role": "ssa-value",
+   "usage": "&a[i]。"
+  },
+  {
+   "name": "%0",
+   "role": "ssa-value",
+   "usage": "読み込んだ a[i]。"
+  },
+  {
+   "name": "%add",
+   "role": "ssa-value",
+   "usage": "新しい合計 s + a[i]。"
+  },
+  {
+   "name": "%inc",
+   "role": "ssa-value",
+   "usage": "i + 1。"
+  },
+  {
+   "name": "%exitcond.not",
+   "role": "ssa-value",
+   "usage": "i + 1 == n（ループ終了条件）。"
+  }
+ ],
+ "registers_title": "SSA values",
+ "edge_uses": [
+  {
+   "from": "for.body",
+   "to": "for.cond.cleanup",
+   "uses": [
+    "%add"
+   ]
+  },
+  {
+   "from": "for.body",
+   "to": "for.body",
+   "uses": [
+    "%inc",
+    "%add"
+   ]
+  }
+ ],
+ "source": {
+  "language": "c",
+  "text": "long sum(const long *a, long n) {\n    long s = 0;\n    for (long i = 0; i < n; i++)\n        s += a[i];\n    return s;\n}\n"
+ },
+ "notes": [
+  "LLVM IR は SSA 形式なので、値は 1 回だけ定義される。ループで変わる値は phi で表され、phi の各オペランドは「その辺を通ったときに読まれる」（edge_uses）。"
+ ],
+ "_comment": "asm-explainer example (sum, clang 19 -O1)"
+}
