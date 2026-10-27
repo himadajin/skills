@@ -9,7 +9,7 @@ You read the listing and write a JSON file (references/schema.md); `scripts/vali
 
 ## Workflow
 1. Get the input: one function's `.s` or `.ll`. If the user gives C, compile it yourself (`clang --target=riscv64-linux-gnu -march=rv64gc -S -O1 -g`, `clang --target=aarch64-linux-gnu -S -O1 -g`, `clang -S -emit-llvm -O1 -g0 -fno-discard-value-names`) — *`-g` gives `.loc` lines for the C mapping; -O1 keeps code short but realistic.*
-2. Write the JSON exactly per [references/schema.md](references/schema.md); start from the matching file in [references/examples/](references/examples/) — *the schema rules (block split, successors, defs/uses, roles) are what the validator enforces.*
+2. Write the JSON exactly per [references/schema.md](references/schema.md) alone (its 'Minimal examples' section already has per-ISA snippets); do not look for or read example files — *the schema rules (block split, successors, defs/uses, roles) are what the validator enforces.*
 3. `python3 scripts/validate.py data.json input.s --isa riscv|aarch64|llvm [--source foo.c]` and fix every ERROR, repeat until none — *its messages name the instruction and the expected value.*
 4. Fill the prose fields (`function.summary`, block `summary`/`explanation`, instruction `note`, register `usage`, `notes`) in the user's language; in Japanese keep technical terms in English (taken / not taken, live range, control flow, basic block, back-edge, phi) — *readers match them against the graph labels.*
 5. `python3 scripts/build.py data.json out.html` (or `uv run scripts/build.py …`) — *stdlib only, one HTML file, no network.*
@@ -28,5 +28,4 @@ You read the listing and write a JSON file (references/schema.md); `scripts/vali
 ## Files
 - `scripts/validate.py`, `scripts/build.py`, `scripts/cfgtools.py` (Python ≥ 3.9, stdlib only); `assets/template.src.html`.
 - [references/schema.md](references/schema.md): the JSON format and all rules (ABI/register naming included).
-- [references/examples/](references/examples/): `sum` for RISC-V, AArch64 and LLVM IR (input, filled JSON; built HTML for RISC-V).
 - [references/testing.md](references/testing.md): how the validator was tested and its known limits.
