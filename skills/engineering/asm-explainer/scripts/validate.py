@@ -6,10 +6,11 @@
 """Validate an asm-explainer JSON against its input.
   python3 validate.py data.json input.(s|ll) [--isa riscv|aarch64|llvm]
 One short line per problem, written for an LLM fixing its own JSON. Exit 1 if any ERROR.
-Core is ISA-independent; per-ISA knowledge lives in the small tables below (stdlib only)."""
+Asm ISAs are table-driven below; LLVM IR checks live in validate_llvm.py (stdlib only)."""
 import json, re, sys, difflib, argparse, os
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from cfgtools import dominators
+import validate_llvm
 
 # ============================ per-ISA tables ============================
 RV_ABI = ["zero", "ra", "sp", "gp", "tp", "t0", "t1", "t2", "s0", "s1"] + [f"a{i}" for i in range(8)] + \
@@ -59,10 +60,8 @@ WHY = {"store": "store: every register operand is read", "cmp": "compare: writes
        "rmw": "destination is also read (read-modify-write)", "storepair": "store pair: every register operand is read",
        "loadpair": "load pair: both destinations are written", "cset": "cset reads nzcv", "ccmp": "ccmp/ccmn/fccmp: operands are read only; nzcv is read and written"}
 
-# ============================ input parsing ============================
-META = re.compile(r",\s*![\w.]+ !\d+")  # LLVM metadata attachments (!tbaa, !llvm.loop, !dbg ...)
 
-
+# ============================ shared / asm helpers ============================
 def detect_isa(isa_field, path):
     s = (isa_field or "").lower()
     if path.endswith(".ll") or "llvm" in s: return "llvm"
@@ -75,35 +74,9 @@ def norm(t):
     return re.sub(r"\s*,\s*", ", ", t)
 
 
-def input_insns(text, fname, isa):
-    """-> (llvm (values, params, implicit entry label)|None, [normalized text], [source line or None],
-           {label: index of the next instruction})"""
+def parse_asm(text, fname, T):
+    """-> None, [normalized text], [source line or None], {label: index of the next instruction}"""
     lines = text.splitlines()
-    if isa == "llvm":
-        start = next((i for i, l in enumerate(lines) if l.startswith("define") and re.search(rf"@{re.escape(fname.lstrip('@'))}\(", l)), None)
-        if start is None: return None, [], [], None
-        out, params = [], re.findall(r"%[\w.]+", lines[start].split("(", 1)[1].rsplit(")", 1)[0])
-        defs = set(params); labels = {}; entry = None; first = True; pend = None
-        for l in lines[start + 1:]:
-            if l.startswith("}"): break
-            c = META.sub("", l.split(";")[0]).strip()
-            if pend is not None:  # continuation of a multi-line instruction (switch [ ... ], indirectbr [ ... ])
-                pend += " " + c
-                if pend.count("[") <= pend.count("]"): out.append(norm(pend)); pend = None
-                continue
-            if not c: continue
-            m = re.match(r"^([\w.$-]+):", c)
-            if m:
-                labels[m.group(1)] = len(out); first = False; continue
-            if first and entry is None:  # unnamed entry block: implicit label %N (N = number of unnamed params)
-                entry = str(sum(1 for q in params if re.fullmatch(r"%\d+", q))) if all(re.fullmatch(r"%\d+", q) for q in params) else None
-                entry = entry or "0"
-                first = False
-            if c.count("[") > c.count("]") and not re.match(r"^(%[\w.]+\s*=\s*)?phi\b", c): pend = c; continue
-            out.append(norm(c))
-            m = re.match(r"(%[\w.]+)\s*=", c)
-            if m: defs.add(m.group(1))
-        return (defs, params, entry), out, [None] * len(out), labels
     start = next((i for i, l in enumerate(lines) if re.match(rf"^{re.escape(fname)}:", l)), None)
     if start is None: return None, [], [], None
     out, locs, loc, labels = [], [], None, {fname: 0}
@@ -117,7 +90,7 @@ def input_insns(text, fname, isa):
         if m:
             labels[m.group(1)] = len(out)
             if re.match(r"^\.L(BB[\w$]+|\d+)$", m.group(1)): lastlab = len(out)  # branch-target label: L1 boundary
-        c = re.sub(r"^\s*[\w.$]+:", "", l.split(ISA[isa]["comment"])[0]).strip()
+        c = re.sub(r"^\s*[\w.$]+:", "", l.split(T["comment"])[0]).strip()
         if not c or c.startswith("."): continue
         out.append(norm(c)); locs.append(loc if locpos is not None and locpos >= lastlab else None)  # L1: no carry across a label
     return None, out, locs, labels
@@ -141,14 +114,6 @@ def jump_table(text, label):
         if not labs: return None
         out.append(labs[0])
     return out or None
-
-
-def mnemonic(text, isa):
-    if isa == "llvm":
-        t = re.sub(r"^%[\w.]+\s*=\s*", "", text)
-        if t.startswith("br "): return "br i1" if t.startswith("br i1") else "br label"
-        return t.split()[0]
-    return text.split()[0].lower()
 
 
 def split_ops(s):
@@ -234,20 +199,168 @@ def expected_asm(text, isa, T, fn_returns):
     return D, U, OPT, cls, []
 
 
-LLVM_TERM = r"^(br|ret|switch|unreachable|resume|indirectbr|invoke|callbr)$"
+# ============================ asm target hooks ============================
+def asm_mnemonic(text):
+    return text.split()[0].lower()
 
 
-def expected_llvm(text, vals):
-    """-> defs, uses, phi_incoming[(value, pred_label)]"""
-    m = re.match(r"(%[\w.]+)\s*=\s*(.*)$", text)
-    d, rest = ([m.group(1)], m.group(2)) if m else ([], text)
-    if rest.startswith("phi "):
-        return d, [], [(v, p) for v, p in re.findall(r"\[\s*([^,\]]+?)\s*,\s*%([\w.]+)\s*\]", rest)]
-    rest = re.sub(r"label %[\w.]+", "", rest)
-    u = []
-    for v in re.findall(r"%[\w.]+", rest):
-        if v in vals and v not in u: u.append(v)
-    return d, u, []
+def asm_is_term(mn, T):
+    return bool(re.match(T["cond"], mn) or re.match(T["jump"], mn) or re.match(T["ret"], mn) or mn in ("br", "jr", "c.jr", "tail"))
+
+
+def asm_norm_label(label):
+    Ln = label.rstrip(":")
+    warn = f"write label as {Ln!r} (no '%' or ':'); accepted" if Ln != label else None
+    return Ln, warn
+
+
+def check_asm_labels(seq_ok, labpos, blocks, want, src, lab, E):
+    if not (seq_ok and labpos is not None): return
+    starts, g = {}, 0
+    for b in blocks: starts[b["id"]] = g; g += len(b.get("instructions", []))
+    for b in blocks:
+        L0 = b.get("label")
+        if not L0: continue
+        if L0 not in labpos: E(f"{b['id']}: label {L0!r} not found in the input")
+        elif labpos[L0] != starts[b["id"]]: E(f"{b['id']}: label {L0!r} is at instruction #{labpos[L0]} in the input, block starts at #{starts[b['id']]}")
+        elif re.match(r"^\.L(pcrel_hi|tmp|func_begin|func_end)", L0): E(f"{b['id']}: {L0} is not a branch target; it does not start a block (B3)")
+    refd = set(re.findall(r"\.L(?:BB[\w$]+|\d+)\b", " ".join(want)))
+    for jl in set(re.findall(r"\.LJTI[\w$]+", " ".join(want))): refd |= set(jump_table(src, jl) or [])
+    for L0 in sorted(refd):
+        if L0 in labpos and not any(b.get("label") == L0 for b in blocks):
+            E(f"label {L0} is a branch/jump-table target: it must start a block with label {L0!r}")
+
+
+def asm_successors(b, mn, last, lab, nxt, want, src, isa, T, check_switch, E, W):
+    tgts = [lab[t] for t in re.findall(r"%?[\w.$]+", re.sub(r"^\S+", "", last)) if t in lab]
+    exp = None
+    if re.match(T["cond"], mn):
+        exp = [(tgts[-1] if tgts else None, "true"), (nxt, "false")]
+        if not tgts: E(f"{b['id']}: branch target of '{last}' is not a block label"); exp = None
+    elif re.match(T["jump"], mn):
+        exp = [(tgts[-1], "jump")] if tgts else None
+        if not tgts: E(f"{b['id']}: jump target of '{last}' is not a block label")
+    elif re.match(T["ret"], mn) or mn == "tail" or (isa == "riscv" and re.match(r"^(c\.)?jr (ra|x1)$", norm(last))): exp = []
+    elif mn in ("br", "jr", "c.jr"):
+        jt = b.get("jump_table")
+        jls = sorted(set(re.findall(r"\.LJTI[\w$]+", " ".join(want))))
+        if not jt and jls: E(f"{b['id']}: indirect jump '{last}' with jump table {jls[0]} in the function: add jump_table {{label, targets}} and case successors")
+        elif not jt: W(f"{b['id']}: indirect jump '{last}': successors not checked (add jump_table if it jumps through a table)")
+        else:
+            ent = jump_table(src, jt.get("label", "")) if jt.get("label") else None
+            if not jt.get("label") or jt["label"] not in " ".join(want): E(f"{b['id']}: jump_table.label {jt.get('label')!r} is not referenced in the function")
+            if ent is None: W(f"{b['id']}: could not parse jump table {jt.get('label')!r} in the input; successors not checked")
+            else:
+                tl = [lab.get(e) for e in ent]
+                if None in tl: E(f"{b['id']}: jump table entry {ent[tl.index(None)]} is not a block label")
+                jtt = [t.get("target") if isinstance(t, dict) else t for t in jt.get("targets", [])]
+                if jtt != tl: E(f"{b['id']}: jump_table.targets should be {tl} (table order, one per entry; found {jtt})")
+                vals_by_t = {}
+                for t in jt.get("targets", []):
+                    if isinstance(t, dict) and t.get("case") is not None: vals_by_t.setdefault(t.get("target"), set()).update(map(str, t["case"] if isinstance(t["case"], list) else [t["case"]]))
+                want_s = [(t, "case", frozenset(vals_by_t[t]) if t in vals_by_t else None) for t in dict.fromkeys(tl) if t]
+                check_switch(b, b.get("successors", []), want_s, last)
+    else: exp = [(nxt, "fallthrough")] if nxt else []
+    return exp
+
+
+def analyze_asm_insn(x, where, extra, lab, b, phi_need, norm_, E, W, pending, fn_returns, void_callee, isa, T):
+    Dl, Ul, Cl = list(x.get("defs", [])), list(x.get("uses", [])), list(x.get("clobbers", []) or [])
+    bad = False
+    for r in Dl + Ul + Cl:
+        c = T["alias"].get(r, r)
+        if c != r: E(f"{where}: write canonical {c} instead of {r} (text keeps {r})"); bad = True
+        elif r in T["zero"]: E(f"{where}: zero register {r} must not appear in defs/uses"); bad = True
+        elif r not in T["canon"]: E(f"{where}: unknown register {r!r}"); bad = True
+    if bad: return None
+    ed, eu_, opt, cls, ed_opt = expected_asm(x.get("text", ""), isa, T, fn_returns)
+    if cls in ("call", "tail"):
+        # D6 call arguments. An argument register written since the last call (same block) and not read
+        # before the call is dead unless the callee reads it (the call clobbers it) -> ERROR.
+        # One that was also read in between may be scratch -> warn only.
+        dead = sorted(r for r, rd in pending.items() if not rd and r not in Ul)
+        rd_ = sorted(r for r, rd in pending.items() if rd and r not in Ul)
+        if dead: E(f"{where}: {dead} written since the last call and not read before it -> it is an argument: add to uses")
+        if rd_: W(f"{where}: {rd_} set up before the call -> add to uses if it is an argument")
+        if not Cl: W(f"{where}: no clobbers; list caller-saved regs it destroys (else liveness runs through the call)")
+        pending.clear()
+    else:
+        for r in Ul:
+            if r in pending: pending[r] = True
+        for r in set(Dl) & T["args"]: pending[r] = False
+    cr = x.get("callee_returns") or (void_callee(x.get("text", "")) and "void")
+    if cls == "call" and cr == "void" and T["ret_regs"][0] in Dl:
+        E(f"{where}: callee returns void -> {T['ret_regs'][0]} goes in clobbers, not defs")
+    elif cls == "call" and cr != "void" and not any(r in Dl for r in T["ret_regs"]):
+        W(f"{where}: call should also def return register {T['ret_regs'][0]} (if the callee returns void, set \"callee_returns\": \"void\")")
+    if cls == "ret" and fn_returns:
+        rl = T["alias"].get(fn_returns.get("location", ""), fn_returns.get("location", ""))
+        if rl in T["canon"] and rl not in Ul: E(f"{where}: ret must also use the return register {rl}")
+    for c in Cl:
+        if c not in T["caller_saved"]: E(f"{where}: clobbers {c} is not caller-saved")
+    return ed, eu_, opt, cls, ed_opt, Ul
+
+
+def asm_why(isa, cls, md, text):
+    why = WHY.get(cls, "")
+    if md and isa == "aarch64" and any(re.search(rf"\[[wx]?{re.escape(r[1:])}\b|\[{r}\b", text) for r in md):
+        why = "pre/post-index writeback ([base, #i]! or [base], #i) also writes the base"
+    return why
+
+
+def check_asm_roles(listed, extra, ret_used, live_in, f, T, blocks, E, W, isa):
+    retloc = (f.get("returns") or {}).get("location")
+    retloc = T["alias"].get(retloc, retloc) if retloc else None
+    fp_set = None  # frame pointer set from sp in the prologue (mov x29, sp / add x29, sp, #n / addi s0, sp, n)
+    fpreg = {"aarch64": "x29", "riscv": "s0"}.get(isa)
+    for x in (blocks[0].get("instructions", []) + (blocks[1].get("instructions", []) if len(blocks) > 1 else [])):
+        if fpreg and x.get("defs") == [fpreg] and x.get("uses") == ["sp"] and re.match(r"^(mov|add|addi|c\.addi4spn)\s", norm(x.get("text", ""))): fp_set = x.get("text")
+    CALLEE = {"aarch64": {f"x{i}" for i in range(19, 29)} | {f"v{i}" for i in range(8, 16)},
+              "riscv": {f"s{i}" for i in range(12)} | {f"fs{i}" for i in range(12)}}.get(isa, set())
+    for n, r in listed.items():
+        role = r.get("role")
+        if n == retloc and n in live_in and n in ret_used and role in ("argument", "return"):
+            E(f"registers.{n}: holds a parameter on entry and is the return register read by ret -> role argument+return")
+        if n == fpreg and fp_set and role != "frame-pointer":
+            E(f"registers.{n}: set from sp in the prologue ('{fp_set}') -> role frame-pointer")
+        if n in CALLEE and n in live_in and role in ("temporary", "other", "return") and not (n == fpreg and fp_set):
+            E(f"registers.{n}: callee-saved register live at entry (saved/restored) -> role callee-saved, not {role}")
+        fx = T["fixed"].get(n)
+        if fx and role != fx: W(f"registers.{n}: role should be {fx}")
+        if n == "x29" and role not in ("frame-pointer", "callee-saved"): W(f"registers.{n}: role frame-pointer (or callee-saved)")
+        ploc = {T["alias"].get(p.get("location"), p.get("location")) for p in f.get("params", [])}
+        if n in live_in and role in ("temporary", "other", "zero", "return") and (n in ploc or n in CALLEE or n in T["fixed"]):
+            W(f"registers.{n}: read before any write (live at entry) -> role argument / callee-saved, not {role}")
+        elif n in live_in and role in ("temporary", "zero", "return"):
+            W(f"registers.{n}: read before any write but not a parameter location -> role undefined-live-in (if the code really reads an undefined value) or check defs/uses")
+        if role == "undefined-live-in" and n not in live_in: W(f"registers.{n}: role undefined-live-in but never read before written")
+        if role == "undefined-live-in" and (n in ploc or n in CALLEE): W(f"registers.{n}: is a parameter location / callee-saved -> role argument / callee-saved")
+        if role in ("argument", "argument+return") and n not in live_in and n not in [T["alias"].get(p.get("location"), p.get("location")) for p in f.get("params", [])]:
+            W(f"registers.{n}: role {role} but never read before written")
+
+
+def target_for(isa):
+    """Small per-target hook table. LLVM IR is a different language; asm ISAs share these closures."""
+    if isa == "llvm":
+        return validate_llvm.target()
+    T = ISA[isa]
+    return dict(
+        parse=lambda src, fname, norm_: parse_asm(src, fname, T),
+        mnemonic=asm_mnemonic,
+        is_term=lambda mn: asm_is_term(mn, T),
+        is_return=lambda mn: bool(re.match(T["ret"], mn)),
+        norm_label=asm_norm_label,
+        bind_entry=lambda extra, blocks, lab: None,
+        note_seq_mismatch=lambda have, E: None,
+        check_labels=lambda seq_ok, labpos, blocks, want, src, lab, E: check_asm_labels(seq_ok, labpos, blocks, want, src, lab, E),
+        require_case_value=False,
+        successors=lambda b, mn, last, lab, nxt, norm_, check_switch, E, W, want=None, src=None: asm_successors(b, mn, last, lab, nxt, want, src, isa, T, check_switch, E, W),
+        analyze_insn=lambda x, where, extra, lab, b, phi_need, norm_, E, W, pending, fn_returns, void_callee: analyze_asm_insn(x, where, extra, lab, b, phi_need, norm_, E, W, pending, fn_returns, void_callee, isa, T),
+        why=lambda cls, md, text: asm_why(isa, cls, md, text),
+        check_source_line=True,
+        finish_phi=lambda eu, phi_need, E: None,
+        check_roles=lambda listed, extra, ret_used, live_in, f, T_, blocks, E, W: check_asm_roles(listed, extra, ret_used, live_in, f, T_, blocks, E, W, isa),
+    )
 
 
 # ============================ main ============================
@@ -270,7 +383,7 @@ def main():
     for k in ("name", "isa"):
         if not f.get(k): E(f"function.{k}: missing")
     if not isinstance(d.get("blocks"), list) or not d["blocks"]: E("blocks: missing/empty"); return report(errs, warns)
-    isa = a.isa or detect_isa(f.get("isa"), a.input); T = ISA[isa]
+    isa = a.isa or detect_isa(f.get("isa"), a.input); T = ISA[isa]; tgt = target_for(isa)
     blocks = d["blocks"]; ids = [b.get("id") for b in blocks]; byid = {b.get("id"): b for b in blocks}
     if len(set(ids)) != len(ids): E("blocks: duplicate id")
     for b in blocks:
@@ -285,13 +398,12 @@ def main():
         if not r.get("name") or not r.get("role"): E(f"registers[{i}]: needs name and role")
         elif r["role"] not in ROLES: E(f"registers.{r['name']}: role {r['role']!r} not in enum")
     # ---- (1) verbatim instruction sequence
-    llvm_info, want, locs, labpos = input_insns(src, f.get("name", ""), isa)
+    extra, want, locs, labpos = tgt["parse"](src, f.get("name", ""), norm)
     have = [norm(x.get("text", "")) for b in blocks for x in b.get("instructions", [])]
     seq_ok = bool(want) and have == want
     if not want: E(f"input: function {f.get('name')} not found")
     elif not seq_ok:
-        for t in have:
-            if isa == "llvm" and META.search(t): E(f"strip metadata from text: {t[:60]!r}"); break
+        tgt["note_seq_mismatch"](have, E)
         sm = difflib.SequenceMatcher(a=want, b=have, autojunk=False)
         for op, i1, i2, j1, j2 in sm.get_opcodes():
             if op == "equal": continue
@@ -303,27 +415,11 @@ def main():
     for b in blocks:
         L0 = b.get("label")
         if L0:
-            Ln = L0.rstrip(":").lstrip("%") if isa == "llvm" else L0.rstrip(":")
-            if Ln != L0: W(f"{b['id']}: write label as {Ln!r} (no '%' or ':'); accepted")
+            Ln, wmsg = tgt["norm_label"](L0)
+            if wmsg: W(f"{b['id']}: {wmsg}")
             lab[Ln] = b["id"]; lab["%" + Ln] = b["id"]
-    if isa == "llvm" and llvm_info and llvm_info[2] is not None and not blocks[0].get("label"):
-        lab.setdefault(llvm_info[2], blocks[0]["id"]); lab.setdefault("%" + llvm_info[2], blocks[0]["id"])
-    # B3: labelled blocks must start at that label; branch/table targets must start a block
-    if seq_ok and labpos is not None and isa != "llvm":
-        starts, g = {}, 0
-        for b in blocks: starts[b["id"]] = g; g += len(b.get("instructions", []))
-        for b in blocks:
-            L0 = b.get("label")
-            if not L0: continue
-            if L0 not in labpos: E(f"{b['id']}: label {L0!r} not found in the input")
-            elif labpos[L0] != starts[b["id"]]: E(f"{b['id']}: label {L0!r} is at instruction #{labpos[L0]} in the input, block starts at #{starts[b['id']]}")
-            elif re.match(r"^\.L(pcrel_hi|tmp|func_begin|func_end)", L0): E(f"{b['id']}: {L0} is not a branch target; it does not start a block (B3)")
-        refd = set(re.findall(r"\.L(?:BB[\w$]+|\d+)\b", " ".join(want)))
-        for jl in set(re.findall(r"\.LJTI[\w$]+", " ".join(want))): refd |= set(jump_table(src, jl) or [])
-        bystart = {v: k for k, v in starts.items()}
-        for L0 in sorted(refd):
-            if L0 in labpos and not any(b.get("label") == L0 for b in blocks):
-                E(f"label {L0} is a branch/jump-table target: it must start a block with label {L0!r}")
+    tgt["bind_entry"](extra, blocks, lab)
+    tgt["check_labels"](seq_ok=seq_ok, labpos=labpos, blocks=blocks, want=want, src=src, lab=lab, E=E)
     DOM = dominators(blocks)
 
     def cv(s):
@@ -342,70 +438,19 @@ def main():
             elif near: E(f"{b['id']}: case edge to {t} should have case {sorted(vs)} (found {sorted(near[2] or [])})"); rem.remove(near)
             else: E(f"{b['id']}: needs successor {{target:{t}, kind:{k}" + (f", case:{sorted(vs)}" if vs else "") + f"}} (from '{last[:60]}')")
         for g in rem: E(f"{b['id']}: unexpected successor {{target:{g[0]}, kind:{g[1]}}} (not a target of '{last[:60]}')")
-    def is_term(mn):
-        if isa == "llvm": return bool(re.match(LLVM_TERM, mn.split()[0]))
-        return bool(re.match(T["cond"], mn) or re.match(T["jump"], mn) or re.match(T["ret"], mn) or mn in ("br", "jr", "c.jr", "tail"))
     for i, b in enumerate(blocks):
         ins = b.get("instructions", []); succ = b.get("successors", []); nxt = ids[i + 1] if i + 1 < len(ids) else None
         for s in succ:
             if s.get("target") not in byid: E(f"{b['id']}: successor target {s.get('target')!r} does not exist")
             if s.get("kind") not in ("true", "false", "jump", "fallthrough", "back", "case", "default"): E(f"{b['id']}: successor kind {s.get('kind')!r} invalid")
-            if s.get("kind") == "case" and s.get("case") in (None, "", []) and isa == "llvm": E(f"{b['id']}: case edge to {s.get('target')} needs a 'case' value")
+            if s.get("kind") == "case" and s.get("case") in (None, "", []) and tgt["require_case_value"]: E(f"{b['id']}: case edge to {s.get('target')} needs a 'case' value")
             if s.get("kind") != "case" and "case" in s and s.get("kind") != "back": E(f"{b['id']}: 'case' field only on kind 'case' edges")
         if not ins: W(f"{b['id']}: empty block"); continue
         for j, x in enumerate(ins[:-1]):
-            if is_term(mnemonic(x["text"], isa)):
-                E(f"{b['id']}[{j}]: '{mnemonic(x['text'], isa)}' ends a block; start a new block after it")
-        last = ins[-1]["text"]; mn = mnemonic(last, isa)
-        tgts = [lab[t] for t in re.findall(r"%?[\w.$]+", re.sub(r"^\S+", "", last) if isa != "llvm" else last) if t in lab]
-        exp = None  # list of (target, kind)
-        if isa == "llvm":
-            if mn == "br i1":
-                m = re.findall(r"label %([\w.]+)", last)
-                if len(m) == 2: exp = [(lab.get(m[0]), "true"), (lab.get(m[1]), "false")]
-            elif mn == "br label":
-                m = re.findall(r"label %([\w.]+)", last); exp = [(lab.get(m[0]), "jump")]
-            elif re.match(r"^(ret|unreachable|resume)$", mn): exp = []
-            elif mn == "switch":
-                m = re.match(r"switch\s+\S+\s+[^,]+,\s*label\s+%([\w.]+)\s*\[(.*)\]\s*$", norm(last))
-                if not m: W(f"{b['id']}: could not parse switch; successors not checked")
-                else:
-                    cases = {}
-                    for v, t in re.findall(r"\S+\s+(-?\w+),\s*label\s+%([\w.]+)", m.group(2)):
-                        cases.setdefault(t, []).append(v)
-                    want_s = [(lab.get(m.group(1)), "default", None)] + [(lab.get(t), "case", frozenset(vs)) for t, vs in cases.items()]
-                    check_switch(b, succ, want_s, last)
-            elif mn in ("indirectbr", "invoke", "callbr"): W(f"{b['id']}: '{mn}' successors not checked")
-            else: exp = [(nxt, "fallthrough")] if nxt else []
-            for k, (t, _) in enumerate(exp or []):
-                if t is None: E(f"{b['id']}: branch label not found among block labels"); exp = None; break
-        elif re.match(T["cond"], mn):
-            exp = [(tgts[-1] if tgts else None, "true"), (nxt, "false")]
-            if not tgts: E(f"{b['id']}: branch target of '{last}' is not a block label"); exp = None
-        elif re.match(T["jump"], mn):
-            exp = [(tgts[-1], "jump")] if tgts else None
-            if not tgts: E(f"{b['id']}: jump target of '{last}' is not a block label")
-        elif re.match(T["ret"], mn) or mn == "tail" or (isa == "riscv" and re.match(r"^(c\.)?jr (ra|x1)$", norm(last))): exp = []
-        elif mn in ("br", "jr", "c.jr"):
-            jt = b.get("jump_table")
-            jls = sorted(set(re.findall(r"\.LJTI[\w$]+", " ".join(want))))
-            if not jt and jls: E(f"{b['id']}: indirect jump '{last}' with jump table {jls[0]} in the function: add jump_table {{label, targets}} and case successors")
-            elif not jt: W(f"{b['id']}: indirect jump '{last}': successors not checked (add jump_table if it jumps through a table)")
-            else:
-                ent = jump_table(src, jt.get("label", "")) if jt.get("label") else None
-                if not jt.get("label") or jt["label"] not in " ".join(want): E(f"{b['id']}: jump_table.label {jt.get('label')!r} is not referenced in the function")
-                if ent is None: W(f"{b['id']}: could not parse jump table {jt.get('label')!r} in the input; successors not checked")
-                else:
-                    tl = [lab.get(e) for e in ent]
-                    if None in tl: E(f"{b['id']}: jump table entry {ent[tl.index(None)]} is not a block label")
-                    jtt = [t.get("target") if isinstance(t, dict) else t for t in jt.get("targets", [])]
-                    if jtt != tl: E(f"{b['id']}: jump_table.targets should be {tl} (table order, one per entry; found {jtt})")
-                    vals_by_t = {}
-                    for t in jt.get("targets", []):
-                        if isinstance(t, dict) and t.get("case") is not None: vals_by_t.setdefault(t.get("target"), set()).update(map(str, t["case"] if isinstance(t["case"], list) else [t["case"]]))
-                    want_s = [(t, "case", frozenset(vals_by_t[t]) if t in vals_by_t else None) for t in dict.fromkeys(tl) if t]
-                    check_switch(b, succ, want_s, last)
-        else: exp = [(nxt, "fallthrough")] if nxt else []
+            if tgt["is_term"](tgt["mnemonic"](x["text"])):
+                E(f"{b['id']}[{j}]: '{tgt['mnemonic'](x['text'])}' ends a block; start a new block after it")
+        last = ins[-1]["text"]; mn = tgt["mnemonic"](last)
+        exp = tgt["successors"](b, mn, last, lab, nxt, norm, check_switch, E, W, want=want, src=src)
         if exp is not None:
             got = [(s.get("target"), s.get("kind")) for s in succ]; rem = list(got)
             for t, k in exp:
@@ -426,121 +471,36 @@ def main():
         elif e["to"] not in [s.get("target") for s in byid[e["from"]].get("successors", [])]: E(f"edge_uses {e['from']}->{e['to']}: not a CFG edge")
         eu.setdefault((e.get("from"), e.get("to")), set()).update(e.get("uses", []))
     phi_need = set()
-    vals, params = (llvm_info or (set(), [], None))[:2]
-    gi = 0; bstart = {}
-    for b in blocks: bstart[b["id"]] = gi; gi += len(b.get("instructions", []))
     gi = 0
     for b in blocks:
         pending = {}  # argument register -> read since written? (written in this block since the last call)
         for j, x in enumerate(b.get("instructions", [])):
             where = f"{b['id']}[{j}] '{x.get('text', '')[:48]}'"
             gi += 1; L = locs[gi - 1] if seq_ok and gi - 1 < len(locs) else None
-            Dl, Ul, Cl = list(x.get("defs", [])), list(x.get("uses", [])), list(x.get("clobbers", []) or [])
-            if isa == "llvm":
-                for r in Dl + Ul:
-                    if r not in vals: E(f"{where}: {r} is not a value of this function")
-                ed, eu_, inc = expected_llvm(norm(x.get("text", "")), vals)
-                ed_opt = []
-                if inc:
-                    if Ul: E(f"{where}: phi uses must be [] (operands go in edge_uses), found {Ul}")
-                    for v, p in inc:
-                        if v in vals and p in lab: phi_need.add((lab[p], b["id"], v))
-                    Ul = []
-                opt = []
-            else:
-                bad = False
-                for r in Dl + Ul + Cl:
-                    c = T["alias"].get(r, r)
-                    if c != r: E(f"{where}: write canonical {c} instead of {r} (text keeps {r})"); bad = True
-                    elif r in T["zero"]: E(f"{where}: zero register {r} must not appear in defs/uses"); bad = True
-                    elif r not in T["canon"]: E(f"{where}: unknown register {r!r}"); bad = True
-                if bad: continue
-                L = L
-                ed, eu_, opt, cls, ed_opt = expected_asm(x.get("text", ""), isa, T, f.get("returns"))
-                if cls in ("call", "tail"):
-                    # D6 call arguments. An argument register written since the last call (same block) and not read
-                    # before the call is dead unless the callee reads it (the call clobbers it) -> ERROR.
-                    # One that was also read in between may be scratch -> warn only.
-                    dead = sorted(r for r, rd in pending.items() if not rd and r not in Ul)
-                    rd_ = sorted(r for r, rd in pending.items() if rd and r not in Ul)
-                    if dead: E(f"{where}: {dead} written since the last call and not read before it -> it is an argument: add to uses")
-                    if rd_: W(f"{where}: {rd_} set up before the call -> add to uses if it is an argument")
-                    if not Cl: W(f"{where}: no clobbers; list caller-saved regs it destroys (else liveness runs through the call)")
-                    pending = {}
-                else:
-                    for r in Ul:
-                        if r in pending: pending[r] = True
-                    for r in set(Dl) & T["args"]: pending[r] = False
-                cr = x.get("callee_returns") or (void_callee(x.get("text", "")) and "void")
-                if cls == "call" and cr == "void" and T["ret_regs"][0] in Dl:
-                    E(f"{where}: callee returns void -> {T['ret_regs'][0]} goes in clobbers, not defs")
-                elif cls == "call" and cr != "void" and not any(r in Dl for r in T["ret_regs"]):
-                    W(f"{where}: call should also def return register {T['ret_regs'][0]} (if the callee returns void, set \"callee_returns\": \"void\")")
-                if cls == "ret" and f.get("returns") and isa != "llvm":
-                    rl = T["alias"].get(f["returns"].get("location", ""), f["returns"].get("location", ""))
-                    if rl in T["canon"] and rl not in Ul: E(f"{where}: ret must also use the return register {rl}")
-                for c in Cl:
-                    if c not in T["caller_saved"]: E(f"{where}: clobbers {c} is not caller-saved")
+            got = tgt["analyze_insn"](x, where, extra, lab, b, phi_need, norm, E, W, pending, f.get("returns"), void_callee)
+            if got is None: continue
+            ed, eu_, opt, cls, ed_opt, Ul = got
+            Dl = list(x.get("defs", []))
             md = [r for r in ed if r not in Dl]; xd = [r for r in Dl if r not in ed and r not in ed_opt]
             mu = [r for r in eu_ if r not in Ul]; xu = [r for r in Ul if r not in eu_ and r not in opt]
-            why = WHY.get(cls, "") if isa != "llvm" else ""
-            if md and isa == "aarch64" and any(re.search(rf"\[[wx]?{re.escape(r[1:])}\b|\[{r}\b", x.get("text", "")) for r in md):
-                why = "pre/post-index writeback ([base, #i]! or [base], #i) also writes the base"
+            why = tgt["why"](cls, md, x.get("text", ""))
             if md or xd: E(f"{where}: defs should be {ed + [r for r in Dl if r in ed_opt]} (found {Dl})" + (f"; {why}" if why else ""))
             if mu or xu: E(f"{where}: uses should be {eu_ + [r for r in Ul if r in opt]} (found {Ul})" + (f"; {why}" if why else ""))
             for r in Dl + Ul:
                 if r not in listed: W(f"{b['id']}[{j}]: {r} not in registers[] (not plotted)")
-            # source_line vs .loc
-            if seq_ok and isa != "llvm":
+            if seq_ok and tgt["check_source_line"]:
                 s = x.get("source_line")
                 if L and s and s != L: E(f"{b['id']}[{j}]: source_line {s} but .loc says {L}")
                 elif L and not s: W(f"{b['id']}[{j}]: .loc says line {L}; set source_line")
                 elif s and not L: W(f"{b['id']}[{j}]: source_line {s} but .loc says 0/none; omit it")
-    if isa == "llvm":
-        for fr, to, v in sorted(phi_need):
-            if v not in eu.get((fr, to), set()): E(f"edge_uses {fr}->{to}: must include {v} (phi in {to})")
-        have_eu = {(fr, to, v) for (fr, to), vs in eu.items() for v in vs}
-        for fr, to, v in sorted(have_eu - phi_need): E(f"edge_uses {fr}->{to}: {v} is not a phi operand on that edge")
+    tgt["finish_phi"](eu, phi_need, E)
     # ---- (4) roles (heuristic -> warn)
     live_in = entry_live_in(blocks, eu)
-    retloc = (f.get("returns") or {}).get("location")
-    retloc = T["alias"].get(retloc, retloc) if retloc else None
     ret_used = set()
     for b in blocks:
         for x in b.get("instructions", []):
-            if re.match(T["ret"], mnemonic(x.get("text", ""), isa)): ret_used |= set(x.get("uses", []))
-    fp_set = None  # frame pointer set from sp in the prologue (mov x29, sp / add x29, sp, #n / addi s0, sp, n)
-    fpreg = {"aarch64": "x29", "riscv": "s0"}.get(isa)
-    for x in (blocks[0].get("instructions", []) + (blocks[1].get("instructions", []) if len(blocks) > 1 else [])):
-        if fpreg and x.get("defs") == [fpreg] and x.get("uses") == ["sp"] and re.match(r"^(mov|add|addi|c\.addi4spn)\s", norm(x.get("text", ""))): fp_set = x.get("text")
-    CALLEE = {"aarch64": {f"x{i}" for i in range(19, 29)} | {f"v{i}" for i in range(8, 16)},
-              "riscv": {f"s{i}" for i in range(12)} | {f"fs{i}" for i in range(12)}}.get(isa, set())
-    for n, r in listed.items():
-        role = r.get("role")
-        if isa == "llvm":
-            if n in params and role not in ("argument", "argument+return"): W(f"registers.{n}: function parameter -> role argument")
-            if n not in params and role in ("argument", "argument+return"): W(f"registers.{n}: not a parameter -> role ssa-value or return")
-            if n not in params and n in ret_used and role != "return": W(f"registers.{n}: value given to ret -> role return (even if it is also a phi/loop value)")
-            if n in params and n in ret_used and role == "argument": E(f"registers.{n}: parameter returned by ret -> role argument+return")
-            continue
-        if n == retloc and n in live_in and n in ret_used and role in ("argument", "return"):
-            E(f"registers.{n}: holds a parameter on entry and is the return register read by ret -> role argument+return")
-        if n == fpreg and fp_set and role != "frame-pointer":
-            E(f"registers.{n}: set from sp in the prologue ('{fp_set}') -> role frame-pointer")
-        if n in CALLEE and n in live_in and role in ("temporary", "other", "return") and not (n == fpreg and fp_set):
-            E(f"registers.{n}: callee-saved register live at entry (saved/restored) -> role callee-saved, not {role}")
-        fx = T["fixed"].get(n)
-        if fx and role != fx: W(f"registers.{n}: role should be {fx}")
-        if n == "x29" and role not in ("frame-pointer", "callee-saved"): W(f"registers.{n}: role frame-pointer (or callee-saved)")
-        ploc = {T["alias"].get(p.get("location"), p.get("location")) for p in f.get("params", [])}
-        if n in live_in and role in ("temporary", "other", "zero", "return") and (n in ploc or n in CALLEE or n in T["fixed"]):
-            W(f"registers.{n}: read before any write (live at entry) -> role argument / callee-saved, not {role}")
-        elif n in live_in and role in ("temporary", "zero", "return"):
-            W(f"registers.{n}: read before any write but not a parameter location -> role undefined-live-in (if the code really reads an undefined value) or check defs/uses")
-        if role == "undefined-live-in" and n not in live_in: W(f"registers.{n}: role undefined-live-in but never read before written")
-        if role == "undefined-live-in" and (n in ploc or n in CALLEE): W(f"registers.{n}: is a parameter location / callee-saved -> role argument / callee-saved")
-        if role in ("argument", "argument+return") and n not in live_in and n not in [T["alias"].get(p.get("location"), p.get("location")) for p in f.get("params", [])]:
-            W(f"registers.{n}: role {role} but never read before written")
+            if tgt["is_return"](tgt["mnemonic"](x.get("text", ""))): ret_used |= set(x.get("uses", []))
+    tgt["check_roles"](listed, extra, ret_used, live_in, f, T, blocks, E, W)
     for p in f.get("params", []):
         loc = T["alias"].get(p.get("location"), p.get("location"))
         if loc and loc not in listed: W(f"function.params {p.get('name')}: location {loc} not in registers[]")

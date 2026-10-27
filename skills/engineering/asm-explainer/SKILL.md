@@ -26,6 +26,6 @@ You read the listing and write a JSON file (references/schema.md); `scripts/vali
 - One function per JSON — *block ids, roles and liveness are per function.*
 
 ## Files
-- `scripts/validate.py`, `scripts/build.py`, `scripts/cfgtools.py` (Python ≥ 3.9, stdlib only); `assets/template.src.html`.
+- `scripts/validate.py`, `scripts/validate_llvm.py`, `scripts/build.py`, `scripts/cfgtools.py` (Python ≥ 3.9, stdlib only); `assets/template.src.html`.
 - [references/schema.md](references/schema.md): the JSON format and all rules (ABI/register naming included).
 - [references/testing.md](references/testing.md): how the validator was tested and its known limits.
