@@ -3,7 +3,7 @@
 # requires-python = ">=3.9"
 # dependencies = []
 # ///
-"""Validate an asm-explainer JSON (schema v2) against its input.
+"""Validate an asm-explainer JSON against its input.
   python3 validate.py data.json input.(s|ll) [--isa riscv|aarch64|llvm]
 One short line per problem, written for an LLM fixing its own JSON. Exit 1 if any ERROR.
 Core is ISA-independent; per-ISA knowledge lives in the small tables below (stdlib only)."""

@@ -233,7 +233,7 @@ var edgeUse={};(D.edge_uses||[]).forEach(function(e){(edgeUse[e.from]=edgeUse[e.
  h.innerHTML=html;document.title=F.name+' — '+(F.isa||'')+' の解説';
  document.getElementById('regs-title').textContent=D.registers_title||'Registers';
  document.getElementById('lst-title').textContent=F.isa||'Code';
- document.getElementById('foot').textContent=(D._comment?D._comment+'　':'')+'schema v'+(D.schema_version||2);
+ document.getElementById('foot').textContent=D._comment||'';
 })();
 
 // ---- CFG: nodes show all instructions; layered layout sized to content

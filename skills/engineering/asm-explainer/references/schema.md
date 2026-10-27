@@ -1,4 +1,4 @@
-# asm-explainer JSON schema (v2)
+# asm-explainer JSON schema
 
 You (an LLM) read one function of assembly (RISC-V, AArch64) or LLVM IR and write this JSON.
 `python3 scripts/validate.py data.json input [--isa riscv|aarch64|llvm]` checks it (fix every ERROR, read every warn);
@@ -7,7 +7,6 @@ Prose fields (`summary`, `explanation`, `note`, `usage`, `notes`) are Japanese; 
 
 ```
 {
-  "schema_version": 2,
   "_comment": string?,                       // shown in footer
   "function": { "name", "isa", "summary", "compiler"?: string,
                 "params":  [{ "name", "type", "location" }],   // location = register as written (w3) or %value
